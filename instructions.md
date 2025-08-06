@@ -1,66 +1,557 @@
 # Instructions for GitHub Copilot: Building Abhayprad Jha's Personal Portfolio Website
 
-This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive single-page portfolio website showcasing my background as a Computer Science student at William & Mary, internships, projects, and hobbies. The design is based on a specific Figma mockup featuring a clean layout with left sidebar navigation, centered content area with circular profile image, and right sidebar with social links.
+This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive multi-page portfolio website showcasing my background as a Computer Science student at William & Mary, internships, projects, and hobbies.
 
 ## Project Overview
 
-- **Site Type**: Single-page application (SPA) with smooth scrolling between sections. Uses SvelteKit routing with a main layout and single page structure.
-- **Theme**: Ultra-minimalist black and white design with clean typography. Black text (#000000) on white background (#ffffff), with subtle hover states and transitions.
-- **Design System**: Based on Figma design showing specific layout with:
-  - Left sidebar: Navigation menu (Bio, Internships, Projects, College, Hobbies, Blog) with arrow indicators
-  - Center content: Large circular profile photo with "About Me" section below
-  - Right sidebar: Social links (Blog/Substack, LinkedIn, GitHub, Resume) with icons
-  - Top header: Name in italic narrow font with barcode-style element
-- **Responsiveness**: Mobile-first design using Tailwind's responsive utilities
+- **Site Type**: Multi-page application with SvelteKit routing and shared layout components
+- **Theme**: Ultra-minimalist black and white design with clean typography. Black text (#000000) on white background (#ffffff), with subtle hover states and transitions
+- **Responsiveness**: Mobile-first design using Tailwind's responsive utilities with collapsible sidebar
 - **Accessibility**: Include ARIA labels, alt text for images, keyboard navigation, and semantic HTML
 - **SEO**: Add meta tags, titles, and descriptions in the layout
-- **Interactivity**: Svelte for animations/transitions, smooth scrolling navigation
+- **Interactivity**: Svelte 5 for animations/transitions, smooth scrolling navigation
 - **Hosting**: GitHub Pages deployment (abetrs.github.io)
 
 ## Tech Stack
 
-- **Framework**: SvelteKit 5.0 with adapter-auto for GitHub Pages deployment
-- **Styling**: Tailwind CSS 4.0 with plugins:
+- **Framework**: SvelteKit 2.22.0 with Svelte 5.0 and adapter-auto for GitHub Pages deployment
+- **Styling**: Tailwind CSS 4.0 with Vite integration and plugins:
   - `@tailwindcss/typography` for prose styling (blog previews, descriptions)
   - `@tailwindcss/forms` for contact form inputs
-- **Current Dependencies**:
-  - SvelteKit 2.22.0 with Svelte 5.0 (latest)
-  - Tailwind CSS 4.0 with Vite integration
-  - ESLint + Prettier for code formatting
-  - Vite 7.0.4 as build tool
-- **State Management**: Svelte 5 runes and stores for reactive state
+- **State Management**: Svelte 5 runes ($state, $derived, $effect) and stores for reactive state
 - **Icons**: Use heroicons or simple SVG icons (avoid heavy icon libraries)
-- **Animations**: Svelte's built-in transitions and GSAP for complex animations if needed
+- **Animations**: Svelte's built-in transitions and custom animation components
 
-## Current Project Structure
+## CRITICAL: Svelte 5 Runes Development Patterns
 
-The project is set up as a standard SvelteKit application:
+### ⚠️ Common Pitfalls and Solutions
 
-- `src/routes/+layout.svelte`: Currently minimal layout importing app.css and favicon
-- `src/routes/+page.svelte`: Basic welcome page (needs to be replaced with portfolio content)
-- `src/app.css`: Tailwind imports with forms and typography plugins
-- `src/lib/`: Component library directory (currently has favicon.svg)
-- `static/`: Static assets directory
-- Modern tooling: ESLint, Prettier, Vite, SvelteKit sync
+Based on recent debugging, follow these patterns to avoid component rendering issues:
 
-## Design Guidelines
+#### 1. $derived Usage - Function vs Direct Value
 
-- **Colors**: Strict black (#000000) and white (#ffffff) only, as shown in Figma design
-- **Typography**:
-  - Headers: Arial Narrow (italic for name, regular for navigation)
-  - Body text: Arial or system fonts
-  - Specific font styling from Figma: Name in italic narrow style, navigation in medium weight
-- **Layout Structure** (from Figma design):
-  - Fixed top header: Name (left) + barcode element (right)
-  - Left sidebar: Vertical navigation menu with arrows (Bio, Internships, Projects, College, Hobbies, Blog)
-  - Center content area: Large circular profile image + about text below
-  - Right sidebar: Social links with icons (Blog, LinkedIn, GitHub, Resume)
-  - Full-width layout on desktop, stack vertically on mobile
-- **Interactive Elements**:
-  - Navigation arrows in left sidebar
-  - Hover states for clickable elements
-  - Smooth scrolling between sections
-  - Social link buttons with icons
+```javascript
+// ❌ AVOID: Function wrapper in $derived can cause reactivity issues
+let sortedData = $derived(() => {
+    return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+});
+
+// ✅ PREFERRED: Direct expression in $derived
+let sortedData = $derived(
+    [...items].sort((a, b) => new Date(b.date) - new Date(a.date))
+);
+
+// ✅ ALTERNATIVE: Regular function for complex logic
+function getSortedData(items) {
+    return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+// Use in template: {#each getSortedData(items) as item}
+```
+
+#### 2. Intersection Observer and Conditional Rendering
+
+```javascript
+// ❌ AVOID: Starting with false and conditional rendering
+let isVisible = $state(false);
+
+// Template with conditional that prevents initial rendering
+{#if isVisible}
+    <div>Content that won't show until intersection</div>
+{:else}
+    <div class="h-[600px] w-full"></div> <!-- Placeholder causes layout issues -->
+{/if}
+
+// ✅ CORRECT: Start visible, use observer for animations only
+let isVisible = $state(true); // Start as visible
+
+$effect(() => {
+    if (containerRef && typeof window !== 'undefined') {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+            },
+            { threshold: 0.2 } // Increased threshold for better detection
+        );
+        observer.observe(containerRef);
+        return () => observer.disconnect();
+    }
+});
+
+// Template renders immediately
+<div bind:this={containerRef} class="w-full">
+    <div>Content shows immediately</div>
+</div>
+```
+
+#### 3. Complex Derived Values - Use Functions Instead
+
+```javascript
+// ❌ PROBLEMATIC: Nested derived values with complex dependencies
+let categories = $derived(() => {
+    const cats = new Set(skills.map(skill => skill.category));
+    return ['all', ...Array.from(cats)];
+});
+
+let filteredSkills = $derived(() => {
+    if (selectedCategory === 'all') return skills;
+    return skills.filter(skill => skill.category === selectedCategory);
+});
+
+let skillsByLevel = $derived(() => {
+    const grouped = {};
+    filteredSkills.forEach(skill => {
+        if (!grouped[skill.level]) grouped[skill.level] = [];
+        grouped[skill.level].push(skill);
+    });
+    return grouped;
+});
+
+// ✅ SOLUTION: Mix simple derived with functions for complex logic
+let categories = $derived([
+    'all', 
+    ...Array.from(new Set(skills.map(skill => skill.category)))
+]);
+
+let filteredSkills = $derived(
+    selectedCategory === 'all' ? skills : skills.filter(skill => skill.category === selectedCategory)
+);
+
+// For complex grouping, use a function
+function getSkillsByLevel(skills) {
+    const grouped = {};
+    if (skills && Array.isArray(skills)) {
+        for (const skill of skills) {
+            if (skill && skill.level) {
+                if (!grouped[skill.level]) {
+                    grouped[skill.level] = [];
+                }
+                grouped[skill.level].push(skill);
+            }
+        }
+    }
+    return grouped;
+}
+
+// Use in template: {#each Object.entries(getSkillsByLevel(filteredSkills)) as [level, levelSkills]}
+```
+
+## Working Components (Current Implementation)
+
+### ✅ TimelineComponent.svelte - Professional Experience Timeline
+
+**Purpose**: Displays internship experience with interactive expandable details
+
+**Data Structure Required**:
+```javascript
+let experiences = $state([
+    {
+        company: 'Company Name',
+        position: 'Job Title',
+        startDate: '2024-06-01', // YYYY-MM-DD format
+        endDate: '2024-08-15',
+        current: false,
+        description: 'Brief job description...',
+        skills: ['React', 'Node.js', 'AWS'], // Array of skill strings
+        achievements: ['Achievement 1', 'Achievement 2'], // Optional array
+        projects: ['Project 1', 'Project 2'] // Optional array
+    }
+]);
+```
+
+**Usage Pattern**:
+```svelte
+<TimelineComponent 
+    {experiences}
+    title="Professional Experience"
+/>
+```
+
+**Key Features**:
+- Chronological sorting by start date (newest first)
+- Expandable cards with achievements and projects
+- Duration calculation and formatting
+- Hover effects and accessibility
+- Skills tags display
+
+**Critical Implementation Notes**:
+- Uses direct `$derived` for sorting: `$derived([...experiences].sort(...))`
+- Always renders content (no conditional rendering)
+- IntersectionObserver used only for animations, not content visibility
+
+### ✅ SkillsCloud.svelte - Animated Technical Skills Display
+
+**Purpose**: Interactive skills showcase with category filtering and level grouping
+
+**Data Structure Required**:
+```javascript
+let technicalSkills = $state([
+    { 
+        name: 'React', 
+        level: 'expert', // 'expert', 'advanced', 'intermediate', 'beginner'
+        category: 'frontend', // 'frontend', 'backend', 'cloud', 'tools'
+        years: 3 // Optional: experience years
+    }
+]);
+```
+
+**Usage Pattern**:
+```svelte
+<SkillsCloud 
+    skills={technicalSkills}
+    title="Technical Skills"
+    animated={true}
+/>
+```
+
+**Key Features**:
+- Category filtering with buttons (All, Frontend, Backend, Cloud, Tools)
+- Skill level grouping with color coding:
+  - Expert: Green (`bg-green-100 text-green-800`)
+  - Advanced: Blue (`bg-blue-100 text-blue-800`)
+  - Intermediate: Yellow (`bg-yellow-100 text-yellow-800`)
+  - Beginner: Gray (`bg-gray-100 text-gray-800`)
+- Hover effects showing years of experience
+- Skills summary with counts
+- Responsive sizing based on skill level
+
+**Critical Implementation Notes**:
+- Uses function `getSkillsByLevel()` instead of `$derived` for complex grouping
+- Category filtering uses simple `$derived` expression
+- No conditional rendering - always shows content
+- Hover state management with `$state(null)` for hoveredSkill
+
+### Layout Components
+
+#### TopBar.svelte
+- Sticky header with name and barcode element
+- Height: 100px, positioned at `top-0 z-50`
+- Typography: Roboto Condensed + Libre Barcode 128
+
+#### LeftBar.svelte  
+- Responsive collapsible navigation
+- Mobile auto-collapse with backdrop blur
+- Active page highlighting
+- Roboto Mono typography
+
+#### ThemeToggle.svelte
+- Theme switching functionality
+- Positioned top-right corner
+- SSR-safe theme management
+
+### Current File Structure
+
+```
+src/routes/
+├── +layout.svelte (ALL shared components and layout)
+├── +page.svelte (home: profile image + about section only)
+├── hobbies/+page.svelte (hobbies content grid only)
+├── blog/+page.svelte (blog posts and content only)
+├── college/+page.svelte (college information only)
+├── internships/+page.svelte (timeline + skills components)
+└── projects/+page.svelte (project cards and content)
+
+src/lib/components/
+├── TopBar.svelte (header with name/barcode)
+├── LeftBar.svelte (responsive navigation sidebar)
+├── ThemeToggle.svelte (theme switcher)
+├── GalleryComponent.svelte (reusable gallery with filtering)
+├── BlogPost.svelte (blog post preview cards)
+├── TimelineComponent.svelte (internship timeline)
+├── SkillsCloud.svelte (animated skills display)
+├── ProjectCard.svelte (project showcase cards)
+├── ContactForm.svelte (contact form component)
+└── TypewriterText.svelte (typewriter animation - currently disabled)
+
+src/lib/stores/
+└── theme.svelte.js (theme management with SSR-safe patterns)
+```
+
+## SSR-Safe Development Patterns (CRITICAL)
+
+Since this project uses SvelteKit with SSR, follow these patterns to avoid 500 errors:
+
+### Browser API Usage
+
+Always check for browser environment before using browser-only APIs:
+
+```javascript
+// In onMount lifecycle
+import { onMount } from 'svelte';
+
+onMount(() => {
+    if (typeof window !== 'undefined') {
+        // Browser-only code here
+        const observer = new IntersectionObserver(...);
+        window.addEventListener('scroll', handleScroll);
+    }
+});
+```
+
+### Effect Usage in Svelte 5
+
+Use `$effect` only within component context, never at module level:
+
+```javascript
+// ❌ WRONG - Module level effect
+$effect(() => {
+	// This will cause SSR errors
+});
+
+// ✅ CORRECT - Component level effect
+let someState = $state(false);
+
+$effect(() => {
+	if (typeof window !== 'undefined') {
+		// Browser-specific reactive code
+	}
+});
+```
+
+### Theme Store Pattern (Current Implementation)
+
+The theme store uses component-level initialization to avoid SSR issues:
+
+```javascript
+// theme.svelte.js pattern
+let theme = $state('light');
+
+export function initializeTheme() {
+	if (typeof window !== 'undefined') {
+		// Initialize theme from localStorage/system preferences
+	}
+}
+
+export function applyTheme(newTheme) {
+	theme = newTheme;
+	if (typeof window !== 'undefined') {
+		document.documentElement.setAttribute('data-theme', theme);
+	}
+}
+```
+
+## Component Architecture and Design System
+
+### Layout Component Hierarchy (Z-Index Management)
+
+Current z-index layering (IMPORTANT for visual hierarchy):
+
+- TopBar: `z-50` (highest priority)
+- LeftBar: `z-40` (behind TopBar)
+- Mobile toggle button: `z-[60]` (above everything for accessibility)
+- Modal overlays: `z-50` (same level as TopBar)
+
+### Responsive Navigation Pattern
+
+LeftBar component uses this mobile-responsive pattern:
+
+```svelte
+<script>
+	let isCollapsed = $state(false);
+	let isMobile = $state(false);
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			isMobile = window.innerWidth < 1024; // lg breakpoint
+			if (isMobile && !isCollapsed) {
+				isCollapsed = true; // Auto-collapse on mobile
+			}
+		}
+	});
+
+	onMount(() => {
+		checkScreenSize();
+		window.addEventListener('resize', checkScreenSize);
+		return () => window.removeEventListener('resize', checkScreenSize);
+	});
+</script>
+
+<!-- Mobile toggle button -->
+<button class="toggle-button">...</button>
+
+<!-- Desktop sidebar -->
+<nav class="sidebar-nav">
+	<!-- Navigation content -->
+</nav>
+
+<!-- Mobile backdrop -->
+{#if isMobile && !isCollapsed}
+	<div class="backdrop-blur-sm" transition:fade>...</div>
+{/if}
+```
+
+### Color Palette
+
+Stick to the minimalist black and white theme:
+
+- **Background**: White (#ffffff)
+- **Text**: Black (#000000)
+- **Accents**: Light gray for subtle elements (#f5f5f5, #e5e5e5)
+- **Hover States**: Subtle gray transitions
+- **Focus States**: Black outlines for accessibility
+
+### Typography System
+
+Current font implementation uses Google Fonts with fallbacks:
+
+- **Condensed headings**: 'Roboto Condensed' for titles and headers
+- **Monospace**: 'Roboto Mono' for technical elements and UI labels
+- **Default**: System sans-serif stack for body text
+
+Font imports are handled in component `<style>` blocks:
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+
+.font-condensed {
+	font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
+}
+
+.font-mono {
+	font-family: 'Roboto Mono', 'Courier New', monospace;
+}
+```
+
+## Current Component Usage Patterns
+
+### Page Component Template (Follow This Pattern)
+
+Individual page components should contain ONLY their unique content:
+
+```svelte
+<script>
+	// Minimal script when no props needed
+</script>
+
+<div class="mx-auto max-w-6xl p-6">
+	<!-- Content -->
+</div>
+
+<style>
+	/* External font imports */
+	@import url('https://fonts.googleapis.com/css2?family=Font+Name&display=swap');
+
+	/* Custom CSS classes for reusability */
+	.custom-class {
+		font-family: 'Font Name', fallback, sans-serif;
+	}
+</style>
+```
+
+### Gallery Component Pattern
+
+GalleryComponent.svelte provides a reusable pattern for content with filtering:
+
+```svelte
+<script>
+	// Svelte 5 props destructuring
+	let { items = [], title = 'Gallery', columns = 2, showModal = true } = $props();
+
+	// Reactive state
+	let filter = $state('all');
+	let selectedItem = $state(null);
+
+	// Derived values
+	let filteredItems = $derived(() => {
+		if (filter === 'all') return items;
+		return items.filter((item) => item.category === filter);
+	});
+</script>
+```
+
+### Animation and Transition Guidelines
+
+Use Svelte's built-in transitions with consistent timing:
+
+```svelte
+import { scale, fly, fade } from 'svelte/transition';
+import { quintOut } from 'svelte/easing';
+
+<!-- Standard transition timing -->
+<div transition:fly={{ y: 50, duration: 600, easing: quintOut }}>
+<div transition:scale={{ delay: index * 100, duration: 500, easing: quintOut }}>
+<div transition:fade={{ duration: 300 }}>
+```
+
+## Content Guidelines
+
+### About/Bio Section (Home Page)
+
+- Circular profile image with proper aspect ratio
+- Brief introduction highlighting CS background at William & Mary
+- Key interests: technology, problem-solving, innovation
+- IntersectionObserver for scroll-based animations
+
+### Internships Section
+
+- TimelineComponent for chronological progression
+- SkillsCloud for animated technical skills display
+- Company names, roles, dates with hover interactions
+
+### Projects Section
+
+- ProjectCard components with consistent styling
+- GitHub/live demo links with proper external link handling
+- Technology tags with filtering capabilities
+
+### Hobbies Section
+
+- GalleryComponent with category filtering
+- Modal support for detailed views
+- Responsive grid layouts (1-4 columns)
+
+### Blog Section
+
+- BlogPost preview components
+- External link handling for Substack/blog platforms
+- SEO-friendly meta descriptions
+
+### College Section
+
+- Academic achievements and coursework
+- Timeline format for major milestones
+- Integration with overall site navigation
+
+## Current Implementation Status
+
+### Completed Features
+
+- ✅ Centralized layout system with shared components
+- ✅ SSR-safe browser API usage patterns
+- ✅ Responsive navigation with mobile collapse
+- ✅ Theme store with proper Svelte 5 patterns
+- ✅ Z-index layering for visual hierarchy
+- ✅ Tailwind CSS 4.0 integration with Vite
+- ✅ Component-level font imports and styling
+
+### Known Issues Fixed
+
+- ✅ 500 SSR errors resolved with proper browser checks
+- ✅ Svelte 5 effect usage patterns corrected
+- ✅ Layout code duplication eliminated
+- ✅ Z-index conflicts resolved (TopBar > LeftBar)
+- ✅ Tailwind CSS parsing issues with certain imports
+
+### Development Priorities
+
+1. Complete layout refactoring for remaining pages (internships, projects)
+2. Re-enable TypewriterText component with proper Tailwind integration
+3. Add content and data for all sections
+4. Implement contact form functionality
+5. Optimize performance and accessibility
+6. Test deployment to GitHub Pages
+
+## Development Notes
+
+- Always use absolute file paths when calling tools
+- Test SSR compatibility by checking browser environment
+- Use Svelte 5 runes ($state, $derived, $effect) consistently
+- Maintain z-index hierarchy: TopBar (50) > LeftBar (40)
+- Keep layout components in +layout.svelte, content in individual pages
+- Import fonts at component level, not globally
+- Use TypeScript where beneficial for component props
+
+Remember: The goal is a clean, professional portfolio with proper SSR support, responsive design, and maintainable code architecture. Every component should follow established patterns and serve a clear purpose in the overall site structure.
 
 ## Figma Design Implementation Notes
 
@@ -186,18 +677,18 @@ The Figma design shows a specific layout that should be implemented:
 let isMobile = false;
 
 function checkScreenSize() {
-  if (typeof window !== 'undefined') {
-    isMobile = window.innerWidth < 1024; // lg breakpoint
-    if (isMobile && !isCollapsed) {
-      isCollapsed = true; // Auto-collapse on mobile
-    }
-  }
+	if (typeof window !== 'undefined') {
+		isMobile = window.innerWidth < 1024; // lg breakpoint
+		if (isMobile && !isCollapsed) {
+			isCollapsed = true; // Auto-collapse on mobile
+		}
+	}
 }
 
 onMount(() => {
-  checkScreenSize();
-  window.addEventListener('resize', checkScreenSize);
-  return () => window.removeEventListener('resize', checkScreenSize);
+	checkScreenSize();
+	window.addEventListener('resize', checkScreenSize);
+	return () => window.removeEventListener('resize', checkScreenSize);
 });
 ```
 
@@ -206,17 +697,17 @@ onMount(() => {
 ```svelte
 <!-- Conditional rendering based on screen size -->
 {#if isCollapsed || isMobile}
-  <button class="toggle-button">...</button>
+	<button class="toggle-button">...</button>
 {/if}
 
 <!-- Responsive sidebar with smooth transitions -->
 <nav class="sidebar {isCollapsed ? '-translate-x-full' : 'translate-x-0'}">
-  <!-- Navigation content -->
+	<!-- Navigation content -->
 </nav>
 
 <!-- Mobile-only glass backdrop effect -->
 {#if !isCollapsed && isMobile}
-  <div class="backdrop-blur-sm" transition:fade>...</div>
+	<div class="backdrop-blur-sm" transition:fade>...</div>
 {/if}
 ```
 
