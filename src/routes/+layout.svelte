@@ -1,6 +1,6 @@
 <script>
 	import '../app.css';
-	import favicon from '$lib/assets/favicon.svg';
+	import favicon from '$lib/assets/iconforportfolio.jpg';
 	import TopBar from '$lib/components/TopBar.svelte';
 	import LeftBar from '$lib/components/LeftBar.svelte';
 	import RightBar from '$lib/components/RightBar.svelte';
