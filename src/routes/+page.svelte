@@ -1,45 +1,64 @@
 <script>
-	import TopBar from '$lib/components/TopBar.svelte';
-	import LeftBar from '$lib/components/LeftBar.svelte';
+	// import TypewriterText from '$lib/components/TypewriterText.svelte';
+	import { fade } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+
+	// Svelte 5 state for profile visibility
+	let profileVisible = $state(false);
+	let profileRef = $state(null);
+	let mounted = $state(false);
+	let observer = $state(null);
+
+	// Use onMount for browser-only code
+	onMount(() => {
+		mounted = true;
+		
+		// Add a small delay to ensure DOM is ready
+		setTimeout(() => {
+			if (browser && profileRef) {
+				observer = new IntersectionObserver(
+					([entry]) => {
+						profileVisible = entry.isIntersecting;
+					},
+					{ threshold: 0.3 }
+				);
+
+				observer.observe(profileRef);
+			}
+		}, 100);
+
+		// Cleanup function
+		return () => {
+			if (observer) {
+				observer.disconnect();
+				observer = null;
+			}
+		};
+	});
+
+	const aboutText =
+		"I'm Abhayprad Jha, a Computer Science student at William & Mary (Class of 2026), blending my passion for building products and design a fascination with modelling the world around me. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.";
 </script>
 
-<div class="min-h-screen bg-gray-50">
-	<!-- Top Bar -->
-	<TopBar />
-	
-	<!-- Left Navigation Bar -->
-	<LeftBar />
-	
-	<!-- Main Content with responsive left margin -->
-	<div class="lg:ml-[150px] ml-0 flex flex-col items-center justify-center px-4 py-8">
-		<!-- Oval Profile Image Placeholder -->
-		<div class="w-[501px] h-[300px] bg-gray-300 rounded-full flex items-center justify-center mb-8 overflow-hidden">
-			<div class="text-gray-600 text-lg font-medium text-center">
-				<div class="mb-2">📷</div>
-				<div>Profile Image</div>
-				<div class="text-sm">Placeholder</div>
-			</div>
-		</div>
-		
-		<!-- About Me Section -->
-		<div class="max-w-[771px] w-full">
-			<div class="text-justify font-condensed">
-				<h2 class="text-[32px] font-bold text-black mb-4 tracking-[-1.92px]">
-					About Me
-				</h2>
-				<p class="text-[32px] text-black leading-normal tracking-[-1.92px]">
-					I'm Abhayprad Jha, a Computer Science student at William & Mary (Class of 2026), blending my passion for building products and design a fascination with modelling the world around me. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.
-				</p>
-			</div>
-		</div>
+<!-- Oval Profile Image Placeholder -->
+<div
+	bind:this={profileRef}
+	class="mb-8 flex h-[300px] w-[501px] items-center justify-center overflow-hidden rounded-full bg-gray-300 transition-all duration-700 hover:shadow-lg"
+>
+	<div class="text-center text-lg font-medium text-gray-600">
+		<div class="mb-2 text-4xl">📷</div>
+		<div>Profile Image</div>
+		<div class="text-sm">Placeholder</div>
 	</div>
 </div>
 
-<style>
-	/* Use Roboto Condensed as Arial Narrow substitute */
-	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-	
-	.font-condensed {
-		font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
-	}
-</style>
+<!-- About Me Section -->
+<div class="w-full max-w-[771px]">
+	<div class="font-condensed text-justify">
+		<h2 class="mb-4 text-[32px] font-bold tracking-[-1.92px] text-black">About Me</h2>
+		<div class="text-[32px] leading-normal tracking-[-1.92px] text-black">
+			<p>{aboutText}</p>
+		</div>
+	</div>
+</div>
