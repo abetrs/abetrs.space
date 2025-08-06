@@ -1,6 +1,41 @@
 <script>
 	import ProjectCard from '$lib/components/ProjectCard.svelte';
 	import ProductStory from '$lib/components/ProductStory.svelte';
+	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
+	import { onMount } from 'svelte';
+	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
+	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
+	import { page } from '$app/stores';
+
+	// Container reference for scroll detection
+	let pageContainer = $state(null);
+
+	// Scroll-to-next functionality
+	const scrollToNext = useScrollToNext();
+	
+	// Get next page name for indicator
+	let nextPagePath = $derived($page.url ? getNextPagePath($page.url.pathname) : null);
+	let nextPageName = $derived(() => {
+		if (nextPagePath === '/college') return 'College';
+		if (nextPagePath === '/hobbies') return 'Hobbies';
+		if (nextPagePath === '/blog') return 'Blog';
+		return 'Next Page';
+	});
+
+	// Initialize scroll functionality
+	onMount(() => {
+		scrollToNext.initScrollListener();
+		return () => {
+			scrollToNext.destroyScrollListener();
+		};
+	});
+
+	// Set the container reference for scroll detection
+	$effect(() => {
+		if (pageContainer) {
+			scrollToNext.containerRef.value = pageContainer;
+		}
+	});
 
 	// Project data using Svelte 5 runes
 	let projects = $state([
@@ -117,63 +152,77 @@
 </script>
 
 <!-- Content Area -->
-<div class="w-full max-w-[800px]">
-			<div class="text-center">
-				<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
-					Projects
-				</h1>
-				<div class="font-condensed text-[24px] leading-relaxed text-black">
-					<p class="mb-8">
-						A showcase of my technical projects spanning web development, mobile apps, and
-						innovative solutions built during hackathons and personal exploration.
+<div bind:this={pageContainer} class="w-full max-w-[800px]">
+	<div class="text-center">
+		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
+			Projects
+		</h1>
+		<div class="font-condensed text-[24px] leading-relaxed text-black">
+			<p class="mb-8">
+				A showcase of my technical projects spanning web development, mobile apps, and
+				innovative solutions built during hackathons and personal exploration.
+			</p>
+
+			<!-- Enhanced project grid with interactive cards -->
+			<div class="grid grid-cols-1 gap-8 text-left md:grid-cols-2">
+				{#each projects as project, index}
+					<ProjectCard
+						title={project.title}
+						description={project.description}
+						tech={project.tech}
+						demoUrl={project.demoUrl}
+						githubUrl={project.githubUrl}
+						projectId={project.id}
+						{index}
+					/>
+				{/each}
+			</div>
+
+			<!-- Product Management Stories Section -->
+			<div class="mt-20 pt-16 border-t border-gray-200">
+				<div class="text-center mb-12">
+					<h2 class="font-condensed text-[40px] font-bold tracking-[-1px] text-black mb-4">
+						Product Management Stories
+					</h2>
+					<p class="font-condensed text-[20px] leading-relaxed text-gray-600 max-w-3xl mx-auto">
+						Behind every great product is strategic thinking, user empathy, and data-driven decisions. 
+						Here's how I approached the product management challenges for each project.
 					</p>
+				</div>
 
-					<!-- Enhanced project grid with interactive cards -->
-					<div class="grid grid-cols-1 gap-8 text-left md:grid-cols-2">
-						{#each projects as project, index}
-							<ProjectCard
-								title={project.title}
-								description={project.description}
-								tech={project.tech}
-								demoUrl={project.demoUrl}
-								githubUrl={project.githubUrl}
-								projectId={project.id}
-								{index}
-							/>
-						{/each}
-					</div>
-
-					<!-- Product Management Stories Section -->
-					<div class="mt-20 pt-16 border-t border-gray-200">
-						<div class="text-center mb-12">
-							<h2 class="font-condensed text-[40px] font-bold tracking-[-1px] text-black mb-4">
-								Product Management Stories
-							</h2>
-							<p class="font-condensed text-[20px] leading-relaxed text-gray-600 max-w-3xl mx-auto">
-								Behind every great product is strategic thinking, user empathy, and data-driven decisions. 
-								Here's how I approached the product management challenges for each project.
-							</p>
-						</div>
-
-						<!-- Product Stories -->
-						<div class="space-y-8">
-							{#each productStories as story, index}
-								<ProductStory
-									projectId={story.projectId}
-									title={story.title}
-									challenge={story.challenge}
-									solution={story.solution}
-									impact={story.impact}
-									metrics={story.metrics}
-									lessons={story.lessons}
-									{index}
-								/>
-							{/each}
-						</div>
-					</div>
+				<!-- Product Stories -->
+				<div class="space-y-8">
+					{#each productStories as story, index}
+						<ProductStory
+							projectId={story.projectId}
+							title={story.title}
+							challenge={story.challenge}
+							solution={story.solution}
+							impact={story.impact}
+							metrics={story.metrics}
+							lessons={story.lessons}
+							{index}
+						/>
+					{/each}
 				</div>
 			</div>
+
+			<!-- Additional content to ensure scrolling is possible -->
+			<div class="mt-16 space-y-8 text-center">
+				<div class="text-sm text-gray-500 font-mono">
+					Continue scrolling to explore my college experience
+				</div>
+				<!-- Spacer to enable scroll-to-next -->
+				<div class="h-32"></div>
+			</div>
 		</div>
+	</div>
+</div>
+
+<!-- Scroll-to-next indicator -->
+{#if nextPagePath}
+	<ScrollToNextIndicator nextPageName={nextPageName()} />
+{/if}
 
 <style>
 	/* Use Roboto Condensed as Arial Narrow substitute */

@@ -3,19 +3,10 @@
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { fade } from 'svelte/transition';
-
-	// Navigation items matching Figma design
-	const navItems = [
-		{ name: 'Bio', path: '/' },
-		{ name: 'Internships', path: '/internships' },
-		{ name: 'Projects', path: '/projects' },
-		{ name: 'College', path: '/college' },
-		{ name: 'Hobbies', path: '/hobbies' },
-		{ name: 'Blog', path: '/blog' }
-	];
+	import { navItems } from '$lib/stores/navigation.svelte.js';
 
 	// Svelte 5 runes for reactive state
-	let isCollapsed = $state(false);
+	let isCollapsed = $state(true); // Start collapsed by default
 	let isMobile = $state(false);
 
 	// Derived reactive value for current path
@@ -36,9 +27,11 @@
 	function checkScreenSize() {
 		if (typeof window !== 'undefined') {
 			isMobile = window.innerWidth < 1024; // lg breakpoint
-			// Auto-collapse on mobile
-			if (isMobile && !isCollapsed) {
+			// Auto-expand on desktop, auto-collapse on mobile
+			if (isMobile) {
 				isCollapsed = true;
+			} else {
+				isCollapsed = false;
 			}
 		}
 	}
@@ -53,6 +46,11 @@
 				window.removeEventListener('resize', checkScreenSize);
 			};
 		}
+	});
+
+	// Initialize on mount
+	onMount(() => {
+		checkScreenSize();
 	});
 </script>
 

@@ -1,37 +1,107 @@
 <script>
 	import BlogPost from '$lib/components/BlogPost.svelte';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
-	// Blog posts data using Svelte 5 runes
+	// Container reference for scroll detection
+	let pageContainer = $state(null);
+	let showBackToTop = $state(false);
+	let isAtBottom = $state(false);
+	let scrollThreshold = 150;
+	let accumulatedScroll = $state(0);
+
+	// Static blog posts data using Svelte 5 runes
 	let blogPosts = $state([
 		{
-			title: 'The Future of Full-Stack Development',
+			title: 'The Internet, AI, and The Truman Show',
 			excerpt:
-				'Exploring emerging trends in web development and how modern frameworks are reshaping the developer experience. From AI-assisted coding to edge computing, the landscape is evolving rapidly.',
-			publishedDate: '2024-01-15',
+				'Exploring how AI and internet culture shape our perception of reality, drawing parallels to The Truman Show. Reflections on privacy, technology, and societal impacts in a hyper-connected world.',
+			publishedDate: '2025-07-15',
 			readTime: 8,
-			url: 'https://substack.com/@abhaypradjha/future-fullstack'
+			url: 'https://abetheunicorn.substack.com/p/the-internet-ai-and-the-truman-show'
 		},
 		{
-			title: 'Lessons from My Deloitte Internship',
+			title: 'DEVLOG - What do you even work on?',
 			excerpt:
-				'Key insights gained from working in tech consulting and how enterprise-level projects differ from academic work. Understanding client needs and scalable solutions.',
-			publishedDate: '2023-12-20',
-			readTime: 6,
-			url: 'https://substack.com/@abhaypradjha/deloitte-lessons'
+				'Explores summer side-projects like a music taste app, blog, and cricket stats, while reflecting on coding productivity and project completion challenges.',
+			publishedDate: '2025-08-04',
+			readTime: 7,
+			url: 'https://abetheunicorn.substack.com/p/devlog-what-do-you-even-work-on'
 		},
 		{
-			title: 'Building User-Centered Digital Experiences',
+			title: 'Returning to Making',
 			excerpt:
-				'The importance of design thinking in development and how to create solutions that truly solve real-world problems. A deep dive into UX principles for developers.',
-			publishedDate: '2023-11-28',
-			readTime: 10,
-			url: 'https://substack.com/@abhaypradjha/user-centered-design'
+				'Explores managing multiple hobbies like music, coding, and filmmaking, and shares strategies for consistently finishing creative projects.',
+			publishedDate: '2025-07-20',
+			readTime: 9,
+			url: 'https://abetheunicorn.substack.com/p/returning-to-making'
 		}
 	]);
+
+	function handleScroll() {
+		if (!pageContainer || typeof window === 'undefined') return;
+
+		const { scrollTop } = document.documentElement;
+		const containerRect = pageContainer.getBoundingClientRect();
+		const containerBottom = containerRect.bottom;
+		const windowHeight = window.innerHeight;
+
+		// Check if we've scrolled to the bottom of the component
+		const isComponentAtBottom = containerBottom <= windowHeight + 10;
+
+		if (isComponentAtBottom && !isAtBottom) {
+			isAtBottom = true;
+			accumulatedScroll = 0;
+		} else if (!isComponentAtBottom && isAtBottom) {
+			isAtBottom = false;
+			accumulatedScroll = 0;
+			showBackToTop = false;
+		}
+
+		// Show back to top after some additional scroll
+		if (isAtBottom) {
+			const deltaY = scrollTop - (window.lastScrollY || 0);
+			if (deltaY > 0) {
+				accumulatedScroll += deltaY;
+				if (accumulatedScroll >= scrollThreshold) {
+					showBackToTop = true;
+				}
+			}
+		}
+
+		window.lastScrollY = scrollTop;
+	}
+
+	function scrollToTop() {
+		if (typeof window !== 'undefined') {
+			document.body.style.transition = 'opacity 400ms ease-in-out';
+			document.body.style.opacity = '0.7';
+			
+			setTimeout(() => {
+				goto('/').then(() => {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+					setTimeout(() => {
+						document.body.style.opacity = '1';
+						setTimeout(() => {
+							document.body.style.transition = '';
+						}, 100);
+					}, 100);
+				});
+			}, 200);
+		}
+	}
+
+	onMount(() => {
+		if (typeof window !== 'undefined') {
+			window.addEventListener('scroll', handleScroll, { passive: true });
+			return () => {
+				window.removeEventListener('scroll', handleScroll);
+			};
+		}
+	});
 </script>
 
-<!-- Content Area -->
-<div class="w-full max-w-[800px]">
+<div bind:this={pageContainer} class="w-full max-w-[800px]">
 	<div class="text-center">
 		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">Blog</h1>
 		<div class="font-condensed text-[24px] leading-relaxed text-black">
@@ -41,7 +111,6 @@
 				exploration.
 			</p>
 
-			<!-- Placeholder content for blog -->
 			<div class="space-y-8 text-left">
 				<div class="rounded-lg border-l-4 border-black bg-white p-6 shadow-sm">
 					<h3 class="mb-2 text-[28px] font-semibold">Substack Integration</h3>
@@ -50,7 +119,7 @@
 						reflections on the tech industry.
 					</p>
 					<a
-						href="https://substack.com/@abhaypradjha"
+						href="https://abetheunicorn.substack.com/"
 						class="text-[18px] text-black underline hover:no-underline"
 					>
 						Read on Substack →
@@ -59,7 +128,6 @@
 
 				<div class="space-y-6">
 					<h3 class="text-[28px] font-semibold">Recent Posts</h3>
-
 					{#each blogPosts as post, index}
 						<BlogPost
 							title={post.title}
@@ -71,7 +139,57 @@
 						/>
 					{/each}
 				</div>
+
+				<!-- Additional content to ensure scrolling is possible -->
+				<div class="mt-16 space-y-8 text-center">
+					<div class="text-sm text-gray-500 font-mono">
+						End of portfolio - Continue scrolling to return to the beginning
+					</div>
+					<!-- Spacer to enable scroll-to-top -->
+					<div class="h-32"></div>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
+<!-- Back to top indicator (for last page) -->
+{#if showBackToTop}
+	<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+		<button 
+			class="bg-black/90 text-white px-6 py-3 rounded-full shadow-lg backdrop-blur-sm hover:bg-black transition-colors duration-200"
+			onclick={scrollToTop}
+		>
+			<div class="flex items-center space-x-3">
+				<!-- Up arrow -->
+				<svg 
+					class="w-5 h-5 text-white animate-bounce" 
+					fill="none" 
+					stroke="currentColor" 
+					viewBox="0 0 24 24"
+				>
+					<path 
+						stroke-linecap="round" 
+						stroke-linejoin="round" 
+						stroke-width="2" 
+						d="M5 10l7-7m0 0l7 7m-7-7v18"
+					></path>
+				</svg>
+				
+				<!-- Text -->
+				<div class="text-sm font-mono">
+					<div class="text-white/80">Continue scrolling to</div>
+					<div class="text-white font-medium">Return to Bio</div>
+				</div>
+			</div>
+		</button>
+	</div>
+{/if}
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+	
+	.font-mono {
+		font-family: 'Roboto Mono', 'Courier New', monospace;
+	}
+</style>

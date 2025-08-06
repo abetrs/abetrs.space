@@ -2,11 +2,12 @@
 	// Props with defaults using Svelte 5 syntax
 	let {
 		text = '',
-		speed = 100,
+		speed = 1,
 		delay = 0,
 		cursor = true,
 		loop = false,
-		onComplete = null
+		onComplete = null,
+		onClickComplete = null
 	} = $props();
 
 	// Svelte 5 runes for state management
@@ -37,7 +38,7 @@
 			if (loop) {
 				setTimeout(() => {
 					reset();
-				}, 2000);
+				}, 250);
 			}
 		}
 
@@ -66,20 +67,40 @@
 		showCursor = true;
 	}
 
-	// Expose reset function for external use
+	function complete() {
+		if (!isComplete) {
+			displayText = text;
+			currentIndex = text.length;
+			isComplete = true;
+			if (onComplete) onComplete();
+			if (onClickComplete) onClickComplete();
+			// Clear any pending timeouts
+			if (timeoutId) {
+				clearTimeout(timeoutId);
+				timeoutId = null;
+			}
+		}
+	}
+
+	// Expose functions for external use
 	$effect(() => {
-		return { reset };
+		return { reset, complete };
 	});
 </script>
 
-<span class="font-condensed">
+<span 
+	class="typewriter-text cursor-pointer" 
+	role="button"
+	tabindex="0"
+	onclick={complete}
+	onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? complete() : null}
+>
 	{displayText}<span class="animate-pulse text-black">{cursorDisplay}</span>
 </span>
 
 <style>
-	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-
-	.font-condensed {
-		font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
+	.typewriter-text {
+		/* Inherit font styling from parent instead of forcing condensed */
+		font-family: inherit;
 	}
 </style>

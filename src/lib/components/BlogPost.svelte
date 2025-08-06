@@ -9,15 +9,14 @@
 	let isRead = $state(false);
 
 	// Derived values
-	let formattedDate = $derived(() => {
-		if (!publishedDate) return 'Recent';
-		const date = new Date(publishedDate);
-		return date.toLocaleDateString('en-US', {
+	let formattedDate = $derived(
+		!publishedDate ? 'Recent' : 
+		new Date(publishedDate).toLocaleDateString('en-US', {
 			month: 'long',
 			day: 'numeric',
 			year: 'numeric'
-		});
-	});
+		})
+	);
 
 	let animationDelay = $derived(index * 150);
 

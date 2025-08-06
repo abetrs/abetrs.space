@@ -132,6 +132,49 @@ function getSkillsByLevel(skills) {
 // Use in template: {#each Object.entries(getSkillsByLevel(filteredSkills)) as [level, levelSkills]}
 ```
 
+#### 4. Event Handling and Interactive Components
+
+```svelte
+// ❌ AVOID: Using deprecated on: syntax
+<span on:click={handleClick} on:keydown={handleKeydown}>
+
+// ✅ CORRECT: Use Svelte 5 event attributes
+<span
+    onclick={handleClick}
+    onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? handleClick() : null}
+>
+
+// ✅ ACCESSIBILITY: Interactive non-button elements need proper ARIA
+<span
+    class="cursor-pointer"
+    role="button"
+    tabindex="0"
+    onclick={complete}
+    onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? complete() : null}
+>
+    Clickable text content
+</span>
+
+// ✅ PREVENT DUPLICATE ACTIONS: Use state flags
+let isComplete = $state(false);
+
+function complete() {
+    if (!isComplete) {
+        isComplete = true;
+        // Perform action only once
+        performAction();
+    }
+}
+```
+
+**Event Handling Best Practices**:
+
+- Use Svelte 5 event attributes (`onclick`, `onkeydown`) instead of `on:` directives
+- Always provide keyboard accessibility for clickable elements
+- Use proper ARIA roles for non-semantic interactive elements
+- Implement state flags to prevent duplicate actions
+- Clean up timeouts and intervals when interrupting animations
+
 ## Working Components (Current Implementation)
 
 ### ✅ TimelineComponent.svelte - Professional Experience Timeline
@@ -218,6 +261,120 @@ let technicalSkills = $state([
 - No conditional rendering - always shows content
 - Hover state management with `$state(null)` for hoveredSkill
 
+### ✅ RightBar.svelte - Social Links Sidebar
+
+**Purpose**: Fixed sidebar displaying external social/professional links with responsive behavior
+
+**Data Structure Required**:
+
+```javascript
+const socialLinks = [
+	{
+		name: 'Blog',
+		url: 'https://abetheunicorn.substack.com',
+		iconType: 'substack'
+	},
+	{
+		name: 'LinkedIn',
+		url: 'https://www.linkedin.com/in/abhayprad-jha-b12390223/',
+		iconType: 'linkedin'
+	},
+	{
+		name: 'GitHub',
+		url: 'https://github.com/abetrs',
+		iconType: 'github'
+	},
+	{
+		name: 'Resume',
+		url: resumePdf, // Imported asset
+		iconType: 'resume'
+	}
+];
+```
+
+**Usage Pattern**:
+
+```svelte
+<RightBar />
+```
+
+**Key Features**:
+
+- Fixed positioning on right side (`right-0 z-40`)
+- Responsive mobile collapse with toggle button
+- Custom SVG icons for each platform (Substack, LinkedIn, GitHub, Resume)
+- External link handling with `window.open()` and proper security attributes
+- Auto-collapse on mobile after link click
+- Matches LeftBar styling with Roboto Mono typography
+- Hover effects with color transitions
+- Glass backdrop blur effect on mobile
+
+**Critical Implementation Notes**:
+
+- Uses imported resume PDF asset with proper Vite handling
+- All links open in new tabs with `noopener,noreferrer` for security
+- Mobile responsive pattern matches LeftBar implementation
+- SVG icons defined in `getIcon()` function for maintainability
+- No shadow styling for clean integration with layout
+- Toggle button uses social/share icon instead of generic hamburger
+
+### ✅ TypewriterText.svelte - Interactive Text Animation Component
+
+**Purpose**: Animated typewriter effect with click-to-complete functionality for enhanced user experience
+
+**Props Structure**:
+
+```javascript
+let {
+	text = '', // Text to animate
+	speed = 100, // Typing speed in milliseconds
+	delay = 0, // Initial delay before starting
+	cursor = true, // Show blinking cursor
+	loop = false, // Loop animation (rarely used)
+	onComplete = null, // Callback when animation completes
+	onClickComplete = null // Callback when user clicks to complete
+} = $props();
+```
+
+**Usage Pattern**:
+
+```svelte
+<TypewriterText text={aboutText} speed={25} delay={200} cursor={true} />
+```
+
+**Key Features**:
+
+- **Click-to-complete**: Users can click anywhere on the text to instantly complete the animation
+- **Keyboard accessibility**: Enter and Space keys also trigger completion
+- **Prevent duplicate completion**: Once complete, additional clicks have no effect
+- **Smooth timeout management**: Properly clears pending timeouts when completing early
+- **Cursor animation**: Blinking cursor with configurable visibility
+- **Svelte 5 compatibility**: Uses runes and modern event syntax
+
+**Critical Implementation Notes**:
+
+- Component is clickable with proper accessibility (`role="button"`, `tabindex="0"`)
+- Uses Svelte 5 event syntax (`onclick` instead of `on:click`)
+- State management with `$state()` for all reactive values
+- Cursor blinking handled in separate `$effect()` with cleanup
+- Font styling inherits from parent (maintains typography consistency)
+- Prevents multiple completions with `isComplete` state check
+
+**UX Enhancement**:
+
+This component solves the common UX issue where users want to skip animation and read full content immediately. The click-to-complete feature provides:
+
+- Faster content consumption for returning visitors
+- Better accessibility for users who prefer static text
+- Maintained visual appeal for first-time visitors who enjoy the animation
+
+**Accessibility Features**:
+
+- Keyboard navigation support (Enter/Space keys)
+- Proper ARIA role assignment
+- Focus management with tabindex
+- Inherits parent font styling for consistency
+
 ### Layout Components
 
 #### TopBar.svelte
@@ -232,6 +389,15 @@ let technicalSkills = $state([
 - Mobile auto-collapse with backdrop blur
 - Active page highlighting
 - Roboto Mono typography
+
+#### RightBar.svelte
+
+- Social links sidebar (Blog/Substack, LinkedIn, GitHub, Resume)
+- Responsive collapsible with mobile auto-collapse
+- SVG icons for each platform (Substack, LinkedIn, GitHub, Resume/Document)
+- Opens external links in new tabs with proper noopener/noreferrer
+- Matches LeftBar styling with Roboto Mono typography
+- No shadow styling for clean integration
 
 #### ThemeToggle.svelte
 
@@ -258,12 +424,13 @@ src/lib/components/
 ├── SkillsCloud.svelte (✅ Working skills display)
 ├── TopBar.svelte (✅ Sticky header)
 ├── LeftBar.svelte (✅ Responsive navigation)
+├── RightBar.svelte (✅ Social links sidebar)
 ├── ThemeToggle.svelte (✅ Theme switching)
 ├── GalleryComponent.svelte (reusable gallery with filtering)
 ├── BlogPost.svelte (blog post preview cards)
 ├── ProjectCard.svelte (project showcase cards)
 ├── ContactForm.svelte (contact form)
-└── TypewriterText.svelte (typewriter animation - disabled)
+└── TypewriterText.svelte (✅ Working interactive typewriter with click-to-complete)
 ```
 
 ### ✅ Internships Page Implementation
@@ -304,7 +471,7 @@ src/lib/components/
 ### Page Creation Pattern
 
 1. **Individual pages contain ONLY their unique content**
-2. **No layout components in page files** (TopBar, LeftBar, ThemeToggle)
+2. **No layout components in page files** (TopBar, LeftBar, RightBar, ThemeToggle)
 3. **Import only content-specific components** from `$lib/components/`
 4. **Use centralized layout from +layout.svelte**
 
@@ -472,7 +639,8 @@ Current z-index layering (IMPORTANT for visual hierarchy):
 
 - TopBar: `z-50` (highest priority)
 - LeftBar: `z-40` (behind TopBar)
-- Mobile toggle button: `z-[60]` (above everything for accessibility)
+- RightBar: `z-40` (same level as LeftBar)
+- Mobile toggle buttons: `z-[60]` (above everything for accessibility)
 - Modal overlays: `z-50` (same level as TopBar)
 
 ### Responsive Navigation Pattern
@@ -670,7 +838,7 @@ import { quintOut } from 'svelte/easing';
 ### Development Priorities
 
 1. Complete layout refactoring for remaining pages (internships, projects)
-2. Re-enable TypewriterText component with proper Tailwind integration
+2. ✅ TypewriterText component with click-to-complete functionality (complete)
 3. Add content and data for all sections
 4. Implement contact form functionality
 5. Optimize performance and accessibility
@@ -1050,11 +1218,243 @@ Start by implementing the basic layout structure that matches the Figma design!
 
 - ✅ `TimelineComponent.svelte` - Professional experience timeline
 - ✅ `SkillsCloud.svelte` - Technical skills with filtering
-- ✅ Layout system with `TopBar`, `LeftBar`, `ThemeToggle`
+- ✅ `TypewriterText.svelte` - Interactive text animation with click-to-complete and session management
+- ✅ `ScrollToNextIndicator.svelte` - Bidirectional scroll-based page navigation system
+- ✅ Layout system with `TopBar`, `LeftBar`, `RightBar`, `ThemeToggle`
+
+### ✅ ScrollToNextIndicator.svelte - Smooth Page Navigation System
+
+**Purpose**: Provides intuitive scroll-based navigation between pages with visual feedback and click shortcuts
+
+**Navigation Store Structure** (`navigation.svelte.js`):
+
+```javascript
+// Navigation items in sequential order
+export const navItems = [
+	{ name: 'Bio', path: '/' },
+	{ name: 'Internships', path: '/internships' },
+	{ name: 'Projects', path: '/projects' },
+	{ name: 'College', path: '/college' },
+	{ name: 'Hobbies', path: '/hobbies' },
+	{ name: 'Blog', path: '/blog' }
+];
+
+// Reactive state using Svelte 5 runes
+let scrollTransitionActive = $state(false);
+let scrollDelta = $state(0);
+let scrollDuration = $state(0);
+```
+
+**useScrollToNext.js Composable Pattern**:
+
+```javascript
+export function useScrollToNext() {
+	// Bidirectional state management
+	let isAtBottom = false;
+	let isAtTop = false;
+	let accumulatedScroll = 0;
+	let accumulatedScrollUp = 0;
+
+	// Tunable behavior constants
+	const TRANSITION_THRESHOLD = 150; // pixels of wheel movement
+	const REQUIRED_SCROLL_DURATION = 500; // milliseconds at boundary
+	const TRANSITION_DURATION = 400; // animation duration
+
+	function handleScroll() {
+		// Accurate boundary detection using document dimensions
+		const { scrollTop } = document.documentElement;
+		const windowHeight = window.innerHeight;
+		const documentHeight = document.documentElement.scrollHeight;
+
+		const isComponentAtBottom = scrollTop + windowHeight >= documentHeight - 10;
+		const isComponentAtTop = scrollTop <= 10;
+		// Boundary state management with proper resets
+	}
+
+	function handleWheel(event) {
+		// Critical: Use wheel events at boundaries where scroll is impossible
+		if (isAtBottom && event.deltaY > 0) {
+			accumulatedScroll += Math.abs(event.deltaY);
+			// Trigger next page after threshold + duration
+		}
+		if (isAtTop && event.deltaY < 0) {
+			accumulatedScrollUp += Math.abs(event.deltaY);
+			// Trigger previous page after threshold + duration
+		}
+	}
+
+	// Dual event listener initialization
+	function initScrollListener() {
+		if (typeof window !== 'undefined') {
+			window.addEventListener('scroll', handleScroll, { passive: true });
+			window.addEventListener('wheel', handleWheel, { passive: true });
+		}
+	}
+}
+```
+
+**Page Implementation Pattern**:
+
+```svelte
+<script>
+	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
+	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
+	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
+
+	// Initialize scroll system
+	const scrollToNext = useScrollToNext();
+	let pageContainer = $state(null);
+
+	// Reactive page name mapping
+	let nextPagePath = $derived($page.url ? getNextPagePath($page.url.pathname) : null);
+	let nextPageName = $derived(() => {
+		if (nextPagePath === '/internships') return 'Internships';
+		if (nextPagePath === '/projects') return 'Projects';
+		// ... other mappings
+		return 'Next Page';
+	});
+
+	onMount(() => {
+		scrollToNext.initScrollListener();
+		return () => scrollToNext.destroyScrollListener();
+	});
+
+	$effect(() => {
+		if (pageContainer) {
+			scrollToNext.containerRef.value = pageContainer;
+		}
+	});
+</script>
+
+<!-- Content with scroll detection -->
+<div bind:this={pageContainer} class="mt-16 space-y-8">
+	<!-- Main page content -->
+	<div class="h-64"></div>
+	<!-- Spacer to enable scrolling -->
+</div>
+
+<!-- Interactive navigation indicator -->
+{#if nextPagePath}
+	<ScrollToNextIndicator nextPageName={nextPageName()} />
+{/if}
+```
+
+**Key Features**:
+
+- **Bidirectional navigation**: Scroll down at bottom → next page, scroll up at top → previous page
+- **Dual interaction modes**: Continue scrolling OR click indicator for instant navigation
+- **Visual progress feedback**: Circular progress indicator with accumulation display
+- **Full accessibility**: Keyboard support (Enter/Space), ARIA roles, focus management
+- **Smart boundary detection**: Uses wheel events when actual scrolling is impossible
+- **Smooth page transitions**: Custom opacity animations with SvelteKit navigation
+
+**Critical Implementation Notes**:
+
+- **Wheel vs Scroll Events**: At page boundaries, browsers prevent scroll movement, so wheel events detect continued scroll intention
+- **Document Height Calculation**: Accurate boundary detection using `(scrollTop + windowHeight) >= (documentHeight - 10)`
+- **State Management**: Proper cleanup and reset when transitioning between boundaries
+- **Performance Optimization**: Debounced events, passive listeners, efficient state updates
+
+### ✅ Enhanced TypewriterText.svelte - Session-Aware Animation
+
+**Purpose**: Smart typewriter animation that shows on new browser sessions but skips on same-session revisits
+
+**Session Storage Pattern**:
+
+```svelte
+<script>
+	let startTypewriter = $state(false);
+	let typewriterCompleted = $state(false);
+
+	onMount(() => {
+		// Check for session-based completion
+		const typewriterShown = browser && sessionStorage.getItem('typewriter-completed');
+
+		if (typewriterShown) {
+			// Already shown this session - instant display
+			typewriterCompleted = true;
+			startTypewriter = false;
+		} else {
+			// New session - trigger animation
+			setTimeout(() => {
+				startTypewriter = true;
+			}, 500);
+		}
+	});
+
+	function handleTypewriterComplete() {
+		typewriterCompleted = true;
+		if (browser) {
+			sessionStorage.setItem('typewriter-completed', 'true');
+		}
+	}
+</script>
+
+<!-- Smart state-based rendering -->
+<div class="text-[24px] leading-relaxed text-black">
+	{#if startTypewriter}
+		<TypewriterText text={aboutText} onComplete={handleTypewriterComplete} />
+	{:else if typewriterCompleted}
+		<p>{aboutText}</p>
+	{:else}
+		<p class="opacity-0">{aboutText}</p>
+	{/if}
+</div>
+```
+
+**Storage Strategy Comparison**:
+
+- **sessionStorage**: Clears on browser close → animation triggers each new visit
+- **localStorage**: Persists indefinitely → animation shows only once ever
+- **User Experience**: sessionStorage balances engagement with performance
+
+**Interaction Features**:
+
+- **Click-to-complete**: Users can click text to instantly finish animation
+- **Session memory**: Skips animation when navigating within same session
+- **Accessibility**: Full keyboard support and proper focus management
+- **State transitions**: Handles all rendering states smoothly
 
 **Data Patterns:**
 
 - Timeline: `{company, position, startDate, endDate, description, skills, achievements, projects}`
 - Skills: `{name, level, category, years}` with levels: expert/advanced/intermediate/beginner
+- Navigation: `{name, path}` with ordered array for bidirectional scroll navigation
 
 This documentation is current as of August 2025 and reflects all debugging lessons learned.
+
+## Advanced Features Implemented (Latest Updates)
+
+### Scroll-Based Page Navigation System
+
+**Core Innovation**: Implemented bidirectional scroll navigation using wheel events at page boundaries where traditional scroll detection fails.
+
+**Technical Achievement**:
+
+- Solved the fundamental problem of detecting "scroll intention" when already at scroll limits
+- Created smooth page transitions that feel native and intuitive
+- Balanced sensitivity (150px + 500ms) for responsive but not accidental triggers
+
+**User Experience Enhancement**:
+
+- Natural navigation flow: scroll down → next page, scroll up → previous page
+- Visual feedback with progress indicators and next page previews
+- Dual interaction: continue scrolling OR click for instant navigation
+- Accessible with keyboard support and proper ARIA implementation
+
+### Session-Aware Typewriter Animation
+
+**Smart Behavior**: Animation triggers on new browser sessions but skips on same-session revisits, providing optimal balance between engagement and performance.
+
+**Implementation Highlight**: Using `sessionStorage` instead of `localStorage` ensures the typewriter effect remains engaging for returning visitors while avoiding repetition within the same browsing session.
+
+### Event Handling Evolution
+
+**Key Learning**: At page boundaries (top/bottom), scroll events stop firing but wheel events continue, making wheel event detection essential for boundary-based interactions.
+
+**Pattern Established**: Always implement both scroll and wheel listeners for comprehensive scroll-based functionality:
+
+- `scroll` events for position tracking and boundary detection
+- `wheel` events for continued interaction at scroll limits
+
+This represents significant advancement in modern web navigation patterns and demonstrates sophisticated understanding of browser scroll behavior.
