@@ -2,7 +2,7 @@
 	import { fade, scale } from 'svelte/transition';
 
 	// Props using Svelte 5 destructuring syntax
-	let { title, description, tech = [], demoUrl = null, githubUrl = null, index = 0 } = $props();
+	let { title, description, tech = [], demoUrl = null, githubUrl = null, index = 0, projectId = null } = $props();
 
 	// Svelte 5 runes for reactive state
 	let isHovered = $state(false);
@@ -12,6 +12,7 @@
 	// Derived values using Svelte 5 $derived
 	let animationDelay = $derived(index * 100);
 	let hasLinks = $derived(demoUrl || githubUrl);
+	let hasAnyActions = $derived(demoUrl || githubUrl || projectId);
 	let cardClasses = $derived(`
 		bg-white border border-gray-300 rounded-lg transition-all duration-300 hover:shadow-lg
 		${isHovered ? 'transform hover:-translate-y-1' : ''}
@@ -49,6 +50,15 @@
 			window.open(url, '_blank', 'noopener,noreferrer');
 		}
 	}
+
+	function scrollToStory() {
+		if (projectId) {
+			const element = document.getElementById(`story-${projectId}`);
+			if (element) {
+				element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		}
+	}
 </script>
 
 {#if isVisible}
@@ -83,11 +93,11 @@
 				</div>
 			{/if}
 
-			{#if hasLinks}
-				<div class="flex gap-3 pt-2">
+			{#if hasAnyActions}
+				<div class="flex gap-2 pt-2 flex-wrap">
 					{#if demoUrl}
 						<button
-							class="font-condensed rounded-lg bg-black px-4 py-2 text-[16px] text-white transition-colors duration-200 hover:bg-gray-800"
+							class="font-condensed rounded-lg bg-black px-3 py-2 text-[14px] text-white transition-colors duration-200 hover:bg-gray-800 flex-shrink-0"
 							onclick={() => openLink(demoUrl)}
 						>
 							Live Demo →
@@ -96,10 +106,19 @@
 
 					{#if githubUrl}
 						<button
-							class="font-condensed rounded-lg border border-gray-300 px-4 py-2 text-[16px] text-black transition-colors duration-200 hover:bg-gray-50"
+							class="font-condensed rounded-lg border border-gray-300 px-3 py-2 text-[14px] text-black transition-colors duration-200 hover:bg-gray-50 flex-shrink-0"
 							onclick={() => openLink(githubUrl)}
 						>
 							GitHub
+						</button>
+					{/if}
+
+					{#if projectId}
+						<button
+							class="font-condensed rounded-lg border border-gray-300 px-3 py-2 text-[14px] text-black transition-colors duration-200 hover:bg-gray-50 flex-shrink-0"
+							onclick={scrollToStory}
+						>
+							Learn More ↓
 						</button>
 					{/if}
 				</div>

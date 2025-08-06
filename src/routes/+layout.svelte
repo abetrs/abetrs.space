@@ -3,7 +3,6 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import TopBar from '$lib/components/TopBar.svelte';
 	import LeftBar from '$lib/components/LeftBar.svelte';
-	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 
 	let { children } = $props();
 </script>
@@ -18,9 +17,6 @@
 
 	<!-- Left Navigation Bar -->
 	<LeftBar />
-
-	<!-- Theme Toggle -->
-	<ThemeToggle position="top-right" />
 
 	<!-- Main Content with responsive left margin -->
 	<main class="ml-0 flex flex-col items-center justify-center px-4 py-8 lg:ml-[150px]">

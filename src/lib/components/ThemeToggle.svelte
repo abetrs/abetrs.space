@@ -29,11 +29,11 @@
 			case 'top-left':
 				return 'fixed top-4 left-4';
 			case 'top-right':
-				return 'fixed top-4 right-4';
+				return 'fixed top-[30px] right-[30px]';
 			case 'bottom-right':
 				return 'fixed bottom-4 right-4';
 			default:
-				return 'fixed top-4 right-4';
+				return 'fixed top-[30px] right-[30px]';
 		}
 	});
 
@@ -56,7 +56,7 @@
 </script>
 
 <button
-	class="{positionClasses} z-[70] rounded-lg border border-gray-300 bg-white p-2 shadow-md transition-all duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700
+	class="{positionClasses} z-[80] rounded-lg border border-gray-300 bg-white p-2 shadow-md transition-all duration-200 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700
 		{isToggling ? 'scale-95' : 'scale-100'}"
 	onclick={handleToggle}
 	onkeydown={handleKeyDown}

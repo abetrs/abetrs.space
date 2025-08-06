@@ -110,64 +110,6 @@
 				3D modeling—each offering unique perspectives on design and storytelling.
 			</p>
 
-			<!-- Placeholder content for hobbies -->
-			<div class="grid grid-cols-1 gap-8 text-left md:grid-cols-2">
-				<div class="rounded-lg bg-white p-6 shadow-sm">
-					<h3 class="mb-4 text-[28px] font-semibold">🎵 Music</h3>
-					<p class="mb-4 text-[18px] text-gray-700">
-						Curating playlists and exploring diverse genres. Active on Spotify and SoundCloud,
-						sharing musical discoveries and creating themed collections.
-					</p>
-					<div class="text-[16px] text-gray-600">Platforms: Spotify, SoundCloud</div>
-				</div>
-
-				<div class="rounded-lg bg-white p-6 shadow-sm">
-					<h3 class="mb-4 text-[28px] font-semibold">📸 Photography</h3>
-					<p class="mb-4 text-[18px] text-gray-700">
-						Capturing moments from travels and daily life. Building a portfolio of landscape,
-						street, and portrait photography from various trips and experiences.
-					</p>
-					<div class="text-[16px] text-gray-600">Focus: Travel, Street, Portrait</div>
-				</div>
-
-				<div class="rounded-lg bg-white p-6 shadow-sm">
-					<h3 class="mb-4 text-[28px] font-semibold">🎬 Film</h3>
-					<p class="mb-4 text-[18px] text-gray-700">
-						Passionate about cinematography and storytelling. Creating video content and
-						exploring different filming techniques and narrative structures.
-					</p>
-					<div class="text-[16px] text-gray-600">Interest: Cinematography, Storytelling</div>
-				</div>
-
-				<div class="rounded-lg bg-white p-6 shadow-sm">
-					<h3 class="mb-4 text-[28px] font-semibold">🎨 3D Modeling</h3>
-					<p class="mb-4 text-[18px] text-gray-700">
-						Creating digital art and 3D environments. Experimenting with modeling software to
-						bring creative concepts to life in virtual space.
-					</p>
-					<div class="text-[16px] text-gray-600">Tools: Blender, Maya</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="min-h-screen bg-gray-50">
-
-	<!-- Main Content with responsive left margin -->
-	<div class="ml-0 flex flex-col items-center justify-start px-4 py-8 lg:ml-[200px]">
-		<!-- Content Area -->
-		<div class="w-full max-w-[1000px]">
-			<div class="mb-12 text-center">
-				<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
-					Hobbies
-				</h1>
-				<p class="font-condensed text-[24px] leading-relaxed text-black">
-					Beyond coding and academics, I explore creativity through music, photography, film, and
-					3D modeling—each offering unique perspectives on design and storytelling.
-				</p>
-			</div>
-			
 			<!-- Enhanced Gallery Component -->
 			<GalleryComponent 
 				items={hobbyItems}
@@ -177,9 +119,7 @@
 			/>
 		</div>
 	</div>
-</div>
-
-<style>
+</div><style>
 	/* Use Roboto Condensed as Arial Narrow substitute */
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 

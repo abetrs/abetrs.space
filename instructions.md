@@ -33,17 +33,15 @@ Based on recent debugging, follow these patterns to avoid component rendering is
 ```javascript
 // ❌ AVOID: Function wrapper in $derived can cause reactivity issues
 let sortedData = $derived(() => {
-    return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+	return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
 });
 
 // ✅ PREFERRED: Direct expression in $derived
-let sortedData = $derived(
-    [...items].sort((a, b) => new Date(b.date) - new Date(a.date))
-);
+let sortedData = $derived([...items].sort((a, b) => new Date(b.date) - new Date(a.date)));
 
 // ✅ ALTERNATIVE: Regular function for complex logic
 function getSortedData(items) {
-    return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
+	return [...items].sort((a, b) => new Date(b.date) - new Date(a.date));
 }
 // Use in template: {#each getSortedData(items) as item}
 ```
@@ -88,48 +86,47 @@ $effect(() => {
 ```javascript
 // ❌ PROBLEMATIC: Nested derived values with complex dependencies
 let categories = $derived(() => {
-    const cats = new Set(skills.map(skill => skill.category));
-    return ['all', ...Array.from(cats)];
+	const cats = new Set(skills.map((skill) => skill.category));
+	return ['all', ...Array.from(cats)];
 });
 
 let filteredSkills = $derived(() => {
-    if (selectedCategory === 'all') return skills;
-    return skills.filter(skill => skill.category === selectedCategory);
+	if (selectedCategory === 'all') return skills;
+	return skills.filter((skill) => skill.category === selectedCategory);
 });
 
 let skillsByLevel = $derived(() => {
-    const grouped = {};
-    filteredSkills.forEach(skill => {
-        if (!grouped[skill.level]) grouped[skill.level] = [];
-        grouped[skill.level].push(skill);
-    });
-    return grouped;
+	const grouped = {};
+	filteredSkills.forEach((skill) => {
+		if (!grouped[skill.level]) grouped[skill.level] = [];
+		grouped[skill.level].push(skill);
+	});
+	return grouped;
 });
 
 // ✅ SOLUTION: Mix simple derived with functions for complex logic
-let categories = $derived([
-    'all', 
-    ...Array.from(new Set(skills.map(skill => skill.category)))
-]);
+let categories = $derived(['all', ...Array.from(new Set(skills.map((skill) => skill.category)))]);
 
 let filteredSkills = $derived(
-    selectedCategory === 'all' ? skills : skills.filter(skill => skill.category === selectedCategory)
+	selectedCategory === 'all'
+		? skills
+		: skills.filter((skill) => skill.category === selectedCategory)
 );
 
 // For complex grouping, use a function
 function getSkillsByLevel(skills) {
-    const grouped = {};
-    if (skills && Array.isArray(skills)) {
-        for (const skill of skills) {
-            if (skill && skill.level) {
-                if (!grouped[skill.level]) {
-                    grouped[skill.level] = [];
-                }
-                grouped[skill.level].push(skill);
-            }
-        }
-    }
-    return grouped;
+	const grouped = {};
+	if (skills && Array.isArray(skills)) {
+		for (const skill of skills) {
+			if (skill && skill.level) {
+				if (!grouped[skill.level]) {
+					grouped[skill.level] = [];
+				}
+				grouped[skill.level].push(skill);
+			}
+		}
+	}
+	return grouped;
 }
 
 // Use in template: {#each Object.entries(getSkillsByLevel(filteredSkills)) as [level, levelSkills]}
@@ -142,31 +139,31 @@ function getSkillsByLevel(skills) {
 **Purpose**: Displays internship experience with interactive expandable details
 
 **Data Structure Required**:
+
 ```javascript
 let experiences = $state([
-    {
-        company: 'Company Name',
-        position: 'Job Title',
-        startDate: '2024-06-01', // YYYY-MM-DD format
-        endDate: '2024-08-15',
-        current: false,
-        description: 'Brief job description...',
-        skills: ['React', 'Node.js', 'AWS'], // Array of skill strings
-        achievements: ['Achievement 1', 'Achievement 2'], // Optional array
-        projects: ['Project 1', 'Project 2'] // Optional array
-    }
+	{
+		company: 'Company Name',
+		position: 'Job Title',
+		startDate: '2024-06-01', // YYYY-MM-DD format
+		endDate: '2024-08-15',
+		current: false,
+		description: 'Brief job description...',
+		skills: ['React', 'Node.js', 'AWS'], // Array of skill strings
+		achievements: ['Achievement 1', 'Achievement 2'], // Optional array
+		projects: ['Project 1', 'Project 2'] // Optional array
+	}
 ]);
 ```
 
 **Usage Pattern**:
+
 ```svelte
-<TimelineComponent 
-    {experiences}
-    title="Professional Experience"
-/>
+<TimelineComponent {experiences} title="Professional Experience" />
 ```
 
 **Key Features**:
+
 - Chronological sorting by start date (newest first)
 - Expandable cards with achievements and projects
 - Duration calculation and formatting
@@ -174,6 +171,7 @@ let experiences = $state([
 - Skills tags display
 
 **Critical Implementation Notes**:
+
 - Uses direct `$derived` for sorting: `$derived([...experiences].sort(...))`
 - Always renders content (no conditional rendering)
 - IntersectionObserver used only for animations, not content visibility
@@ -183,27 +181,26 @@ let experiences = $state([
 **Purpose**: Interactive skills showcase with category filtering and level grouping
 
 **Data Structure Required**:
+
 ```javascript
 let technicalSkills = $state([
-    { 
-        name: 'React', 
-        level: 'expert', // 'expert', 'advanced', 'intermediate', 'beginner'
-        category: 'frontend', // 'frontend', 'backend', 'cloud', 'tools'
-        years: 3 // Optional: experience years
-    }
+	{
+		name: 'React',
+		level: 'expert', // 'expert', 'advanced', 'intermediate', 'beginner'
+		category: 'frontend', // 'frontend', 'backend', 'cloud', 'tools'
+		years: 3 // Optional: experience years
+	}
 ]);
 ```
 
 **Usage Pattern**:
+
 ```svelte
-<SkillsCloud 
-    skills={technicalSkills}
-    title="Technical Skills"
-    animated={true}
-/>
+<SkillsCloud skills={technicalSkills} title="Technical Skills" animated={true} />
 ```
 
 **Key Features**:
+
 - Category filtering with buttons (All, Frontend, Backend, Cloud, Tools)
 - Skill level grouping with color coding:
   - Expert: Green (`bg-green-100 text-green-800`)
@@ -215,6 +212,7 @@ let technicalSkills = $state([
 - Responsive sizing based on skill level
 
 **Critical Implementation Notes**:
+
 - Uses function `getSkillsByLevel()` instead of `$derived` for complex grouping
 - Category filtering uses simple `$derived` expression
 - No conditional rendering - always shows content
@@ -223,48 +221,185 @@ let technicalSkills = $state([
 ### Layout Components
 
 #### TopBar.svelte
+
 - Sticky header with name and barcode element
 - Height: 100px, positioned at `top-0 z-50`
 - Typography: Roboto Condensed + Libre Barcode 128
 
-#### LeftBar.svelte  
+#### LeftBar.svelte
+
 - Responsive collapsible navigation
 - Mobile auto-collapse with backdrop blur
 - Active page highlighting
 - Roboto Mono typography
 
 #### ThemeToggle.svelte
+
 - Theme switching functionality
 - Positioned top-right corner
 - SSR-safe theme management
 
-### Current File Structure
+## Current Page Structure
+
+### File Organization
 
 ```
 src/routes/
-├── +layout.svelte (ALL shared components and layout)
-├── +page.svelte (home: profile image + about section only)
-├── hobbies/+page.svelte (hobbies content grid only)
-├── blog/+page.svelte (blog posts and content only)
-├── college/+page.svelte (college information only)
-├── internships/+page.svelte (timeline + skills components)
-└── projects/+page.svelte (project cards and content)
+├── +layout.svelte (ALL shared components and centralized layout)
+├── +page.svelte (Bio: profile image + about section)
+├── internships/+page.svelte (✅ Timeline + Skills components)
+├── projects/+page.svelte (project showcase cards)
+├── college/+page.svelte (William & Mary details)
+├── hobbies/+page.svelte (creative pursuits gallery)
+└── blog/+page.svelte (Substack integration)
 
 src/lib/components/
-├── TopBar.svelte (header with name/barcode)
-├── LeftBar.svelte (responsive navigation sidebar)
-├── ThemeToggle.svelte (theme switcher)
+├── TimelineComponent.svelte (✅ Working internship timeline)
+├── SkillsCloud.svelte (✅ Working skills display)
+├── TopBar.svelte (✅ Sticky header)
+├── LeftBar.svelte (✅ Responsive navigation)
+├── ThemeToggle.svelte (✅ Theme switching)
 ├── GalleryComponent.svelte (reusable gallery with filtering)
 ├── BlogPost.svelte (blog post preview cards)
-├── TimelineComponent.svelte (internship timeline)
-├── SkillsCloud.svelte (animated skills display)
 ├── ProjectCard.svelte (project showcase cards)
-├── ContactForm.svelte (contact form component)
-└── TypewriterText.svelte (typewriter animation - currently disabled)
-
-src/lib/stores/
-└── theme.svelte.js (theme management with SSR-safe patterns)
+├── ContactForm.svelte (contact form)
+└── TypewriterText.svelte (typewriter animation - disabled)
 ```
+
+### ✅ Internships Page Implementation
+
+**Complete and working** - serves as the reference implementation for other pages:
+
+```svelte
+<script>
+    import TimelineComponent from '$lib/components/TimelineComponent.svelte';
+    import SkillsCloud from '$lib/components/SkillsCloud.svelte';
+
+    // Experience data using Svelte 5 runes
+    let experiences = $state([...]);
+    let technicalSkills = $state([...]);
+</script>
+
+<!-- Content Area - No layout components, just content -->
+<div class="w-full max-w-[900px] space-y-12">
+	<div class="text-center">
+		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
+			Internships
+		</h1>
+		<p class="font-condensed mb-12 text-[24px] leading-relaxed text-black">
+			Professional journey description...
+		</p>
+	</div>
+
+	<TimelineComponent {experiences} title="Professional Experience" />
+
+	<div class="mt-16">
+		<SkillsCloud skills={technicalSkills} title="Technical Skills" animated={true} />
+	</div>
+</div>
+```
+
+## Development Guidelines
+
+### Page Creation Pattern
+
+1. **Individual pages contain ONLY their unique content**
+2. **No layout components in page files** (TopBar, LeftBar, ThemeToggle)
+3. **Import only content-specific components** from `$lib/components/`
+4. **Use centralized layout from +layout.svelte**
+
+### Svelte 5 Best Practices
+
+1. **Start components as visible**: `let isVisible = $state(true)`
+2. **Use simple $derived for straightforward transformations**
+3. **Use functions for complex data grouping instead of nested $derived**
+4. **Always include browser checks for DOM APIs**
+5. **Avoid conditional rendering that blocks initial content display**
+
+### Component Creation Checklist
+
+- [ ] Browser API usage wrapped in `typeof window !== 'undefined'` checks
+- [ ] State initialized to show content immediately (`$state(true)`)
+- [ ] Complex data transformations use functions, not $derived
+- [ ] IntersectionObserver used for animations only, not content visibility
+- [ ] Typography follows established font system (Roboto Condensed/Mono)
+- [ ] Responsive design with mobile-first approach
+- [ ] Accessibility features (ARIA labels, keyboard navigation)
+
+### Debugging Approach
+
+When components don't render content:
+
+1. **Check initial state values** - ensure visibility starts as `true`
+2. **Verify $derived expressions** - use simple expressions, not complex functions
+3. **Test data flow** - add temporary debug output to verify props/data
+4. **Check conditional rendering** - avoid `{#if}` blocks that prevent initial display
+5. **Use browser dev tools** - inspect for empty arrays/objects in derived values
+
+### Typography System
+
+- **Headings**: Roboto Condensed with tracking adjustments
+- **Body text**: System font stack or Roboto Condensed for consistency
+- **Technical elements**: Roboto Mono for labels, buttons, code-like text
+- **Import in component styles**: Load fonts per-component for better control
+
+### Color and Layout Standards
+
+- **Background**: `bg-gray-50` site-wide
+- **Text**: `text-black` for primary content
+- **Hover states**: Subtle gray transitions
+- **Spacing**: Generous whitespace with consistent gap/margin patterns
+- **Max width**: `max-w-[900px]` for content areas
+- **Z-index hierarchy**: TopBar (50) > LeftBar (40) > Content (default)
+
+## Content Implementation Priorities
+
+### ✅ Completed
+
+- [x] Timeline component with professional experience data
+- [x] Skills cloud with technical skills categorization
+- [x] Responsive navigation and layout system
+- [x] SSR-safe browser API handling
+- [x] Svelte 5 runes implementation patterns
+
+### 🔄 Next Steps
+
+- [ ] Projects page with ProjectCard components
+- [ ] College page with academic timeline
+- [ ] Hobbies page with GalleryComponent
+- [ ] Blog page with Substack integration
+- [ ] Contact form implementation
+- [ ] Performance optimization and deployment
+
+## How to Prompt Copilot (Updated)
+
+### For New Components
+
+```
+"Create a [component name] following the working TimelineComponent pattern with:
+- State starting as visible ($state(true))
+- Simple $derived expressions
+- Functions for complex data grouping
+- No conditional rendering blocking initial display"
+```
+
+### For Page Implementation
+
+```
+"Build [page name] following the internships page pattern:
+- Import only content-specific components
+- No layout components (TopBar/LeftBar already in +layout)
+- Content wrapper with max-w-[900px]
+- Roboto Condensed typography"
+```
+
+### For Data Structures
+
+```
+"Design data structure for [component] following the established patterns in TimelineComponent and SkillsCloud with proper typing and required/optional fields"
+```
+
+This updated documentation reflects all learnings from debugging the timeline and skills components, providing a reliable foundation for future development.
 
 ## SSR-Safe Development Patterns (CRITICAL)
 
@@ -898,3 +1033,28 @@ onMount(() => {
 - Test responsive design across devices during development
 
 Start by implementing the basic layout structure that matches the Figma design!
+
+---
+
+## Summary of Key Learnings (August 2025)
+
+**Critical Svelte 5 Patterns for Component Rendering:**
+
+1. **Always start components visible**: `let isVisible = $state(true)` prevents blank screens
+2. **Use simple $derived expressions**: Complex callback functions can break reactivity
+3. **Use regular functions for complex data grouping**: More reliable than nested $derived
+4. **Never block initial rendering with conditional logic**: IntersectionObserver for animations only
+5. **Browser APIs must be wrapped**: `typeof window !== 'undefined'` checks essential
+
+**Working Component Examples:**
+
+- ✅ `TimelineComponent.svelte` - Professional experience timeline
+- ✅ `SkillsCloud.svelte` - Technical skills with filtering
+- ✅ Layout system with `TopBar`, `LeftBar`, `ThemeToggle`
+
+**Data Patterns:**
+
+- Timeline: `{company, position, startDate, endDate, description, skills, achievements, projects}`
+- Skills: `{name, level, category, years}` with levels: expert/advanced/intermediate/beginner
+
+This documentation is current as of August 2025 and reflects all debugging lessons learned.
