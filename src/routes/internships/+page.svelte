@@ -38,88 +38,137 @@
 		}
 	});
 
-	// Experience data using Svelte 5 runes
+	// Experience data using Svelte 5 runes - Based on actual resume
 	let experiences = $state([
 		{
-			company: 'Deloitte',
-			position: 'Technology Consulting Intern',
-			startDate: '2024-06-01',
-			endDate: '2024-08-15',
-			current: false,
-			description: 'Led digital transformation initiatives for Fortune 500 clients, focusing on enterprise software solutions and process automation.',
-			skills: ['React', 'Node.js', 'AWS', 'Agile', 'Client Relations'],
-			achievements: [
-				'Developed automated reporting dashboard that reduced manual work by 60%',
-				'Led client presentations to C-suite executives',
-				'Implemented CI/CD pipeline improving deployment efficiency by 40%'
-			],
-			projects: [
-				'Enterprise Resource Planning (ERP) system modernization',
-				'Cloud migration strategy for retail client',
-				'Business process automation suite'
-			]
-		},
-		{
 			company: 'Black Pearl Global Investments',
-			position: 'Data Analysis & Investment Research Intern',
-			startDate: '2023-06-01',
-			endDate: '2023-08-15',
+			position: 'Venture Capital Intern',
+			startDate: '2025-06-01',
+			endDate: '2025-08-31',
 			current: false,
-			description: 'Conducted quantitative analysis of investment portfolios and developed algorithmic trading models for emerging markets.',
-			skills: ['Python', 'SQL', 'Tableau', 'Financial Modeling', 'Statistical Analysis'],
+			description: 'Scaled deal flow and shaped investment strategy for a venture capital firm, focusing on integrating AI into the VC lifecycle and developing strategic partnerships.',
+			skills: ['LLM Engineering', 'Due Diligence', 'Strategic Planning', 'AI/ML', 'Investment Analysis', 'Partnership Development'],
 			achievements: [
-				'Built predictive model with 85% accuracy for market trend analysis',
-				'Streamlined data collection process reducing analysis time by 50%',
-				'Created comprehensive market research reports for investment committee'
+				'Scaled up deal flow by sourcing a network of 15+ strategic ecosystem partners and 30+ prospective limited partners',
+				'Authored the firm\'s strategic roadmap for integrating Generative and Agentic AI into the VC lifecycle',
+				'Engineered a proof-of-concept LLM-based tool to automate due diligence, reducing initial screening time by an estimated 40%',
+				'Co-authored a $10M fund thesis with explicit entry & kill signals, shortening IC prep by 25% and improving go/no-go clarity'
 			],
 			projects: [
-				'Emerging markets risk assessment framework',
-				'Automated portfolio rebalancing algorithm',
-				'ESG investment scoring system'
+				'LLM-based due diligence automation tool',
+				'AI integration strategic roadmap for VC operations',
+				'$10M fund thesis development with decision frameworks'
 			]
 		},
 		{
-			company: 'TCS (Tata Consultancy Services)',
-			position: 'Full-Stack Development Intern',
-			startDate: '2022-06-01',
-			endDate: '2022-08-15',
+			company: 'Deloitte',
+			position: 'Product Strategy Intern',
+			startDate: '2025-01-01',
+			endDate: '2025-01-31',
 			current: false,
-			description: 'Developed end-to-end web applications using modern frameworks and collaborated with cross-functional teams on enterprise solutions.',
-			skills: ['Java', 'Spring Boot', 'Angular', 'MySQL', 'REST APIs'],
+			description: 'Converted market research into actionable product strategies, focusing on post-pandemic demand signals and stakeholder alignment for new product opportunities.',
+			skills: ['Product Strategy', 'Market Research', 'Stakeholder Management', 'Product Roadmapping', 'Strategic Analysis'],
 			achievements: [
-				'Delivered customer portal used by 10,000+ users',
-				'Optimized database queries improving response time by 30%',
-				'Received "Outstanding Intern" recognition'
+				'Converted post-pandemic demand signals into 3 product opportunity briefs with must-test assumptions',
+				'Secured stakeholder alignment in one workshop and green-lighted pilots',
+				'Translated research findings into actionable product strategies for SMEs and industry leaders',
+				'Standardized the decision pack (market sizing, comps, risks), reducing review cycles across SME groups'
 			],
 			projects: [
-				'Customer relationship management system',
-				'Inventory management dashboard',
-				'Employee onboarding automation platform'
+				'Product opportunity brief development',
+				'Decision pack standardization framework'
+			]
+		},
+		{
+			company: 'Tata Consultancy Services',
+			position: 'UX Design Intern',
+			startDate: '2024-05-01',
+			endDate: '2024-08-31',
+			current: false,
+			description: 'Led end-to-end UX design for lithium-ion battery supply chain solutions, conducting user research and developing design systems for enterprise IT solutions.',
+			skills: ['UX Design', 'User Research', 'Figma', 'Design Systems', 'Supply Chain Analysis', 'Technical Writing'],
+			achievements: [
+				'Conducted user and market research on the lithium-ion battery supply chain to define problem statements',
+				'Led end-to-end design, documented design-system components that cut time-to-spec by 25%',
+				'Turned supply-chain interviews into a Figma prototype with compliance acceptance criteria, enabling CTO sign-off',
+				'Authored and presented a white paper on design rationale, successfully advocating for the proposed solution to the CTO',
+				'Reduced rework by 30% in early engineering cycles through improved design handoff'
+			],
+			projects: [
+				'Lithium-ion battery supply chain UX solution',
+				'Design system component library',
+				'CTO-approved Figma prototype with compliance criteria',
+				'Supply chain research white paper'
 			]
 		}
 	]);
 
-	// Technical skills data
+	// Technical skills data - Based on actual resume
 	let technicalSkills = $state([
-		// Frontend
-		{ name: 'React', level: 'expert', category: 'frontend', years: 3 },
-		{ name: 'Svelte', level: 'advanced', category: 'frontend', years: 2 },
-		{ name: 'TypeScript', level: 'advanced', category: 'frontend', years: 2 },
+		// Programming Languages
+		{ name: 'Python', level: 'expert', category: 'languages', years: 4 },
+		{ name: 'Java', level: 'advanced', category: 'languages', years: 3 },
+		{ name: 'JavaScript', level: 'advanced', category: 'languages', years: 3 },
+		{ name: 'R', level: 'advanced', category: 'languages', years: 2 },
+		{ name: 'SQL', level: 'advanced', category: 'languages', years: 3 },
+		{ name: 'Go', level: 'intermediate', category: 'languages', years: 1 },
+		{ name: 'C', level: 'intermediate', category: 'languages', years: 2 },
+		{ name: 'C++', level: 'intermediate', category: 'languages', years: 2 },
+		{ name: 'C#', level: 'intermediate', category: 'languages', years: 1 },
+		{ name: 'Rust', level: 'beginner', category: 'languages', years: 1 },
+		
+		// Frontend Development
+		{ name: 'React', level: 'advanced', category: 'frontend', years: 2 },
+		{ name: 'Next.js', level: 'advanced', category: 'frontend', years: 2 },
+		{ name: 'Nuxt.js', level: 'intermediate', category: 'frontend', years: 1 },
+		{ name: 'Svelte', level: 'advanced', category: 'frontend', years: 1 },
+		{ name: 'Astro', level: 'intermediate', category: 'frontend', years: 1 },
 		{ name: 'Tailwind CSS', level: 'expert', category: 'frontend', years: 2 },
-		{ name: 'Angular', level: 'intermediate', category: 'frontend', years: 1 },
 		
-		// Backend
-		{ name: 'Node.js', level: 'expert', category: 'backend', years: 3 },
-		{ name: 'Python', level: 'expert', category: 'backend', years: 4 },
-		{ name: 'Java', level: 'advanced', category: 'backend', years: 2 },
-		{ name: 'SQL', level: 'advanced', category: 'backend', years: 3 },
-		{ name: 'MongoDB', level: 'intermediate', category: 'backend', years: 2 },
+		// Backend & Full-Stack
+		{ name: 'Phoenix/Elixir', level: 'intermediate', category: 'backend', years: 1 },
+		{ name: 'Firebase', level: 'intermediate', category: 'backend', years: 1 },
 		
-		// Cloud & Tools
-		{ name: 'AWS', level: 'advanced', category: 'cloud', years: 2 },
-		{ name: 'Docker', level: 'intermediate', category: 'cloud', years: 1 },
+		// Databases
+		{ name: 'MongoDB', level: 'advanced', category: 'database', years: 2 },
+		{ name: 'PostgreSQL', level: 'advanced', category: 'database', years: 2 },
+		{ name: 'SQL', level: 'expert', category: 'database', years: 3 },
+		
+		// Product & Design
+		{ name: 'Figma', level: 'expert', category: 'design', years: 2 },
+		{ name: 'Framer', level: 'advanced', category: 'design', years: 1 },
+		{ name: 'Storybook', level: 'intermediate', category: 'design', years: 1 },
+		{ name: 'User Research', level: 'advanced', category: 'design', years: 2 },
+		{ name: 'Product Design', level: 'advanced', category: 'design', years: 2 },
+		{ name: 'Design Thinking', level: 'advanced', category: 'design', years: 2 },
+		
+		// AI & ML
+		{ name: 'LLMs', level: 'advanced', category: 'ai', years: 2 },
+		{ name: 'Agentic AI', level: 'advanced', category: 'ai', years: 1 },
+		{ name: 'Prompt Engineering', level: 'expert', category: 'ai', years: 2 },
+		{ name: 'Claude Code', level: 'advanced', category: 'ai', years: 1 },
+		{ name: 'GitHub Copilot', level: 'expert', category: 'ai', years: 2 },
+		{ name: 'Gemini CLI', level: 'intermediate', category: 'ai', years: 1 },
+		
+		// Development Tools
 		{ name: 'Git', level: 'expert', category: 'tools', years: 4 },
-		{ name: 'Figma', level: 'advanced', category: 'tools', years: 2 }
+		{ name: 'Unix/PowerShell', level: 'advanced', category: 'tools', years: 3 },
+		{ name: 'CLI', level: 'expert', category: 'tools', years: 3 },
+		{ name: 'Blender', level: 'intermediate', category: 'tools', years: 1 },
+		{ name: 'LaTeX', level: 'advanced', category: 'tools', years: 3 },
+		
+		// Product Management
+		{ name: 'Agile Project Management', level: 'advanced', category: 'product', years: 2 },
+		{ name: 'Statistical Analysis', level: 'advanced', category: 'product', years: 3 },
+		{ name: 'Strategic Planning', level: 'advanced', category: 'product', years: 2 },
+		{ name: 'Market Research', level: 'advanced', category: 'product', years: 2 },
+		{ name: 'Due Diligence', level: 'advanced', category: 'product', years: 1 },
+		
+		// Languages
+		{ name: 'English', level: 'expert', category: 'languages', years: 20 },
+		{ name: 'Hindi', level: 'expert', category: 'languages', years: 20 },
+		{ name: 'Maithili', level: 'expert', category: 'languages', years: 20 },
+		{ name: 'French', level: 'intermediate', category: 'languages', years: 3 }
 	]);
 </script>
 
@@ -130,8 +179,8 @@
 			Internships
 		</h1>
 		<p class="font-condensed mb-12 text-[24px] leading-relaxed text-black">
-			My professional journey through internships at leading companies, gaining experience in
-			tech consulting, data analysis, and full-stack development.
+			My professional journey through internships at leading companies, gaining hands-on experience in
+			venture capital, product strategy, and UX design while building AI-powered solutions and leading product initiatives.
 		</p>
 	</div>
 	

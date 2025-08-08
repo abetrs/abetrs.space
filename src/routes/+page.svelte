@@ -7,6 +7,7 @@
 	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
 	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
 	import { page } from '$app/stores';
+	import frontpageProfile from '$lib/assets/frontpageimage.jpg';
 
 	// Svelte 5 state for profile visibility
 	let profileVisible = $state(false);
@@ -83,16 +84,12 @@
 		"I'm Abhayprad Jha, a Computer Science student at William & Mary (Class of 2026), blending my passion for building products and design a fascination with modelling the world around me. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.";
 </script>
 
-<!-- Oval Profile Image Placeholder -->
+<!-- Oval Profile Image Placeholder replaced with actual image -->
 <div
 	bind:this={profileRef}
 	class="mb-8 flex h-[300px] w-[501px] items-center justify-center overflow-hidden rounded-full bg-gray-300 transition-all duration-700 hover:shadow-lg"
 >
-	<div class="text-center text-lg font-medium text-gray-600">
-		<div class="mb-2 text-4xl">📷</div>
-		<div>Profile Image</div>
-		<div class="text-sm">Placeholder</div>
-	</div>
+	<img src={frontpageProfile} alt="Abhayprad Jha profile photo" class="h-full w-full object-cover" />
 </div>
 
 <!-- About Me Section -->
