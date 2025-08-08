@@ -1,6 +1,7 @@
 <script>
 	import { scale, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+	import { onMount } from 'svelte';
 
 	// Props with Svelte 5 destructuring
 	let { 
@@ -14,6 +15,7 @@
 	let hoveredSkill = $state(null);
 	let selectedCategory = $state('all');
 	let containerRef = $state(null);
+	let visibleSkills = $state(new Set());
 
 	// Derived values using simpler approach
 	let categories = $derived([
@@ -53,6 +55,53 @@
 
 			observer.observe(containerRef);
 			return () => observer.disconnect();
+		}
+	});
+
+	// Effect for individual skill animations
+	onMount(() => {
+		if (typeof window !== 'undefined' && animated) {
+			const skillObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const skillIndex = entry.target.dataset.skillIndex;
+							if (skillIndex) {
+								visibleSkills = new Set([...visibleSkills, skillIndex]);
+							}
+						}
+					});
+				},
+				{ 
+					threshold: 0.1,
+					rootMargin: '50px 0px -50px 0px'
+				}
+			);
+
+			// Observe all skill chips after a short delay
+			setTimeout(() => {
+				const skillChips = document.querySelectorAll('[data-skill-index]');
+				skillChips.forEach(chip => skillObserver.observe(chip));
+			}, 100);
+
+			return () => skillObserver.disconnect();
+		}
+	});
+
+	// Reset visible skills when category changes
+	$effect(() => {
+		if (selectedCategory) {
+			visibleSkills = new Set();
+			// Re-trigger animations for new category
+			setTimeout(() => {
+				const skillChips = document.querySelectorAll('[data-skill-index]');
+				skillChips.forEach(chip => {
+					const skillIndex = chip.dataset.skillIndex;
+					if (skillIndex) {
+						visibleSkills = new Set([...visibleSkills, skillIndex]);
+					}
+				});
+			}, 50);
 		}
 	});
 
@@ -107,10 +156,14 @@
 						</h4>
 						<div class="flex flex-wrap gap-3">
 							{#each levelSkills as skill, skillIndex}
+								{@const globalSkillIndex = `${level}-${skillIndex}`}
 								<div
-									class="border rounded-lg transition-all duration-200 cursor-pointer
+									class="border rounded-lg transition-all duration-200 cursor-pointer skill-chip
 										{getSkillColor(skill.level)} {getSkillSize(skill.level)}
-										{hoveredSkill === skill.name ? 'transform scale-105 shadow-md' : ''}"
+										{hoveredSkill === skill.name ? 'transform scale-105 shadow-md' : ''}
+										{visibleSkills.has(globalSkillIndex) ? 'animate-skill-fade-in' : ''}"
+									data-skill-index={globalSkillIndex}
+									style="animation-delay: {(levelIndex * 100) + (skillIndex * 50)}ms;"
 									onmouseenter={() => hoveredSkill = skill.name}
 									onmouseleave={() => hoveredSkill = null}
 									role="button"
@@ -158,5 +211,32 @@
 	
 	.font-mono {
 		font-family: 'Roboto Mono', 'Courier New', monospace;
+	}
+
+	/* Fade-in animation for skill chips */
+	.skill-chip {
+		opacity: 0;
+		transform: translateY(20px) scale(0.8);
+		transition: all 0.3s ease;
+	}
+
+	.animate-skill-fade-in {
+		animation: skillFadeIn 0.6s ease-out forwards;
+	}
+
+	@keyframes skillFadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(20px) scale(0.8);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	/* Ensure hover effects work properly */
+	.skill-chip:hover {
+		transform: translateY(0) scale(1.05) !important;
 	}
 </style>

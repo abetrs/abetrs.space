@@ -16,7 +16,7 @@
 			title: 'The Internet, AI, and The Truman Show',
 			excerpt:
 				'Exploring how AI and internet culture shape our perception of reality, drawing parallels to The Truman Show. Reflections on privacy, technology, and societal impacts in a hyper-connected world.',
-			publishedDate: '2025-07-15',
+			publishedDate: '2025-08-05',
 			readTime: 8,
 			url: 'https://abetheunicorn.substack.com/p/the-internet-ai-and-the-truman-show'
 		},
@@ -24,7 +24,7 @@
 			title: 'DEVLOG - What do you even work on?',
 			excerpt:
 				'Explores summer side-projects like a music taste app, blog, and cricket stats, while reflecting on coding productivity and project completion challenges.',
-			publishedDate: '2025-08-04',
+			publishedDate: '2025-07-25',
 			readTime: 7,
 			url: 'https://abetheunicorn.substack.com/p/devlog-what-do-you-even-work-on'
 		},
@@ -32,7 +32,7 @@
 			title: 'Returning to Making',
 			excerpt:
 				'Explores managing multiple hobbies like music, coding, and filmmaking, and shares strategies for consistently finishing creative projects.',
-			publishedDate: '2025-07-20',
+			publishedDate: '2025-07-18',
 			readTime: 9,
 			url: 'https://abetheunicorn.substack.com/p/returning-to-making'
 		}
@@ -107,16 +107,16 @@
 		<div class="font-condensed text-[24px] leading-relaxed text-black">
 			<p class="mb-8">
 				Thoughts and insights on technology, design, and the intersection of innovation with
-				real-world problem solving. Follow my journey through tech, academics, and creative
+				real-world problem solving. Follow my journey through tech, culture, and creative
 				exploration.
 			</p>
 
 			<div class="space-y-8 text-left">
 				<div class="rounded-lg border-l-4 border-black bg-white p-6 shadow-sm">
-					<h3 class="mb-2 text-[28px] font-semibold">Substack Integration</h3>
+					<h3 class="mb-2 text-[28px] font-semibold">Memo</h3>
 					<p class="mb-4 text-[18px] text-gray-700">
-						Regular posts about technology trends, development insights, and personal
-						reflections on the tech industry.
+						Regular posts about creativity, design, development insights, and personal
+						reflections on the creative process.
 					</p>
 					<a
 						href="https://abetheunicorn.substack.com/"

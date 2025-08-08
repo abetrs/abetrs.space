@@ -1,6 +1,7 @@
 <script>
 	import { fly, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+	import { onMount } from 'svelte';
 
 	// Props using Svelte 5 destructuring
 	let { 
@@ -12,6 +13,7 @@
 	let isVisible = $state(true); // Start as visible
 	let activeIndex = $state(null);
 	let timelineRef = $state(null);
+	let visibleCards = $state(new Set());
 
 	// Derived values  
 	let sortedExperiences = $derived(
@@ -30,6 +32,34 @@
 
 			observer.observe(timelineRef);
 			return () => observer.disconnect();
+		}
+	});
+
+	// Effect for individual card animations
+	onMount(() => {
+		if (typeof window !== 'undefined') {
+			const cardObserver = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((entry) => {
+						if (entry.isIntersecting) {
+							const cardIndex = parseInt(entry.target.dataset.cardIndex);
+							visibleCards = new Set([...visibleCards, cardIndex]);
+						}
+					});
+				},
+				{ 
+					threshold: 0.1,
+					rootMargin: '50px 0px -50px 0px'
+				}
+			);
+
+			// Observe all cards after a short delay to ensure DOM is ready
+			setTimeout(() => {
+				const cards = document.querySelectorAll('[data-card-index]');
+				cards.forEach(card => cardObserver.observe(card));
+			}, 100);
+
+			return () => cardObserver.disconnect();
 		}
 	});
 
@@ -72,6 +102,7 @@
 			{#each sortedExperiences as experience, index}
 				<div 
 					class="relative flex items-start group cursor-pointer"
+					data-card-index={index}
 					onclick={() => activeIndex = activeIndex === index ? null : index}
 					onkeydown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {
@@ -86,11 +117,16 @@
 					<!-- Timeline Dot -->
 					<div 
 						class="relative z-10 w-3 h-3 bg-black rounded-full mt-2 transition-all duration-300 group-hover:scale-150"
+						class:animate-fade-in={visibleCards.has(index)}
+						style="animation-delay: {index * 200}ms;"
 					></div>
 
+					{#if visibleCards.has(index)}
 						<!-- Content Card -->
 						<div 
-							class="ml-6 flex-1 bg-white p-6 rounded-lg shadow-sm border-l-4 border-black transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1"
+							class="ml-6 flex-1 bg-white p-6 rounded-lg shadow-sm border-l-4 border-black transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1 animate-slide-in-fade"
+							style="animation-delay: {index * 200 + 100}ms;"
+							in:fly={{ y: 30, duration: 600, delay: index * 200, easing: quintOut }}
 						>
 							<div class="flex justify-between items-start mb-2">
 								<h4 class="text-[24px] font-semibold text-black font-condensed">
@@ -159,10 +195,11 @@
 								</div>
 							{/if}
 						</div>
-					</div>
-				{/each}
-			</div>
+					{/if}
+				</div>
+			{/each}
 		</div>
+	</div>
 </div>
 
 <style>
@@ -175,5 +212,60 @@
 	
 	.font-mono {
 		font-family: 'Roboto Mono', 'Courier New', monospace;
+	}
+
+	/* Fade-in animation for timeline dots */
+	.animate-fade-in {
+		animation: fadeIn 0.6s ease-out forwards;
+		opacity: 0;
+	}
+
+	/* Slide-in and fade animation for cards */
+	.animate-slide-in-fade {
+		animation: slideInFadeBounce 0.8s ease-out forwards;
+		opacity: 0;
+		transform: translateY(30px);
+	}
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: scale(0.5);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@keyframes slideInFadeBounce {
+		0% {
+			opacity: 0;
+			transform: translateY(30px) translateX(0px);
+		}
+		50% {
+			opacity: 0.7;
+			transform: translateY(0px) translateX(15px);
+		}
+		70% {
+			opacity: 0.9;
+			transform: translateY(0px) translateX(-5px);
+		}
+		100% {
+			opacity: 1;
+			transform: translateY(0px) translateX(0px);
+		}
+	}
+
+	/* Make cards initially invisible until animation triggers */
+	[data-card-index] > div:last-child {
+		opacity: 0;
+		transform: translateY(30px);
+		transition: none;
+	}
+
+	/* When visible, allow normal transitions */
+	[data-card-index] > div:last-child.animate-slide-in-fade {
+		transition: all 0.3s ease;
 	}
 </style>

@@ -1,3 +1,6 @@
+---
+applyTo: '**'
+---
 # Instructions for GitHub Copilot: Building Abhayprad Jha's Personal Portfolio Website
 
 This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive multi-page portfolio website showcasing my background as a Computer Science student at William & Mary, internships, projects, and hobbies.
