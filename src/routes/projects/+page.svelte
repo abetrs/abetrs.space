@@ -153,7 +153,7 @@
 		},
 		{
 			projectId: 'playlist-exchange',
-			title: 'Playlist Exchange',
+			title: 'Itch - Playlist Exchange',
 			challenge: 'Music lovers struggled to share playlists across different streaming platforms, creating <strong>silos and limiting music discovery</strong>. User research revealed <strong>78% of users</strong> wanted cross-platform playlist sharing, but existing solutions were <strong>fragmented and unreliable</strong>.',
 			solution: 'Implemented a <strong>unified API integration strategy</strong> connecting Spotify, and Last.fm. Developed <strong>intelligent music matching algorithms</strong> and created a social discovery layer with <strong>recommendation systems</strong> based on listening behavior and social connections.',
 			impact: 'Achieved <strong>significant user engagement</strong> with seamless cross-platform playlist conversion and social music discovery features. The solution addressed <strong>core user pain points</strong> while building a sustainable growth model through <strong>network effects</strong>.',
