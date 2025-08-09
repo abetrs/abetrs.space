@@ -7,7 +7,7 @@ export const navItems = [
 	{ name: 'Internships', path: '/internships' },
 	{ name: 'Projects', path: '/projects' },
 	{ name: 'College', path: '/college' },
-	{ name: 'Hobbies', path: '/hobbies' },
+	// { name: 'Hobbies', path: '/hobbies' },
 	{ name: 'Blog', path: '/blog' }
 ];
 

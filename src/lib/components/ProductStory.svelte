@@ -56,43 +56,43 @@
 
 		<!-- Story Content -->
 		<div class="space-y-6">
-			<!-- Challenge Section -->
-			<div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-r">
-				<h4 class="font-condensed text-[20px] font-semibold text-red-800 mb-2">
+			<!-- Challenge Section - Pure Red -->
+			<div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-r">
+				<h4 class="font-condensed text-[20px] font-semibold text-red-700 mb-2">
 					Challenge
 				</h4>
-				<p class="font-condensed text-[16px] leading-relaxed text-red-700">
-					{challenge}
+				<p class="font-condensed text-[16px] leading-relaxed text-gray-700">
+					{@html challenge}
 				</p>
 			</div>
 
-			<!-- Solution Section -->
-			<div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r">
-				<h4 class="font-condensed text-[20px] font-semibold text-blue-800 mb-2">
+			<!-- Solution Section - Red with hint of purple -->
+			<div class="bg-rose-50 border-l-4 border-rose-600 p-4 rounded-r">
+				<h4 class="font-condensed text-[20px] font-semibold text-rose-700 mb-2">
 					Solution & Approach
 				</h4>
-				<p class="font-condensed text-[16px] leading-relaxed text-blue-700">
-					{solution}
+				<p class="font-condensed text-[16px] leading-relaxed text-gray-700">
+					{@html solution}
 				</p>
 			</div>
 
-			<!-- Impact Section -->
-			<div class="bg-green-50 border-l-4 border-green-400 p-4 rounded-r">
-				<h4 class="font-condensed text-[20px] font-semibold text-green-800 mb-2">
+			<!-- Impact Section - Balanced red-purple -->
+			<div class="bg-pink-50 border-l-4 border-pink-600 p-4 rounded-r">
+				<h4 class="font-condensed text-[20px] font-semibold text-pink-700 mb-2">
 					Impact & Results
 				</h4>
-				<p class="font-condensed text-[16px] leading-relaxed text-green-700 mb-3">
-					{impact}
+				<p class="font-condensed text-[16px] leading-relaxed text-gray-700 mb-3">
+					{@html impact}
 				</p>
 				
 				{#if metrics.length > 0}
 					<div class="mt-3">
-						<h5 class="font-condensed text-[16px] font-medium text-green-800 mb-2">Key Metrics:</h5>
+						<h5 class="font-condensed text-[16px] font-medium text-pink-700 mb-2">Key Metrics:</h5>
 						<div class="grid grid-cols-1 md:grid-cols-2 gap-2">
 							{#each metrics as metric}
 								<div class="flex items-center">
-									<span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-									<span class="font-condensed text-[14px] text-green-700">{metric}</span>
+									<span class="w-2 h-2 bg-pink-600 rounded-full mr-2"></span>
+									<span class="font-condensed text-[14px] text-gray-700">{@html metric}</span>
 								</div>
 							{/each}
 						</div>
@@ -100,22 +100,20 @@
 				{/if}
 			</div>
 
-			<!-- Lessons Learned Section -->
-			{#if lessons.length > 0}
-				<div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r">
-					<h4 class="font-condensed text-[20px] font-semibold text-amber-800 mb-2">
-						Lessons Learned
-					</h4>
-					<ul class="space-y-1">
-						{#each lessons as lesson}
-							<li class="flex items-start">
-								<span class="w-2 h-2 bg-amber-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
-								<span class="font-condensed text-[14px] leading-relaxed text-amber-700">{lesson}</span>
-							</li>
-						{/each}
-					</ul>
-				</div>
-			{/if}
+			<!-- Lessons Learned Section - Red-purple with more purple -->
+			<div class="bg-fuchsia-50 border-l-4 border-fuchsia-500 p-4 rounded-r">
+				<h4 class="font-condensed text-[20px] font-semibold text-fuchsia-700 mb-2">
+					Lessons Learned
+				</h4>
+				<ul class="space-y-1">
+					{#each lessons as lesson}
+						<li class="flex items-start">
+							<span class="w-2 h-2 bg-fuchsia-500 rounded-full mr-2 mt-2 flex-shrink-0"></span>
+							<span class="font-condensed text-[14px] leading-relaxed text-gray-700">{@html lesson}</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

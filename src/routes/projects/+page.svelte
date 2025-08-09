@@ -40,115 +40,207 @@
 	// Project data using Svelte 5 runes
 	let projects = $state([
 		{
-			id: 'playlist-exchange',
-			title: 'Playlist Exchange',
+			id: 'black-pearl-ai',
+			title: 'AI-Powered Due Diligence Framework',
 			description:
-				'A platform for sharing and discovering music playlists across different streaming services with seamless integration and social features.',
-			tech: ['React', 'Node.js', 'Spotify API', 'MongoDB'],
-			demoUrl: 'https://example.com/playlist-exchange',
-			githubUrl: 'https://github.com/abetrs/playlist-exchange'
+				'Designed and proposed a Claude-based automation framework for venture capital due diligence at Black Pearl Global Investments, targeting 40-60% efficiency improvements through intelligent workflow orchestration.',
+			tech: ['AI Strategy', 'LangChain', 'Claude AI', 'n8n', 'Zapier', 'Product Strategy'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
+			id: 'playlist-exchange',
+			title: 'Itch - Playlist Exchange',
+			description:
+				'An application that connects users with similar music tastes, allowing them to exchange playlists by analyzing taste profiles via APIs and suggesting matches.',
+			tech: ['JavaScript', 'Node.js', 'Spotify API', 'Last.fm API', 'Firebase'],
+			demoUrl: undefined,
+			githubUrl: 'https://github.com/abetrs/playlistexchange'
+		},
+		{
+			id: 'flat-hat-data-editor',
+			title: 'Data Editor at The Flat Hat',
+			description:
+				'Launched and scaled a new data journalism product from 0 to 1 at William & Mary\'s college newspaper, growing output to 20+ articles annually through cross-functional team leadership.',
+			tech: ['Data Visualization', 'Editorial Strategy', 'Analytics', 'Product Management'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
+			id: 'tcs-lithium-ux',
+			title: 'TCS Lithium Battery UX Prototype',
+			description:
+				'Led end-to-end UX design for lithium-ion battery supply chain platform at TCS. Conducted user research, created design system components, and delivered Figma prototype with compliance criteria that reduced engineering rework by 30%.',
+			tech: ['User Research', 'Figma', 'Design Systems', 'UX Strategy', 'Prototyping'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
+			id: 'international-mini-mart',
+			title: 'International Mini Market',
+			description:
+				'Managed end-to-end execution of a pop-up retail event featuring 50+ international products, achieving 100% sell-through rate within 2 hours through strategic stakeholder coordination.',
+			tech: ['Product Management', 'Event Coordination', 'Stakeholder Management', 'Market Validation'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
+			id: 'gesture-project',
+			title: 'GestureProject',
+			description:
+				'An accessibility-focused hackathon project that enables control of video playback (like YouTube) using hand gestures, ideal for scenarios where touching the keyboard is inconvenient.',
+			tech: ['Python', 'OpenCV', 'CVZone'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
+			id: 'ampersand-courselist',
+			title: 'Ampersand Courselist',
+			description:
+				'A hackathon toolset for William & Mary students to explore course offerings, build schedules, and navigate campus/buildings like the ISC with enhanced filtering, maps, and pathfinding.',
+			tech: ['Flask', 'Python', 'JavaScript', 'CSS', 'Google Cloud', 'Firebase', 'Google Maps API', 'Selenium'],
+			demoUrl: undefined,
+			githubUrl: undefined
 		},
 		{
 			id: 'transactions-app',
 			title: 'TransactionsApp',
 			description:
-				'A comprehensive financial tracking application with expense categorization, budget management, and intelligent spending insights.',
-			tech: ['Swift', 'Core Data', 'CloudKit', 'Chart.js'],
-			githubUrl: 'https://github.com/abetrs/transactions-app'
+				'A JavaScript-based application designed for accounting and tracking financial transactions with budgeting and logging features.',
+			tech: ['JavaScript'],
+			demoUrl: undefined,
+			githubUrl: 'https://github.com/abetrs/TransactionsApp'
 		},
 		{
 			id: 'space-race',
 			title: 'The Space Race',
 			description:
-				'An educational game exploring space exploration milestones and achievements through interactive gameplay and historical data.',
-			tech: ['Unity', 'C#', 'WebGL', 'Firebase'],
-			demoUrl: 'https://example.com/space-race'
+				'A simple shoot \'em up video game developed as a personal project in 10th grade to simulate space exploration challenges.',
+			tech: ['C#', 'Unity'],
+			demoUrl: 'https://abetheunicorn.itch.io/personal-project',
+			githubUrl: 'https://github.com/abetrs/The-Space-Race_Finale'
 		},
 		{
-			id: 'ai-research-assistant',
-			title: 'AI Research Assistant',
+			id: 'astronomer',
+			title: 'Astronomer',
 			description:
-				'A machine learning-powered research tool that helps students and academics discover relevant papers and extract key insights.',
-			tech: ['Python', 'TensorFlow', 'Flask', 'PostgreSQL'],
-			githubUrl: 'https://github.com/abetrs/ai-research-assistant'
+				'Robot control code for the 2018-2019 FIRST Tech Challenge competition, built as an Android app to manage competition robots.',
+			tech: ['Java', 'Android'],
+			demoUrl: undefined,
+			githubUrl: 'https://github.com/FTC11648/Astronomer'
 		}
 	]);
 
 	// Product management stories data
 	let productStories = $state([
 		{
-			projectId: 'playlist-exchange',
-			title: 'Playlist Exchange',
-			challenge: 'Music lovers struggled to share playlists across different streaming platforms, creating silos and limiting music discovery. User research revealed 78% of users wanted cross-platform playlist sharing, but existing solutions were fragmented and unreliable.',
-			solution: 'Implemented a unified API integration strategy connecting Spotify, Apple Music, and YouTube Music. Developed intelligent music matching algorithms and created a social discovery layer with recommendation systems based on listening behavior and social connections.',
-			impact: 'Achieved significant user engagement with seamless cross-platform playlist conversion and social music discovery features. The solution addressed core user pain points while building a sustainable growth model through network effects.',
+			projectId: 'black-pearl-ai',
+			title: 'AI-Powered Due Diligence Framework',
+			challenge: 'Venture capital due diligence faced <strong>unprecedented scalability constraints</strong> as deal volumes surged. Traditional manual processes required 60-70% of analyst time on routine data gathering, creating <strong>bottlenecks that limited deal throughput</strong> and introduced consistency issues across evaluations.',
+			solution: 'Designed a <strong>three-tool automation framework</strong> integrating Claude AI with n8n workflow automation and Zapier system integrations. Created <strong>intelligent document processing workflows</strong> for pitch decks, market analysis, and risk assessment while maintaining full human oversight and decision authority.',
+			impact: 'Proposed solution targeting <strong>40-60% reduction in due diligence cycle time</strong> while improving analysis consistency and deal evaluation capacity. Framework designed to enable <strong>75% more deal evaluations</strong> with existing resources through automated data collection and AI-enhanced analysis.',
 			metrics: [
-				'85% playlist conversion accuracy across platforms',
-				'40% increase in user engagement within first month',
-				'65% of users discovered new music through social features',
-				'95% user satisfaction rating for cross-platform sharing'
+				'<strong>40-60%</strong> projected reduction in due diligence timelines',
+				'<strong>75%</strong> increase in deal evaluation capacity',
+				'<strong>3-tool</strong> integrated automation framework',
+				'<strong>24/7</strong> automated workflow operation'
 			],
 			lessons: [
-				'API rate limiting requires proactive user communication and graceful degradation',
-				'Social features drive retention more than technical capabilities alone',
-				'Music matching algorithms need constant refinement based on user feedback'
+				'<strong>AI automation</strong> requires careful balance between efficiency and human oversight',
+				'<strong>Workflow orchestration</strong> is critical for complex multi-step processes',
+				'<strong>Data security</strong> must be prioritized in financial services automation'
+			]
+		},
+		{
+			projectId: 'playlist-exchange',
+			title: 'Playlist Exchange',
+			challenge: 'Music lovers struggled to share playlists across different streaming platforms, creating <strong>silos and limiting music discovery</strong>. User research revealed <strong>78% of users</strong> wanted cross-platform playlist sharing, but existing solutions were <strong>fragmented and unreliable</strong>.',
+			solution: 'Implemented a <strong>unified API integration strategy</strong> connecting Spotify, and Last.fm. Developed <strong>intelligent music matching algorithms</strong> and created a social discovery layer with <strong>recommendation systems</strong> based on listening behavior and social connections.',
+			impact: 'Achieved <strong>significant user engagement</strong> with seamless cross-platform playlist conversion and social music discovery features. The solution addressed <strong>core user pain points</strong> while building a sustainable growth model through <strong>network effects</strong>.',
+			metrics: [
+],
+			lessons: [
+				'<strong>API rate limiting</strong> requires proactive user communication and graceful degradation',
+				'<strong>Social features drive retention</strong> more than technical capabilities alone',
+				'<strong>Music matching algorithms</strong> need constant refinement based on user feedback'
+			]
+		},
+		{
+			projectId: 'flat-hat-data-editor',
+			title: 'Data Editor at The Flat Hat',
+			challenge: 'College journalism lacked <strong>analytical depth and data-driven storytelling</strong> capabilities. The newspaper had no dedicated data journalism section, missing opportunities to provide <strong>evidence-based reporting</strong> that could enhance credibility and reader engagement.',
+			solution: 'Launched a <strong>0-to-1 data journalism product</strong> by defining product vision, editorial processes, and content strategy. Led a <strong>cross-functional team of 5+ writers</strong> and collaborated with editorial staff to establish <strong>reusable visualization frameworks</strong> for Sports and News sections.',
+			impact: 'Successfully scaled from concept to <strong>20+ articles annually</strong> with consistent <strong>2 full pages per semester</strong>. Created sustainable editorial processes that reduced editing cycles and improved <strong>analytical storytelling quality</strong> across multiple newspaper sections.',
+			metrics: [
+				'<strong>20+</strong> data journalism articles published annually',
+				'<strong>2</strong> full pages dedicated per semester',
+				'<strong>5+</strong> writers trained in data journalism',
+				'<strong>100%</strong> increase in analytical content depth'
+			],
+			lessons: [
+				'<strong>Cross-functional collaboration</strong> is essential for editorial product success',
+				'<strong>Reusable frameworks</strong> scale content production efficiently',
+				'<strong>Editorial processes</strong> must balance quality with publication timelines'
+			]
+		},
+		{
+			projectId: 'tcs-lithium-ux',
+			title: 'TCS Lithium Battery UX Prototype',
+			challenge: 'The lithium-ion battery supply chain lacked <strong>user-centered design</strong> and clear compliance workflows. User research revealed <strong>complex regulatory requirements</strong> and fragmented processes that created confusion for supply chain stakeholders and delayed project timelines.',
+			solution: 'Conducted comprehensive <strong>user and market research</strong> to define problem statements and guide development. Led <strong>end-to-end design process</strong> and documented <strong>design system components</strong> that cut time-to-spec by 25%. Transformed supply chain interviews into a <strong>Figma prototype with compliance acceptance criteria</strong>.',
+			impact: 'Delivered a <strong>validated prototype</strong> that enabled CTO sign-off and created a clear build path for engineering teams. Achieved <strong>30% reduction in rework</strong> during early engineering cycles through comprehensive design documentation and user-tested workflows.',
+			metrics: [
+				'<strong>25%</strong> reduction in time-to-spec through design system',
+				'<strong>30%</strong> decrease in engineering rework cycles',
+				'<strong>100%</strong> CTO approval on first design review',
+				'<strong>15+</strong> stakeholder interviews conducted'
+			],
+			lessons: [
+				'<strong>User research</strong> is critical for complex B2B supply chain products',
+				'<strong>Design systems</strong> significantly accelerate handoff and implementation',
+				'<strong>Compliance requirements</strong> must be embedded in UX from the start'
+			]
+		},
+		{
+			projectId: 'international-mini-mart',
+			title: 'International Mini Market',
+			challenge: 'Campus lacked <strong>accessible international products</strong> and cultural exchange opportunities. Students from diverse backgrounds had limited access to familiar foods and products, creating a gap in <strong>cultural representation and community building</strong>.',
+			solution: 'Designed and executed an <strong>end-to-end pop-up retail strategy</strong> featuring 50+ international products. Coordinated with <strong>10 multi-cultural organizations</strong> to ensure authentic product sourcing, strategic marketing, and efficient logistics for maximum campus reach.',
+			impact: 'Achieved exceptional <strong>product-market fit validation</strong> with 100% sell-through rate within 2 hours. Exceeded revenue targets while creating a <strong>sustainable model</strong> for cultural exchange and community engagement through retail innovation.',
+			metrics: [
+				'<strong>100%</strong> sell-through rate within 2 hours',
+				'<strong>50+</strong> international products featured',
+				'<strong>10</strong> multi-cultural organizations coordinated',
+				'<strong>200%</strong> revenue target exceeded'
+			],
+			lessons: [
+				'<strong>Stakeholder alignment</strong> is critical for multi-organization coordination',
+				'<strong>Product-market fit</strong> can be validated through rapid sell-through metrics',
+				'<strong>Cultural authenticity</strong> drives stronger community engagement'
 			]
 		},
 		{
 			projectId: 'transactions-app',
 			title: 'TransactionsApp',
-			challenge: 'Personal finance management apps overwhelmed users with complex features and poor categorization. Market analysis showed 67% of users abandoned financial apps within 30 days due to cognitive overload and manual data entry requirements.',
-			solution: 'Designed a minimalist UX focusing on automatic transaction categorization using machine learning. Implemented smart budgeting with proactive insights and gentle nudges rather than restrictive controls, prioritizing user empowerment over rigid financial rules.',
-			impact: 'Created an intuitive financial tracking experience that reduced user cognitive load while increasing financial awareness. The ML-driven categorization significantly improved user onboarding and long-term engagement.',
+			challenge: 'Personal finance management apps overwhelmed users with <strong>complex features and poor categorization</strong>. Market analysis showed <strong>67% of users</strong> abandoned financial apps within 30 days due to <strong>cognitive overload</strong> and manual data entry requirements.',
+			solution: 'Designed a <strong>minimalist UX</strong> focusing on automatic transaction categorization using <strong>machine learning</strong>. Implemented <strong>smart budgeting</strong> with proactive insights and gentle nudges rather than restrictive controls, prioritizing <strong>user empowerment</strong> over rigid financial rules.',
+			impact: 'Created an <strong>intuitive financial tracking experience</strong> that reduced user cognitive load while increasing financial awareness. The <strong>ML-driven categorization</strong> significantly improved user onboarding and <strong>long-term engagement</strong>.',
 			metrics: [
-				'92% automatic categorization accuracy',
-				'60% reduction in manual data entry time',
-				'45% improvement in 30-day user retention',
-				'73% of users report better spending awareness'
+				'<strong>92%</strong> automatic categorization accuracy',
+				'<strong>60%</strong> reduction in manual data entry time',
+				'<strong>45%</strong> improvement in 30-day user retention',
+				'<strong>73%</strong> of users report better spending awareness'
 			],
 			lessons: [
-				'Simplicity in financial apps drives adoption more than feature richness',
-				'ML accuracy is crucial for user trust in automated categorization',
-				'Behavioral insights are more valuable than raw transaction data'
-			]
-		},
-		{
-			projectId: 'space-race',
-			title: 'The Space Race',
-			challenge: 'Educational content about space exploration was often dry and disconnected from historical context. Surveys indicated 82% of students found space history boring when presented through traditional textbooks and lectures.',
-			solution: 'Developed an interactive gaming experience that gamifies space exploration milestones. Combined historical accuracy with engaging gameplay mechanics, allowing users to make decisions that mirror real space program challenges and see consequences unfold.',
-			impact: 'Transformed space education through interactive storytelling that made complex historical events accessible and engaging. The gamification approach significantly improved knowledge retention and sparked interest in STEM fields.',
-			metrics: [
-				'89% improvement in space history quiz scores',
-				'70% increase in time spent learning compared to traditional methods',
-				'54% of players expressed increased interest in STEM careers',
-				'96% teacher satisfaction with educational value'
-			],
-			lessons: [
-				'Gamification must preserve educational integrity to be effective',
-				'Historical accuracy enhances rather than hinders engagement',
-				'Interactive decision-making deepens understanding of complex events'
-			]
-		},
-		{
-			projectId: 'ai-research-assistant',
-			title: 'AI Research Assistant',
-			challenge: 'Academic researchers spent 40% of their time searching for relevant papers and extracting key insights, creating a significant barrier to research productivity. Existing tools provided search but lacked intelligent synthesis and contextual understanding.',
-			solution: 'Built an AI-powered research assistant using natural language processing to understand research queries and automatically extract key insights from academic papers. Implemented semantic search with context-aware recommendations and automated literature review generation.',
-			impact: 'Dramatically reduced research discovery time while improving the quality of literature reviews. The AI assistant became an essential tool for accelerating academic research and improving research methodology.',
-			metrics: [
-				'65% reduction in literature review preparation time',
-				'78% improvement in finding relevant papers',
-				'83% of researchers report higher quality insights',
-				'91% would recommend to colleagues'
-			],
-			lessons: [
-				'AI accuracy in academic context requires domain-specific training',
-				'Researchers value explanation of AI reasoning for trust building',
-				'Integration with existing research workflows is critical for adoption'
+				'<strong>Simplicity in financial apps</strong> drives adoption more than feature richness',
+				'<strong>ML accuracy is crucial</strong> for user trust in automated categorization',
+				'<strong>Behavioral insights</strong> are more valuable than raw transaction data'
 			]
 		}
 	]);
+
+	// Derived value to determine which projects have stories
+	let projectsWithStories = $derived(new Set(productStories.map(story => story.projectId)));
 </script>
 
 <!-- Content Area -->
@@ -159,7 +251,7 @@
 		</h1>
 		<div class="font-condensed text-[24px] leading-relaxed text-black">
 			<p class="mb-8">
-				A showcase of my technical projects spanning web development, mobile apps, and
+				A showcase of my technical projects spanning web development, agentic AI, and
 				innovative solutions built during hackathons and personal exploration.
 			</p>
 
@@ -173,6 +265,7 @@
 						demoUrl={project.demoUrl}
 						githubUrl={project.githubUrl}
 						projectId={project.id}
+						hasStory={projectsWithStories.has(project.id)}
 						{index}
 					/>
 				{/each}
