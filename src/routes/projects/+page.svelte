@@ -218,24 +218,6 @@
 				'<strong>Product-market fit</strong> can be validated through rapid sell-through metrics',
 				'<strong>Cultural authenticity</strong> drives stronger community engagement'
 			]
-		},
-		{
-			projectId: 'transactions-app',
-			title: 'TransactionsApp',
-			challenge: 'Personal finance management apps overwhelmed users with <strong>complex features and poor categorization</strong>. Market analysis showed <strong>67% of users</strong> abandoned financial apps within 30 days due to <strong>cognitive overload</strong> and manual data entry requirements.',
-			solution: 'Designed a <strong>minimalist UX</strong> focusing on automatic transaction categorization using <strong>machine learning</strong>. Implemented <strong>smart budgeting</strong> with proactive insights and gentle nudges rather than restrictive controls, prioritizing <strong>user empowerment</strong> over rigid financial rules.',
-			impact: 'Created an <strong>intuitive financial tracking experience</strong> that reduced user cognitive load while increasing financial awareness. The <strong>ML-driven categorization</strong> significantly improved user onboarding and <strong>long-term engagement</strong>.',
-			metrics: [
-				'<strong>92%</strong> automatic categorization accuracy',
-				'<strong>60%</strong> reduction in manual data entry time',
-				'<strong>45%</strong> improvement in 30-day user retention',
-				'<strong>73%</strong> of users report better spending awareness'
-			],
-			lessons: [
-				'<strong>Simplicity in financial apps</strong> drives adoption more than feature richness',
-				'<strong>ML accuracy is crucial</strong> for user trust in automated categorization',
-				'<strong>Behavioral insights</strong> are more valuable than raw transaction data'
-			]
 		}
 	]);
 
