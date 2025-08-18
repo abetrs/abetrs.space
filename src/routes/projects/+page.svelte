@@ -38,16 +38,25 @@
 	});
 
 	// Project data using Svelte 5 runes
-	let projects = $state([
-		{
-			id: 'black-pearl-ai',
-			title: 'AI-Powered Due Diligence Framework',
-			description:
-				'Designed and proposed a Claude-based automation framework for venture capital due diligence at Black Pearl Global Investments, targeting 40-60% efficiency improvements through intelligent workflow orchestration.',
-			tech: ['AI Strategy', 'LangChain', 'Claude AI', 'n8n', 'Zapier', 'Product Strategy'],
-			demoUrl: undefined,
-			githubUrl: undefined
-		},
+	 let projects = $state([
+	 	{
+	 		id: 'spleen-to-text-bot',
+	 		title: 'SpleenToTextBot',
+	 		description:
+	 			"A Discord bot that automatically transcribes voice messages to text in real time, making conversations more accessible for every server member. Built in Go for performance and reliability, SpleenToTextBot seamlessly integrates with Discord's voice notes and delivers accurate, fast transcriptions directly to chat.",
+	 		tech: ['Go', 'Discord API', 'Speech Recognition', 'Bot Development', "GenAI", "LLMs"],
+	 		demoUrl: 'https://discord.com/oauth2/authorize?client_id=1406685377321894051',
+	 		githubUrl: 'https://github.com/abetrs/SpleenToTextBot'
+	 	},
+	 	{
+	 		id: 'black-pearl-ai',
+	 		title: 'AI-Powered Due Diligence Framework',
+	 		description:
+	 			'Designed and proposed a Claude-based automation framework for venture capital due diligence at Black Pearl Global Investments, targeting 40-60% efficiency improvements through intelligent workflow orchestration.',
+	 		tech: ['AI Strategy', 'LangChain', 'Claude AI', 'n8n', 'Zapier', 'Product Strategy'],
+	 		demoUrl: undefined,
+	 		githubUrl: undefined
+	 	},
         {
         	id: 'transactions-app',
         	title: 'TransactionsApp',
@@ -72,7 +81,7 @@
 			description:
 				'Launched and scaled a new data journalism product from 0 to 1 at William & Mary\'s college newspaper, growing output to 20+ articles annually through cross-functional team leadership.',
 			tech: ['Data Visualization', 'Editorial Strategy', 'Analytics', 'Product Management'],
-			demoUrl: undefined,
+			demoUrl: 'https://flathatnews.com/category/data/',
 			githubUrl: undefined
 		},
 		{

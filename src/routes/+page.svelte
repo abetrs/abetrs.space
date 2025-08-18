@@ -81,7 +81,7 @@
 	}
 
 	const aboutText =
-		"I'm Abhayprad Jha, a Computer Science and Economics student at William & Mary (Class of 2026), blending my passion for building products with a fascination for modelling the world around me. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.";
+		"I'm Abhayprad Jha, a Computer Science and Economics student at William & Mary (Class of 2026), blending my passion for building products with a fascination for modelling the world around me. I come from a global background, having grown across 5 different countries. My experience learning from different perspectives has fostered a habit ot interdisciplinary thinking and innovation. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.";
 </script>
 
 <!-- Oval Profile Image Placeholder replaced with actual image -->
