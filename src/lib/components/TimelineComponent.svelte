@@ -4,10 +4,7 @@
 	import { onMount } from 'svelte';
 
 	// Props using Svelte 5 destructuring
-	let { 
-		experiences = [],
-		title = "Experience Timeline" 
-	} = $props();
+	let { experiences = [], title = 'Experience Timeline' } = $props();
 
 	// Svelte 5 reactive state
 	let isVisible = $state(true); // Start as visible
@@ -15,7 +12,7 @@
 	let timelineRef = $state(null);
 	let visibleCards = $state(new Set());
 
-	// Derived values  
+	// Derived values
 	let sortedExperiences = $derived(
 		[...experiences].sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
 	);
@@ -47,7 +44,7 @@
 						}
 					});
 				},
-				{ 
+				{
 					threshold: 0.1,
 					rootMargin: '50px 0px -50px 0px'
 				}
@@ -56,7 +53,7 @@
 			// Observe all cards after a short delay to ensure DOM is ready
 			setTimeout(() => {
 				const cards = document.querySelectorAll('[data-card-index]');
-				cards.forEach(card => cardObserver.observe(card));
+				cards.forEach((card) => cardObserver.observe(card));
 			}, 100);
 
 			return () => cardObserver.disconnect();
@@ -65,9 +62,9 @@
 
 	function formatDate(dateString) {
 		const date = new Date(dateString);
-		return date.toLocaleDateString('en-US', { 
-			month: 'short', 
-			year: 'numeric' 
+		return date.toLocaleDateString('en-US', {
+			month: 'short',
+			year: 'numeric'
 		});
 	}
 
@@ -75,35 +72,32 @@
 		const start = new Date(startDate);
 		const end = new Date(endDate);
 		const months = Math.round((end - start) / (1000 * 60 * 60 * 24 * 30));
-		
+
 		if (months < 12) return `${months} months`;
 		const years = Math.floor(months / 12);
 		const remainingMonths = months % 12;
-		
+
 		if (remainingMonths === 0) return `${years} year${years > 1 ? 's' : ''}`;
 		return `${years}y ${remainingMonths}m`;
 	}
 </script>
 
 <div bind:this={timelineRef} class="w-full">
-	<h3 class="text-[32px] font-bold text-black mb-8 tracking-[-1.5px] font-condensed">
+	<h3 class="font-condensed mb-8 text-[32px] font-bold tracking-[-1.5px] text-black">
 		{title}
 	</h3>
 
 	<div class="relative">
 		<!-- Timeline Line -->
-		<div 
-			class="absolute left-6 top-0 w-0.5 bg-gray-300"
-			style="height: calc(100% - 2rem);"
-		></div>
+		<div class="absolute top-0 left-6 w-0.5 bg-gray-300" style="height: calc(100% - 2rem);"></div>
 
 		<!-- Timeline Items -->
 		<div class="space-y-8">
 			{#each sortedExperiences as experience, index}
-				<div 
-					class="relative flex items-start group cursor-pointer"
+				<div
+					class="group relative flex cursor-pointer items-start"
 					data-card-index={index}
-					onclick={() => activeIndex = activeIndex === index ? null : index}
+					onclick={() => (activeIndex = activeIndex === index ? null : index)}
 					onkeydown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {
 							e.preventDefault();
@@ -115,45 +109,57 @@
 					aria-label="View details for {experience.company}"
 				>
 					<!-- Timeline Dot -->
-					<div 
-						class="relative z-10 w-3 h-3 bg-black rounded-full mt-2 transition-all duration-300 group-hover:scale-150"
+					<div
+						class="relative z-10 mt-2 h-3 w-3 rounded-full bg-black transition-all duration-300 group-hover:scale-150"
 						class:animate-fade-in={visibleCards.has(index)}
 						style="animation-delay: {index * 200}ms;"
 					></div>
 
 					{#if visibleCards.has(index)}
 						<!-- Content Card -->
-						<div 
-							class="ml-6 flex-1 bg-white p-6 rounded-lg shadow-sm border-l-4 border-black transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1 animate-slide-in-fade"
+						<div
+							class="animate-slide-in-fade ml-6 flex-1 rounded-lg border-l-4 border-black bg-white p-6 shadow-sm transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-md"
 							style="animation-delay: {index * 200 + 100}ms;"
 							in:fly={{ y: 30, duration: 600, delay: index * 200, easing: quintOut }}
 						>
-							<div class="flex justify-between items-start mb-2">
-								<h4 class="text-[24px] font-semibold text-black font-condensed">
+							<!-- Optional logo (if provided in experience.logo) - inline above the title to avoid overlap -->
+							{#if experience.logo}
+								<div class="mb-3">
+									<img
+										src={experience.logo}
+										alt={experience.company + ' logo'}
+										class="h-20 w-20 rounded object-contain"
+									/>
+								</div>
+							{/if}
+							<div class="mb-2 flex items-start justify-between">
+								<h4 class="font-condensed text-[24px] font-semibold text-black">
 									{experience.company}
 								</h4>
-								<div class="text-sm text-gray-500 font-mono">
-									{formatDate(experience.startDate)} - {experience.current ? 'Present' : formatDate(experience.endDate)}
+								<div class="font-mono text-sm text-gray-500">
+									{formatDate(experience.startDate)} - {experience.current
+										? 'Present'
+										: formatDate(experience.endDate)}
 								</div>
 							</div>
 
-							<div class="flex justify-between items-center mb-3">
-								<p class="text-[18px] text-gray-700 font-condensed">
+							<div class="mb-3 flex items-center justify-between">
+								<p class="font-condensed text-[18px] text-gray-700">
 									{experience.position}
 								</p>
-								<span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full font-mono">
+								<span class="rounded-full bg-gray-100 px-2 py-1 font-mono text-xs text-gray-500">
 									{calculateDuration(experience.startDate, experience.endDate)}
 								</span>
 							</div>
 
-							<p class="text-[16px] text-gray-600 mb-4 font-condensed">
+							<p class="font-condensed mb-4 text-[16px] text-gray-600">
 								{experience.description}
 							</p>
 
 							{#if experience.skills && experience.skills.length > 0}
-								<div class="flex flex-wrap gap-2 mb-4">
+								<div class="mb-4 flex flex-wrap gap-2">
 									{#each experience.skills as skill}
-										<span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded font-mono">
+										<span class="rounded bg-gray-100 px-2 py-1 font-mono text-xs text-gray-700">
 											{skill}
 										</span>
 									{/each}
@@ -161,16 +167,15 @@
 							{/if}
 
 							{#if activeIndex === index}
-								<div 
-									class="border-t pt-4 mt-4"
-									transition:fly={{ y: 20, duration: 300 }}
-								>
+								<div class="mt-4 border-t pt-4" transition:fly={{ y: 20, duration: 300 }}>
 									{#if experience.achievements}
-										<h5 class="font-semibold text-gray-800 mb-2 font-condensed">Key Achievements:</h5>
-										<ul class="space-y-1 text-gray-600 text-sm">
+										<h5 class="font-condensed mb-2 font-semibold text-gray-800">
+											Key Achievements:
+										</h5>
+										<ul class="space-y-1 text-sm text-gray-600">
 											{#each experience.achievements as achievement}
 												<li class="flex items-start">
-													<span class="text-black mr-2">•</span>
+													<span class="mr-2 text-black">•</span>
 													<span class="font-condensed">{achievement}</span>
 												</li>
 											{/each}
@@ -178,11 +183,13 @@
 									{/if}
 
 									{#if experience.projects}
-										<h5 class="font-semibold text-gray-800 mb-2 mt-4 font-condensed">Notable Projects:</h5>
-										<ul class="space-y-1 text-gray-600 text-sm">
+										<h5 class="font-condensed mt-4 mb-2 font-semibold text-gray-800">
+											Notable Projects:
+										</h5>
+										<ul class="space-y-1 text-sm text-gray-600">
 											{#each experience.projects as project}
 												<li class="flex items-start">
-													<span class="text-black mr-2">•</span>
+													<span class="mr-2 text-black">•</span>
 													<span class="font-condensed">{project}</span>
 												</li>
 											{/each}
@@ -190,9 +197,7 @@
 									{/if}
 								</div>
 							{:else}
-								<div class="text-sm text-gray-500 font-condensed">
-									Click to view more details →
-								</div>
+								<div class="font-condensed text-sm text-gray-500">Click to view more details →</div>
 							{/if}
 						</div>
 					{/if}
@@ -205,11 +210,11 @@
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
-	
+
 	.font-condensed {
 		font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
 	}
-	
+
 	.font-mono {
 		font-family: 'Roboto Mono', 'Courier New', monospace;
 	}

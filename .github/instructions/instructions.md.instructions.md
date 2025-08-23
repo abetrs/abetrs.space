@@ -1,6 +1,7 @@
 ---
 applyTo: '**'
 ---
+
 # Instructions for GitHub Copilot: Building Abhayprad Jha's Personal Portfolio Website
 
 This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive multi-page portfolio website showcasing my background as a Computer Science student at William & Mary, internships, projects, and hobbies.
@@ -811,6 +812,46 @@ import { quintOut } from 'svelte/easing';
 - BlogPost preview components
 - External link handling for Substack/blog platforms
 - SEO-friendly meta descriptions
+
+#### Substack proxy
+
+To avoid CORS issues and to fetch Substack content server-side (so the site can show previews and avoid client-side cross-origin fetches), add and document a small server-side proxy. This project already contains an API route for Substack at `src/routes/api/substack/+server.js` — keep it documented here so contributors know the intent and a safe default implementation.
+
+Recommended behavior for the proxy:
+
+- Perform the Substack fetch server-side (SvelteKit `+server.js`) so the browser never calls Substack directly.
+- Validate any query parameters (avoid open proxies).
+- Add cache headers (or use an in-memory/edge cache) to reduce requests to Substack.
+- Set CORS headers appropriately (e.g. `Access-Control-Allow-Origin: *` if you need public access) or restrict to the site origin for stricter security.
+
+Example minimal `+server.js` implementation (place in `src/routes/api/substack/+server.js`):
+
+```js
+// Minimal server-side proxy for Substack posts
+export async function GET({ url }) {
+	// Optional: validate allowed params
+	const postPath = url.searchParams.get('path') || '';
+	const target = `https://abetheunicorn.substack.com${postPath}`;
+
+	const res = await fetch(target, { headers: { Accept: 'application/json' } });
+	const body = await res.text();
+
+	// Basic caching headers — tune for your needs
+	const headers = new Headers({
+		'content-type': res.headers.get('content-type') || 'text/plain',
+		'cache-control': 'public, max-age=300',
+		'access-control-allow-origin': '*'
+	});
+
+	return new Response(body, { status: res.status, headers });
+}
+```
+
+Notes:
+
+- Replace `https://abetheunicorn.substack.com` with your Substack base URL as needed.
+- Consider adding server-side rate limiting and stricter caching if traffic is expected to be high.
+- If you deploy to GitHub Pages you may need a separate server or edge function to host the proxy (GitHub Pages is static). For static-only deployments, either use Substack's public RSS/JSON endpoints directly from the serverless layer, or prefetch posts at build time.
 
 ### College Section
 
