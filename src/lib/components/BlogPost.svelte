@@ -1,8 +1,16 @@
 <script>
 	import { fade, fly } from 'svelte/transition';
 
-	// Props with default values
-	let { title, excerpt, publishedDate, readTime = 5, url = null, index = 0 } = $props();
+	// Props with default values (added coverImage)
+	let {
+		title,
+		excerpt,
+		publishedDate,
+		readTime = 5,
+		url = null,
+		index = 0,
+		coverImage = null
+	} = $props();
 
 	// Svelte 5 reactive state
 	let isHovered = $state(false);
@@ -10,12 +18,13 @@
 
 	// Derived values
 	let formattedDate = $derived(
-		!publishedDate ? 'Recent' : 
-		new Date(publishedDate).toLocaleDateString('en-US', {
-			month: 'long',
-			day: 'numeric',
-			year: 'numeric'
-		})
+		!publishedDate
+			? 'Recent'
+			: new Date(publishedDate).toLocaleDateString('en-US', {
+					month: 'long',
+					day: 'numeric',
+					year: 'numeric'
+				})
 	);
 
 	let animationDelay = $derived(index * 150);
@@ -36,9 +45,9 @@
 </script>
 
 <div
-	class="cursor-pointer rounded-lg border-l-4 border-black bg-white p-6 shadow-sm transition-all duration-300
-		{isHovered ? '-translate-y-1 transform shadow-md' : ''}
-		{isRead ? 'opacity-80' : ''}"
+	class="min-h-[520px] cursor-pointer rounded-lg border-l-4 border-black bg-white p-12 shadow-sm transition-all duration-300
+    		{isHovered ? '-translate-y-1 transform shadow-md' : ''}
+    		{isRead ? 'opacity-80' : ''}"
 	onmouseenter={() => (isHovered = true)}
 	onmouseleave={() => (isHovered = false)}
 	onclick={handleClick}
@@ -57,13 +66,24 @@
 		</div>
 	</div>
 
+	{#if coverImage}
+		<div class="mb-6">
+			<img
+				src={coverImage}
+				alt={title}
+				loading="lazy"
+				class="h-64 w-full rounded-md object-cover sm:h-72 md:h-80 lg:h-[320px] xl:h-[420px]"
+			/>
+		</div>
+	{/if}
+
 	<h3
-		class="font-condensed mb-3 text-[24px] font-semibold text-black transition-colors hover:text-gray-800"
+		class="font-condensed mb-4 text-[28px] leading-tight font-semibold text-black transition-colors hover:text-gray-800 md:text-[32px] lg:text-[36px] xl:text-[42px]"
 	>
 		{title}
 	</h3>
 
-	<p class="font-condensed mb-4 text-[18px] leading-relaxed text-gray-700">
+	<p class="font-condensed mb-6 text-[18px] leading-relaxed text-gray-700 md:text-[20px]">
 		{excerpt}
 	</p>
 
