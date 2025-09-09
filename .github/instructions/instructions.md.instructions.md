@@ -1502,3 +1502,23 @@ This documentation is current as of August 2025 and reflects all debugging lesso
 - `wheel` events for continued interaction at scroll limits
 
 This represents significant advancement in modern web navigation patterns and demonstrates sophisticated understanding of browser scroll behavior.
+
+## User feedback & iteration items
+
+The following items were added from recent user feedback and should be considered for future iterations and prioritized alongside the existing roadmap. Add these to the backlog and consider small spikes to prototype visualizations and project highlighting.
+
+- Fix small copy typos found in the home page bio (example: replace "ot" with "of").
+- Investigate and fix the "Continue scrolling to return to the beginning" behavior on the Blog page: currently the button works but continued scrolling at the bottom doesn't trigger the expected "return to top" behavior for some users. Consider improving wheel/scroll detection logic and thresholds.
+- Visualization ideas: brainstorm and add components to visualize timeline data and skills. Examples:
+  - Timeline chart for education + internships (horizontal timeline with hover details).
+  - Skills graph (radar chart or bubble chart by years/level/category).
+  - Small summary charts on the Home or Internships page showing counts by category (projects by tech, internships by year).
+- Projects curation UX: add an option to highlight featured projects to reduce cognitive overload for hiring managers. Suggested approaches:
+  - Add a `featured` boolean on project data and surface featured projects first in a "Showcase" section.
+  - Provide screenshots or short video/GIF demos on project cards to increase engagement.
+  - Offer a filter or "Recommended" toggle to surface only the top N projects.
+
+Next steps:
+
+- Create a small issue for each iteration item and prototype the timeline and skills visualizations using a lightweight charting library or SVG-based components.
+- For the Blog scroll issue, reproduce the problem locally, add logging to the wheel/scroll handlers, and tune the `scrollThreshold` and accumulation logic; consider listening to `wheel` events in addition to `scroll` for boundary detection.

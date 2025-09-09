@@ -140,6 +140,19 @@
 		window.lastScrollY = scrollTop;
 	}
 
+	function handleWheel(e) {
+		// When at the bottom, browsers may stop firing scroll events but wheel events continue.
+		if (typeof window === 'undefined' || !pageContainer) return;
+		if (!isAtBottom) return;
+		const delta = e.deltaY || 0;
+		if (delta > 0) {
+			accumulatedScroll += Math.abs(delta);
+			if (accumulatedScroll >= scrollThreshold) {
+				showBackToTop = true;
+			}
+		}
+	}
+
 	function scrollToTop() {
 		if (typeof window !== 'undefined') {
 			document.body.style.transition = 'opacity 400ms ease-in-out';
@@ -162,12 +175,15 @@
 	onMount(() => {
 		if (typeof window !== 'undefined') {
 			window.addEventListener('scroll', handleScroll, { passive: true });
+			// Also listen to wheel events to detect continued scroll intent at boundaries
+			window.addEventListener('wheel', handleWheel, { passive: true });
 
 			// Fetch recent posts from Substack (client-side only)
 			fetchRecentPosts().catch((e) => console.warn('fetchRecentPosts error', e));
 
 			return () => {
 				window.removeEventListener('scroll', handleScroll);
+				window.removeEventListener('wheel', handleWheel);
 			};
 		}
 	});
