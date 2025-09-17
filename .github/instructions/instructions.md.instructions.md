@@ -1522,3 +1522,18 @@ Next steps:
 
 - Create a small issue for each iteration item and prototype the timeline and skills visualizations using a lightweight charting library or SVG-based components.
 - For the Blog scroll issue, reproduce the problem locally, add logging to the wheel/scroll handlers, and tune the `scrollThreshold` and accumulation logic; consider listening to `wheel` events in addition to `scroll` for boundary detection.
+
+---
+
+## Chat session summary & actionable guidelines (added Sep 15 2025)
+
+This short appendix captures the most relevant, non-redundant patterns produced during a development session that added an audio menu and player to the Hobbies page. Keep this file concise; move long examples to `docs/`.
+
+- Svelte 5 runes: prefer simple `$derived` and functions for complex grouping; initialize visibility states (`$state(true)`) to avoid SSR blank pages; guard browser APIs with `typeof window !== 'undefined'` and use `onMount` for DOM-related logic.
+- Event handling: use `onclick`/`onkeydown`; add `role`/`tabindex` for non-button interactive elements; use `createEventDispatcher()` to emit child events (e.g., menu selections).
+- Audio assets: use `import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', { eager: true, as: 'url' })` to collect build-time URLs from `src/lib/assets/audio/`, or alternatively serve files from `static/audio/` and reference `/audio/...` URLs.
+- AudioPlayer checklist: manage `<audio>` in `onMount` with listeners for `timeupdate`, `loadedmetadata`, and `ended`; expose `songUrl` and `title` props; use a `$effect` to react to `songUrl` changes and autoplay safely; implement accessible progress controls and cleanup.
+- Accessibility: ensure keyboard access (Enter/Space, Arrow/Home/End), meaningful `aria-label`s, and consider `aria-live` for Now Playing updates.
+- Repo hygiene: if iterative edits corrupt a file (duplicated tags/fragments), prefer creating a clean replacement component and update imports; avoid leaving duplicate components with similar names.
+
+If you'd like, I can extract these notes into `docs/dev-guides.md` and keep this file focused on project-wide rules.

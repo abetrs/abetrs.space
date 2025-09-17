@@ -1,17 +1,25 @@
 <script>
 	import GalleryComponent from '$lib/components/GalleryComponent.svelte';
 	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
+	import SongMenu from '$lib/components/SongMenu.svelte';
+	import AudioPlayer from '$lib/components/AudioPlayer.svelte';
 	import { onMount } from 'svelte';
 	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
 	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
 	import { page } from '$app/stores';
+	// Dynamically discover audio assets from the project's audio folder using Vite's glob
+	// We use eager + as: 'url' so the build provides file URLs we can pass to the audio element.
+	const audioFiles = import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', {
+		eager: true,
+		as: 'url'
+	});
 
 	// Container reference for scroll detection
 	let pageContainer = $state(null);
 
 	// Scroll-to-next functionality
 	const scrollToNext = useScrollToNext();
-	
+
 	// Get next page name for indicator
 	let nextPagePath = $derived($page.url ? getNextPagePath($page.url.pathname) : null);
 	let nextPageName = $derived(() => {
@@ -37,128 +45,178 @@
 	// Hobbies gallery data using Svelte 5 runes
 	let hobbyItems = $state([
 		{
-			title: 'Ambient Soundscapes',
-			description: 'Curated playlists featuring ambient and atmospheric music for focus and relaxation.',
+			title: 'Placeholder: Music',
+			description: 'Short placeholder description for music-related hobby.',
 			category: 'music',
 			image: null,
-			tags: ['ambient', 'focus', 'productivity'],
-			details: 'A collection of carefully selected ambient tracks perfect for coding sessions and deep work.',
-			links: [
-				{ label: 'Spotify Playlist', url: 'https://open.spotify.com/playlist/example' },
-				{ label: 'SoundCloud', url: 'https://soundcloud.com/abhayprad' }
-			]
+			tags: ['music'],
+			details: 'Placeholder details about music hobby.',
+			links: []
 		},
 		{
-			title: 'Jazz Essentials',
-			description: 'Essential jazz tracks spanning from classic bebop to modern fusion.',
-			category: 'music',
-			image: null,
-			tags: ['jazz', 'bebop', 'fusion'],
-			details: 'Exploring the evolution of jazz through legendary artists and contemporary masters.',
-			links: [
-				{ label: 'Listen on Spotify', url: 'https://open.spotify.com/playlist/jazz-essentials' }
-			]
-		},
-		{
-			title: 'Campus Life Photography',
-			description: 'Capturing moments from daily life at William & Mary - from study sessions to cricket matches.',
+			title: 'Placeholder: Photography',
+			description: 'Short placeholder description for photography.',
 			category: 'photography',
 			image: null,
-			tags: ['campus', 'lifestyle', 'documentary'],
-			details: 'A photographic journal of college experiences, friendships, and academic journey.',
+			tags: ['photography'],
+			details: 'Placeholder details about photography hobby.',
 			links: []
 		},
 		{
-			title: 'Urban Architecture',
-			description: 'Exploring the geometric beauty and modern designs of urban landscapes and buildings.',
-			category: 'photography',
-			image: null,
-			tags: ['architecture', 'urban', 'geometric'],
-			details: 'Documenting the intersection of human creativity and functional design in cityscapes.',
-			links: []
-		},
-		{
-			title: 'Short Film: "Digital Disconnect"',
-			description: 'A 5-minute experimental film exploring our relationship with technology and social media.',
+			title: 'Placeholder: Film',
+			description: 'Short placeholder description for film/video work.',
 			category: 'film',
 			image: null,
-			tags: ['experimental', 'social-commentary', 'tech'],
-			details: 'Shot and edited independently, this film examines how digital devices impact human connection.',
-			links: [
-				{ label: 'Watch on Vimeo', url: 'https://vimeo.com/example-video' }
-			]
-		},
-		{
-			title: 'Documentary: "Startup Culture"',
-			description: 'Behind-the-scenes look at young entrepreneurs building tech companies.',
-			category: 'film',
-			image: null,
-			tags: ['documentary', 'entrepreneurship', 'tech'],
-			details: 'A 15-minute documentary following three student entrepreneurs as they develop their startups.',
+			tags: ['film'],
+			details: 'Placeholder details about film hobby.',
 			links: []
 		},
 		{
-			title: '3D Environment: Cyberpunk Cityscape',
-			description: 'Futuristic city environment with neon lighting and atmospheric effects.',
+			title: 'Placeholder: 3D Modeling',
+			description: 'Short placeholder description for 3D modeling.',
 			category: 'modeling',
 			image: null,
-			tags: ['cyberpunk', 'environment', 'lighting'],
-			details: 'Created in Blender with custom materials and volumetric lighting effects.',
-			links: [
-				{ label: 'View on ArtStation', url: 'https://artstation.com/example' }
-			]
-		},
-		{
-			title: 'Character Design: Sci-Fi Robot',
-			description: 'Detailed robot character with mechanical textures and procedural materials.',
-			category: 'modeling',
-			image: null,
-			tags: ['character', 'sci-fi', 'texturing'],
-			details: 'Full character pipeline from concept to final render, including rigging and animation tests.',
+			tags: ['3d'],
+			details: 'Placeholder details about 3D modeling hobby.',
 			links: []
-		},
-		{
-			title: 'Tech Blog: "Full-Stack Insights"',
-			description: 'Regular posts about web development, frameworks, and industry trends.',
-			category: 'writing',
-			image: null,
-			tags: ['tech', 'web-dev', 'tutorials'],
-			details: 'Sharing knowledge and experiences from internships and personal projects.',
-			links: [
-				{ label: 'Read on Substack', url: 'https://substack.com/@abhaypradjha' }
-			]
 		}
 	]);
+
+	// Build musicTracks dynamically from discovered files. Set artist to 'ReallyAbe'.
+	// Limit to 2 tracks (or fewer if fewer files exist).
+	let musicTracks = $state([]);
+
+	$effect(() => {
+		// audioFiles is an object mapping paths -> urls
+		const fileEntries = Object.entries(audioFiles || {});
+
+		// Map to simple objects and sort by filename for determinism
+		const tracks = fileEntries
+			.map(([path, url]) => {
+				// Derive a title from the filename
+				const parts = path.split('/');
+				const filename = parts[parts.length - 1];
+				const title = filename.replace(/\.(mp3|wav|ogg)$/i, '');
+				return { title, artist: 'ReallyAbe', src: url, duration: '' };
+			})
+			.sort((a, b) => a.title.localeCompare(b.title));
+
+		// Use up to 2 tracks
+		musicTracks = tracks.slice(0, 2);
+	});
+
+	// Selected song state shared between SongMenu and AudioPlayer
+	let selectedSong = $state(null);
+	let selectedIndex = $state(null);
+	// audio element reference exposed by AudioPlayer (bindable)
+	let audioEl = $state(null);
+	// optional analyser provided by AudioPlayer
+	let visualizerAnalyser = $state(null);
+	let visualizerAudioCtx = $state(null);
 </script>
 
 <!-- Content Area -->
-<div bind:this={pageContainer} class="w-full max-w-[800px]">
-	<div class="text-center">
-		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
-			Hobbies
-		</h1>
-		<div class="font-condensed text-[24px] leading-relaxed text-black">
-			<p class="mb-8">
-				Beyond coding and academics, I explore creativity through music, photography, film, and
-				3D modeling—each offering unique perspectives on design and storytelling.
+<div bind:this={pageContainer} class="mx-auto w-full max-w-[600px]">
+	<!-- Music Card: Now Playing + Player + Playlist -->
+	<div>
+		<h2 class="font-condensed mb-4 text-[28px] font-semibold tracking-[-1px] text-black">Music</h2>
+		<div class="mb-6 rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+			<div class="font-condensed mb-2 text-[14px] text-gray-600">Now Playing</div>
+			<div class="flex items-center justify-between">
+				<div class="font-condensed text-[18px] font-semibold">
+					{#if selectedSong}{selectedSong.title} — {selectedSong.artist}{:else}No track selected{/if}
+				</div>
+				{#if selectedSong}
+					<AudioPlayer
+						on:ready={(e) => {
+							console.debug('Hobbies: AudioPlayer ready event', e.detail);
+							queueMicrotask(() => {
+								audioEl = e.detail.audio;
+								if (e.detail.analyser) {
+									visualizerAnalyser = e.detail.analyser;
+									visualizerAudioCtx = e.detail.audioCtx || null;
+								}
+								console.debug('Hobbies: assigned audioEl', { audioEl, visualizerAnalyser });
+							});
+						}}
+						songUrl={selectedSong.src}
+						title={selectedSong.title}
+					/>
+				{/if}
+			</div>
+		</div>
+		<!-- Playlist beneath the player -->
+		<div>
+			<SongMenu
+				songs={musicTracks}
+				title="Tracks"
+				{selectedIndex}
+				on:select={(e) => {
+					selectedSong = e.detail.song;
+					selectedIndex = e.detail.index;
+				}}
+			/>
+		</div>
+	</div>
+
+	<!-- Film section -->
+	<div class="mt-12">
+		<h3 class="font-condensed mb-4 text-[22px] font-semibold tracking-[-1px] text-black">Film</h3>
+		<div class="rounded-md border border-gray-200 bg-white p-6 shadow-sm">
+			<h4 class="font-condensed mb-4 text-[18px] font-semibold text-black">Ellipses</h4>
+			<div class="mb-4 flex justify-center">
+				<iframe
+					width="480"
+					height="480"
+					src="https://www.youtube.com/embed/9JN5lsicZ6w?si=ATYZ6FzdovA0-Rwp"
+					title="YouTube video player"
+					frameborder="0"
+					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+					referrerpolicy="strict-origin-when-cross-origin"
+					allowfullscreen
+					class="aspect-square h-auto max-w-full"
+				></iframe>
+			</div>
+			<p class="font-condensed text-[16px] leading-relaxed text-black">
+				A collaborative short film created in partnership with Taiga Lewis for the prestigious
+				24Speed filmmaking competition. This award-winning romance was conceived, written, filmed,
+				and edited within a demanding 24-hour timeframe while adhering to strict creative
+				constraints. Our compelling storytelling and technical execution earned recognition with the
+				Audience Choice Award for Best Film.
 			</p>
 
-			<!-- Enhanced Gallery Component -->
-			<GalleryComponent 
-				items={hobbyItems}
-				title="Creative Portfolio"
-				columns={3}
-				showModal={true}
-			/>
-
-			<!-- Additional content to ensure scrolling is possible -->
-			<div class="mt-16 space-y-8 text-center">
-				<div class="text-sm text-gray-500 font-mono">
-					Continue scrolling to read my blog posts
+			<!-- Signed in Blood -->
+			<div class="mt-8">
+				<h4 class="font-condensed mb-4 text-[18px] font-semibold text-black">Signed in Blood</h4>
+				<div class="mb-4 flex justify-center">
+					<iframe
+						src="https://drive.google.com/file/d/1spDtVlX2rmnolsr9EOvl5qmBk58b6U2r/preview"
+						width="480"
+						height="480"
+						allow="autoplay"
+						title="Signed in Blood - Noir Short Film"
+						class="aspect-square h-auto max-w-full"
+					></iframe>
 				</div>
-				<!-- Spacer to enable scroll-to-next -->
-				<div class="h-32"></div>
+				<p class="font-condensed text-[16px] leading-relaxed text-black">
+					A noir thriller crafted for the 24Speed Film Festival at William & Mary, showcasing
+					atmospheric cinematography and classic genre elements. This moody short film demonstrates
+					our mastery of visual storytelling through careful lighting, composition, and shadow work.
+					The sophisticated visual aesthetic and technical precision earned recognition with the
+					Judges Award for Best Cinematography.
+				</p>
 			</div>
+		</div>
+	</div>
+
+	<!-- Photography placeholder -->
+	<div class="mt-8 mb-16">
+		<h3 class="font-condensed mb-4 text-[22px] font-semibold tracking-[-1px] text-black">
+			Photography
+		</h3>
+		<div class="rounded-md border border-dashed border-gray-200 bg-white/50 p-6 text-gray-400">
+			<!-- Intentionally left empty for future photography gallery -->
+			<div class="italic">Photography galleries will appear here.</div>
 		</div>
 	</div>
 </div>
@@ -166,7 +224,9 @@
 <!-- Scroll-to-next indicator -->
 {#if nextPagePath}
 	<ScrollToNextIndicator nextPageName={nextPageName()} />
-{/if}<style>
+{/if}
+
+<style>
 	/* Use Roboto Condensed as Arial Narrow substitute */
 	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
 

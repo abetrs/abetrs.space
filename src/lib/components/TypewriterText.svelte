@@ -33,7 +33,7 @@
 			);
 		} else if (currentIndex >= text.length && !isComplete) {
 			isComplete = true;
-			if (onComplete) onComplete();
+			if (onComplete) queueMicrotask(() => onComplete());
 
 			if (loop) {
 				setTimeout(() => {
@@ -72,8 +72,8 @@
 			displayText = text;
 			currentIndex = text.length;
 			isComplete = true;
-			if (onComplete) onComplete();
-			if (onClickComplete) onClickComplete();
+			if (onComplete) queueMicrotask(() => onComplete());
+			if (onClickComplete) queueMicrotask(() => onClickComplete());
 			// Clear any pending timeouts
 			if (timeoutId) {
 				clearTimeout(timeoutId);
@@ -88,12 +88,12 @@
 	});
 </script>
 
-<span 
-	class="typewriter-text cursor-pointer" 
+<span
+	class="typewriter-text cursor-pointer"
 	role="button"
 	tabindex="0"
 	onclick={complete}
-	onkeydown={(e) => e.key === 'Enter' || e.key === ' ' ? complete() : null}
+	onkeydown={(e) => (e.key === 'Enter' || e.key === ' ' ? complete() : null)}
 >
 	{displayText}<span class="animate-pulse text-black">{cursorDisplay}</span>
 </span>
