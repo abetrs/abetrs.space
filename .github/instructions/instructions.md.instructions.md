@@ -1503,6 +1503,217 @@ This documentation is current as of August 2025 and reflects all debugging lesso
 
 This represents significant advancement in modern web navigation patterns and demonstrates sophisticated understanding of browser scroll behavior.
 
+## ✅ Enhanced LeftBar.svelte - Sidebar Dropdown Navigation System
+
+**Purpose**: Advanced navigation sidebar with collapsible section dropdowns for quick content jumping
+
+**Navigation Store Integration**:
+
+```javascript
+// navigation.svelte.js - navigation items in sequential order
+export const navItems = [
+	{ name: 'Bio', path: '/' },
+	{ name: 'Internships', path: '/internships' },
+	{ name: 'Projects', path: '/projects' },
+	{ name: 'College', path: '/college' },
+	{ name: 'Hobbies', path: '/hobbies' },
+	{ name: 'Blog', path: '/blog' }
+];
+```
+
+**Dropdown Configuration Pattern**:
+
+```javascript
+// Define dropdown sections for specific pages
+const pageDropdowns = {
+	'/internships': [
+		{ label: 'Black Pearl Global Investments', anchor: '#company-black-pearl-global-investments' },
+		{ label: 'Deloitte', anchor: '#company-deloitte' },
+		{ label: 'TCS', anchor: '#company-tcs' }
+	],
+	'/projects': [
+		{ label: 'SpleenToTextBot', anchor: '#story-spleen-to-text-bot' },
+		{ label: 'AI-Powered Due Diligence Framework', anchor: '#story-black-pearl-ai' },
+		{ label: 'Itch - Playlist Exchange', anchor: '#story-playlist-exchange' },
+		{ label: 'Data Editor at The Flat Hat', anchor: '#story-flat-hat-data-editor' },
+		{ label: 'TCS Lithium Battery UX Prototype', anchor: '#story-tcs-lithium-ux' },
+		{ label: 'International Mini Market', anchor: '#story-international-mini-mart' }
+	],
+	'/hobbies': [
+		{ label: 'Music', anchor: '#music-section' },
+		{ label: 'Film', anchor: '#film-section' },
+		{ label: 'Photography', anchor: '#photography-section' }
+	]
+};
+```
+
+**Key Features**:
+
+- **Exclusive Dropdown Behavior**: Only one dropdown can be open at a time for clean UI
+- **Smart Navigation Logic**:
+  - Click section → Navigate to page + expand relevant dropdown
+  - Click section without dropdown → Navigate + close all dropdowns
+- **Anchor-Based Section Jumping**: Smooth scroll to specific content sections within pages
+- **Mobile Responsive**: Auto-collapse sidebar and dropdowns on mobile after navigation
+- **State Management**: Uses Svelte 5 `$state(new Set())` for tracking expanded dropdowns
+
+**Critical Implementation Patterns**:
+
+```javascript
+// Exclusive dropdown control - prevents multiple open dropdowns
+function handleNavigation(item.path) {
+	// Always navigate to the page first
+	handleNavigation(item.path);
+
+	// Close all dropdowns first, then expand only the current one if it has dropdown
+	setTimeout(() => {
+		if (pageDropdowns[item.path]) {
+			// Set only this dropdown as expanded (closes all others)
+			expandedDropdowns = new Set([item.path]);
+		} else {
+			// Close all dropdowns if this page doesn't have one
+			expandedDropdowns = new Set();
+		}
+	}, 100);
+}
+
+// Section jumping with proper anchor handling
+function handleSectionJump(anchor) {
+	// Remove # from anchor if present
+	const elementId = anchor.startsWith('#') ? anchor.slice(1) : anchor;
+	const element = document.getElementById(elementId);
+	if (element) {
+		element.scrollIntoView({
+			behavior: 'smooth',
+			block: 'start',
+			inline: 'nearest'
+		});
+	}
+}
+```
+
+**Component ID Requirements**:
+
+- **Timeline Components**: Must use `id="company-{sanitized-company-name}"` format
+- **Project Stories**: Must use `id="story-{project-id}"` format
+- **Hobby Sections**: Must use `id="{section}-section"` format
+
+**Responsive Behavior**:
+
+- **Desktop**: Sidebar visible by default, dropdowns expand in place
+- **Mobile**: Sidebar collapsed, glass backdrop when expanded, auto-collapse after navigation
+- **Keyboard Accessible**: Enter/Space keys trigger navigation and section jumping
+
+**UI Enhancement Features**:
+
+- **Visual Feedback**: Chevron rotation indicates dropdown state (`rotate-90` when expanded)
+- **Active Page Highlighting**: Current page shows `bg-gray-200 bg-opacity-40`
+- **Hover Effects**: Subtle `hover:bg-gray-100` transitions on all interactive elements
+- **Typography**: Roboto Mono for technical, monospace aesthetic
+
+**Critical Debugging Notes**:
+
+- **NEVER add auto-expand effects** that conflict with manual dropdown control
+- **Always use exclusive Set logic** to prevent multiple open dropdowns
+- **Ensure anchor IDs match** the dropdown anchor configuration exactly
+- **Test mobile responsiveness** to verify auto-collapse behavior works correctly
+
+## ✅ AudioPlayer.svelte & SongMenu.svelte - Music Playback System
+
+**Purpose**: Complete audio playback system with interactive playlist menu and advanced audio controls
+
+**AudioPlayer Component**:
+
+```javascript
+// Props structure
+let { songUrl = '', title = 'Track' } = $props();
+
+// State management with Svelte 5 runes
+let isPlaying = $state(false);
+let currentTime = $state(0);
+let duration = $state(0);
+let audioRef = $state(null);
+```
+
+**Key Features**:
+
+- **Browser-safe initialization**: Audio context setup in `onMount()` with proper cleanup
+- **Event dispatching**: Notifies parent components of playback state changes
+- **Progress controls**: Interactive seekbar with click-to-seek functionality
+- **Accessibility**: Keyboard navigation (Space for play/pause, Arrow keys for seeking)
+- **Auto-cleanup**: Proper disposal of audio context and event listeners
+
+**SongMenu Component**:
+
+```javascript
+// Props structure
+let { songs = [], title = 'Songs', selectedIndex = null } = $props();
+
+// Event dispatching pattern
+const dispatch = createEventDispatcher();
+
+function selectSong(index) {
+	queueMicrotask(() => dispatch('select', { song: songs[index], index }));
+}
+```
+
+**Integration Pattern (Hobbies Page)**:
+
+```svelte
+<script>
+	// Audio file discovery using Vite glob imports
+	const audioFiles = import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', {
+		eager: true,
+		as: 'url'
+	});
+
+	let songs = $state([
+		{
+			title: 'Track Name',
+			url: audioFiles['/src/lib/assets/audio/track.wav'],
+			duration: '3:45'
+		}
+	]);
+
+	let selectedSong = $state(null);
+	let selectedIndex = $state(null);
+
+	function handleSongSelect(event) {
+		selectedSong = event.detail.song;
+		selectedIndex = event.detail.index;
+	}
+</script>
+
+<!-- Usage in template -->
+<div id="music-section" class="space-y-6">
+	<SongMenu {songs} title="Music Tracks" {selectedIndex} onselect={handleSongSelect} />
+
+	{#if selectedSong}
+		<AudioPlayer songUrl={selectedSong.url} title={selectedSong.title} />
+	{/if}
+</div>
+```
+
+**Audio Asset Management**:
+
+- **File Location**: Place audio files in `src/lib/assets/audio/`
+- **Supported Formats**: `.mp3`, `.wav`, `.ogg` for broad browser compatibility
+- **Vite Integration**: Use `import.meta.glob()` for build-time asset discovery
+- **Fallback Strategy**: Graceful handling of missing or failed audio loads
+
+**Accessibility Features**:
+
+- **Keyboard Navigation**: Full keyboard control for both components
+- **ARIA Labels**: Descriptive labels for screen readers
+- **Focus Management**: Proper tab order and focus indicators
+- **Progress Indicators**: Visual and textual progress feedback
+
+**Performance Considerations**:
+
+- **Lazy Loading**: Audio context created only when needed
+- **Memory Management**: Proper cleanup prevents memory leaks
+- **Event Optimization**: Debounced time updates for smooth performance
+
 ## User feedback & iteration items
 
 The following items were added from recent user feedback and should be considered for future iterations and prioritized alongside the existing roadmap. Add these to the backlog and consider small spikes to prototype visualizations and project highlighting.
@@ -1532,8 +1743,63 @@ This short appendix captures the most relevant, non-redundant patterns produced 
 - Svelte 5 runes: prefer simple `$derived` and functions for complex grouping; initialize visibility states (`$state(true)`) to avoid SSR blank pages; guard browser APIs with `typeof window !== 'undefined'` and use `onMount` for DOM-related logic.
 - Event handling: use `onclick`/`onkeydown`; add `role`/`tabindex` for non-button interactive elements; use `createEventDispatcher()` to emit child events (e.g., menu selections).
 - Audio assets: use `import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', { eager: true, as: 'url' })` to collect build-time URLs from `src/lib/assets/audio/`, or alternatively serve files from `static/audio/` and reference `/audio/...` URLs.
-- AudioPlayer checklist: manage `<audio>` in `onMount` with listeners for `timeupdate`, `loadedmetadata`, and `ended`; expose `songUrl` and `title` props; use a `$effect` to react to `songUrl` changes and autoplay safely; implement accessible progress controls and cleanup.
 - Accessibility: ensure keyboard access (Enter/Space, Arrow/Home/End), meaningful `aria-label`s, and consider `aria-live` for Now Playing updates.
 - Repo hygiene: if iterative edits corrupt a file (duplicated tags/fragments), prefer creating a clean replacement component and update imports; avoid leaving duplicate components with similar names.
+- Component rendering issues: Always start with `isVisible = $state(true)` to prevent blank components when intersection observers fail; avoid duplicate array entries that can cause rendering conflicts.
+- Dropdown navigation: Use exclusive Set logic (`expandedDropdowns = new Set([item.path])`) to ensure only one dropdown is open at a time; never add auto-expand effects that conflict with manual control.
 
 If you'd like, I can extract these notes into `docs/dev-guides.md` and keep this file focused on project-wide rules.
+
+---
+
+## Recent Development Session Summary (Sep 17-18, 2025)
+
+### Critical Fixes Applied
+
+#### ✅ Sidebar Dropdown Navigation System
+
+- **Added dropdown functionality** to LeftBar.svelte for section-specific navigation
+- **Implemented exclusive dropdown behavior** - only one dropdown open at a time
+- **Fixed navigation logic** - clicking sections navigates to page AND manages dropdowns
+- **Added anchor-based section jumping** with smooth scrolling to specific content areas
+- **Resolved conflicting auto-expand effects** that were overriding manual dropdown control
+
+#### ✅ Component Rendering Issues Fixed
+
+- **ProjectCard loading**: Changed `isVisible = $state(false)` to `$state(true)` to prevent blank cards
+- **Timeline component**: Fixed multi-line ID generation causing potential rendering issues
+- **Removed duplicate project entries** that were causing array conflicts
+- **Intersection observer pattern**: Updated to use observers for animations only, not content visibility
+
+#### ✅ Audio System Implementation
+
+- **AudioPlayer.svelte**: Full-featured audio player with progress controls and accessibility
+- **SongMenu.svelte**: Interactive playlist menu with selection dispatching
+- **Audio asset integration**: Vite glob imports for build-time audio file discovery
+- **SSR-safe audio context**: Proper cleanup and browser environment checks
+
+#### ✅ Navigation Store Enhancements
+
+- **Sequential page order**: Defined proper navigation flow for scroll-to-next functionality
+- **Dropdown anchor mapping**: Matched dropdown labels to actual component IDs
+- **State management**: Exclusive Set logic prevents multiple open dropdowns
+
+### Component ID Standards Established
+
+- **Timeline companies**: `id="company-{sanitized-company-name}"`
+- **Project stories**: `id="story-{project-id}"`
+- **Hobby sections**: `id="{section}-section"`
+
+### Performance & UX Improvements
+
+- **Mobile responsiveness**: Auto-collapse behavior for all navigation interactions
+- **Accessibility compliance**: Full keyboard support and ARIA labels throughout
+- **Visual feedback**: Chevron rotations, hover states, and active page highlighting
+- **Clean UI**: Removed redundant "Go to [page]" buttons and conflicting effects
+
+### Development Patterns Validated
+
+- **Always start components visible**: `$state(true)` prevents SSR blank screens
+- **Use functions for complex data operations**: More reliable than nested `$derived`
+- **Proper event cleanup**: Essential for audio components and intersection observers
+- **Exclusive state management**: Critical for dropdown and modal behaviors
