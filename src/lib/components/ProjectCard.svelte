@@ -15,7 +15,7 @@
 
 	// Svelte 5 runes for reactive state
 	let isHovered = $state(false);
-	let isVisible = $state(false);
+	let isVisible = $state(true); // Start as visible to avoid blank cards
 	let cardRef = $state(null);
 
 	// Derived values using Svelte 5 $derived

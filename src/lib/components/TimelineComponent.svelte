@@ -95,6 +95,7 @@
 		<div class="space-y-8">
 			{#each sortedExperiences as experience, index}
 				<div
+					id="company-{experience.company.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')}"
 					class="group relative flex cursor-pointer items-start"
 					data-card-index={index}
 					onclick={() => (activeIndex = activeIndex === index ? null : index)}

@@ -117,15 +117,6 @@
 			githubUrl: undefined
 		},
 		{
-			id: 'transactions-app',
-			title: 'TransactionsApp',
-			description:
-				'A JavaScript-based application designed for accounting and tracking financial transactions with budgeting and logging features.',
-			tech: ['JavaScript'],
-			demoUrl: undefined,
-			githubUrl: 'https://github.com/abetrs/TransactionsApp'
-		},
-		{
 			id: 'space-race',
 			title: 'The Space Race',
 			description:
