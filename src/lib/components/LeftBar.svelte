@@ -158,7 +158,7 @@
 					onclick={() => {
 						// Always navigate to the page first
 						handleNavigation(item.path);
-						
+
 						// Close all dropdowns first, then expand only the current one if it has dropdown
 						setTimeout(() => {
 							if (pageDropdowns[item.path]) {
