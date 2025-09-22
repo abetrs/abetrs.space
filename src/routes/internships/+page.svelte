@@ -45,6 +45,38 @@
 	// Experience data using Svelte 5 runes - Based on actual resume
 	let experiences = $state([
 		{
+			company: 'William & Mary Computer Science Department',
+			logo: undefined,
+			position: 'Research Assistant, SBOM Tool Analysis',
+			startDate: '2025-01-15',
+			endDate: undefined,
+			current: true,
+			description:
+				'Conducting comprehensive analysis of Software Bill of Materials (SBOM) generation tools to evaluate dependency identification accuracy and completeness across multiple programming ecosystems.',
+			skills: [
+				'SBOM Analysis',
+				'Software Security',
+				'Python',
+				'JavaScript',
+				'Java',
+				'Go',
+				'Research Methodology',
+				'Tool Evaluation',
+				'Automated Testing'
+			],
+			achievements: [
+				'Conducted comparative analysis of 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems',
+				'Quantified dependency identification accuracy and completeness through systematic testing methodologies',
+				'Engineered automated frameworks to evaluate SBOM tool performance and identify coverage gaps',
+				'Documented metadata capture capabilities across enterprise repositories for comprehensive tool assessment'
+			],
+			projects: [
+				'Multi-ecosystem SBOM tool comparison study',
+				'Automated SBOM evaluation framework development',
+				'Enterprise repository metadata analysis system'
+			]
+		},
+		{
 			company: 'Black Pearl Global Investments',
 			logo: bpLogo,
 			position: 'Venture Capital Intern',
@@ -203,12 +235,12 @@
 <div bind:this={pageContainer} class="w-full max-w-[900px] space-y-12">
 	<div class="text-center">
 		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
-			Internships
+			Work Experience
 		</h1>
 		<p class="font-condensed mb-12 text-[24px] leading-relaxed text-black">
-			My professional journey through internships at leading companies, gaining hands-on experience
-			in venture capital, product strategy, and UX design while building AI-powered solutions and
-			leading product initiatives.
+			My professional journey through research assistantships and internships at leading companies,
+			gaining hands-on experience in research, venture capital, product strategy, and UX design
+			while building AI-powered solutions and leading product initiatives.
 		</p>
 	</div>
 

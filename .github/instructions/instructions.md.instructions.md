@@ -4,7 +4,7 @@ applyTo: '**'
 
 # Instructions for GitHub Copilot: Building Abhayprad Jha's Personal Portfolio Website
 
-This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive multi-page portfolio website showcasing my background as a Computer Science student at William & Mary, internships, projects, and hobbies.
+This file provides detailed guidance for generating code in this SvelteKit project. Use it to prompt Copilot for components, pages, layouts, and styles. The goal is to build a minimalist, responsive multi-page portfolio website showcasing my background as a Computer Science student at William & Mary, work experience, projects, and hobbies.
 
 ## Project Overview
 
@@ -417,7 +417,7 @@ This component solves the common UX issue where users want to skip animation and
 src/routes/
 ├── +layout.svelte (ALL shared components and centralized layout)
 ├── +page.svelte (Bio: profile image + about section)
-├── internships/+page.svelte (✅ Timeline + Skills components)
+├── internships/+page.svelte (✅ Work Experience Timeline + Skills components)
 ├── projects/+page.svelte (project showcase cards)
 ├── college/+page.svelte (William & Mary details)
 ├── hobbies/+page.svelte (creative pursuits gallery)
@@ -437,7 +437,7 @@ src/lib/components/
 └── TypewriterText.svelte (✅ Working interactive typewriter with click-to-complete)
 ```
 
-### ✅ Internships Page Implementation
+### ✅ Work Experience Page Implementation
 
 **Complete and working** - serves as the reference implementation for other pages:
 
@@ -455,7 +455,7 @@ src/lib/components/
 <div class="w-full max-w-[900px] space-y-12">
 	<div class="text-center">
 		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">
-			Internships
+			Work Experience
 		</h1>
 		<p class="font-condensed mb-12 text-[24px] leading-relaxed text-black">
 			Professional journey description...
@@ -557,7 +557,7 @@ When components don't render content:
 ### For Page Implementation
 
 ```
-"Build [page name] following the internships page pattern:
+"Build [page name] following the work experience page pattern:
 - Import only content-specific components
 - No layout components (TopBar/LeftBar already in +layout)
 - Content wrapper with max-w-[900px]
@@ -789,7 +789,7 @@ import { quintOut } from 'svelte/easing';
 - Key interests: technology, problem-solving, innovation
 - IntersectionObserver for scroll-based animations
 
-### Internships Section
+### Work Experience Section
 
 - TimelineComponent for chronological progression
 - SkillsCloud for animated technical skills display
@@ -881,7 +881,7 @@ Notes:
 
 ### Development Priorities
 
-1. Complete layout refactoring for remaining pages (internships, projects)
+1. Complete layout refactoring for remaining pages (work experience, projects)
 2. ✅ TypewriterText component with click-to-complete functionality (complete)
 3. Add content and data for all sections
 4. Implement contact form functionality
@@ -924,9 +924,9 @@ The Figma design shows a specific layout that should be implemented:
    - Large circular profile photo (centered)
    - "About Me" heading and paragraph text
    - Professional photo placeholder
-   - Bio text about CS student, internships, and goals
+   - Bio text about CS student, work experience, and goals
 
-2. **Internships Section**:
+2. **Work Experience Section**:
    - Timeline or card layout for work experience
    - Deloitte (2024), Black Pearl Global Investments (2023), TCS (2022)
    - Focus on tech consulting, data analysis, full-stack development
@@ -955,7 +955,7 @@ The Figma design shows a specific layout that should be implemented:
 
 ### Navigation Structure
 
-- Left sidebar navigation (from Figma): Bio, Internships, Projects, College, Hobbies, Blog
+- Left sidebar navigation (from Figma): Bio, Work Experience, Projects, College, Hobbies, Blog
 - Right sidebar social links: Blog (Substack), LinkedIn, GitHub, Resume
 - Smooth scrolling between sections
 - Mobile: Convert sidebars to collapsible menu or footer layout
@@ -1101,7 +1101,7 @@ onMount(() => {
 #### LeftBar Component (`src/lib/components/LeftBar.svelte`)
 
 - **Responsive Collapsible Navigation**: Automatically collapses on screens < 1024px (lg breakpoint)
-- **Navigation Items**: Bio, Internships, Projects, College, Hobbies, Blog with proper routing
+- **Navigation Items**: Bio, Work Experience, Projects, College, Hobbies, Blog with proper routing
 - **Interactive Features**:
   - Active page highlighting with `bg-gray-200 bg-opacity-40`
   - Hover effects with subtle gray background (`hover:bg-gray-100`)
@@ -1276,7 +1276,7 @@ Start by implementing the basic layout structure that matches the Figma design!
 // Navigation items in sequential order
 export const navItems = [
 	{ name: 'Bio', path: '/' },
-	{ name: 'Internships', path: '/internships' },
+	{ name: 'Work Experience', path: '/internships' },
 	{ name: 'Projects', path: '/projects' },
 	{ name: 'College', path: '/college' },
 	{ name: 'Hobbies', path: '/hobbies' },
@@ -1352,7 +1352,7 @@ export function useScrollToNext() {
 	// Reactive page name mapping
 	let nextPagePath = $derived($page.url ? getNextPagePath($page.url.pathname) : null);
 	let nextPageName = $derived(() => {
-		if (nextPagePath === '/internships') return 'Internships';
+		if (nextPagePath === '/internships') return 'Work Experience';
 		if (nextPagePath === '/projects') return 'Projects';
 		// ... other mappings
 		return 'Next Page';
@@ -1513,7 +1513,7 @@ This represents significant advancement in modern web navigation patterns and de
 // navigation.svelte.js - navigation items in sequential order
 export const navItems = [
 	{ name: 'Bio', path: '/' },
-	{ name: 'Internships', path: '/internships' },
+	{ name: 'Work Experience', path: '/internships' },
 	{ name: 'Projects', path: '/projects' },
 	{ name: 'College', path: '/college' },
 	{ name: 'Hobbies', path: '/hobbies' },
@@ -1527,6 +1527,10 @@ export const navItems = [
 // Define dropdown sections for specific pages
 const pageDropdowns = {
 	'/internships': [
+		{
+			label: 'William & Mary Research Assistant',
+			anchor: '#company-william-&-mary-research-assistant'
+		},
 		{ label: 'Black Pearl Global Investments', anchor: '#company-black-pearl-global-investments' },
 		{ label: 'Deloitte', anchor: '#company-deloitte' },
 		{ label: 'TCS', anchor: '#company-tcs' }
@@ -1721,9 +1725,9 @@ The following items were added from recent user feedback and should be considere
 - Fix small copy typos found in the home page bio (example: replace "ot" with "of").
 - Investigate and fix the "Continue scrolling to return to the beginning" behavior on the Blog page: currently the button works but continued scrolling at the bottom doesn't trigger the expected "return to top" behavior for some users. Consider improving wheel/scroll detection logic and thresholds.
 - Visualization ideas: brainstorm and add components to visualize timeline data and skills. Examples:
-  - Timeline chart for education + internships (horizontal timeline with hover details).
+  - Timeline chart for education + work experience (horizontal timeline with hover details).
   - Skills graph (radar chart or bubble chart by years/level/category).
-  - Small summary charts on the Home or Internships page showing counts by category (projects by tech, internships by year).
+  - Small summary charts on the Home or Work Experience page showing counts by category (projects by tech, work experience by year).
 - Projects curation UX: add an option to highlight featured projects to reduce cognitive overload for hiring managers. Suggested approaches:
   - Add a `featured` boolean on project data and surface featured projects first in a "Showcase" section.
   - Provide screenshots or short video/GIF demos on project cards to increase engagement.

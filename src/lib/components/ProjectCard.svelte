@@ -10,7 +10,8 @@
 		githubUrl = null,
 		index = 0,
 		projectId = null,
-		hasStory = false
+		hasStory = false,
+		logo = null
 	} = $props();
 
 	// Svelte 5 runes for reactive state
@@ -81,9 +82,18 @@
 		aria-label="Project: {title}"
 	>
 		<div class="p-6">
-			<h3 class="font-condensed mb-4 text-[28px] font-semibold text-black">
-				{title}
-			</h3>
+			<div class="mb-4 flex items-center gap-3">
+				{#if logo}
+					<img
+						src={logo}
+						alt="{title} logo"
+						class="h-12 w-12 flex-shrink-0 rounded-lg object-contain"
+					/>
+				{/if}
+				<h3 class="font-condensed text-[28px] font-semibold text-black">
+					{title}
+				</h3>
+			</div>
 
 			<p class="font-condensed mb-4 text-[18px] leading-relaxed text-gray-700">
 				{description}

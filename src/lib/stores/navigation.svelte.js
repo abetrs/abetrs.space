@@ -4,7 +4,7 @@
 // Navigation items in order
 export const navItems = [
 	{ name: 'Bio', path: '/' },
-	{ name: 'Internships', path: '/internships' },
+	{ name: 'Work Experience', path: '/internships' },
 	{ name: 'Projects', path: '/projects' },
 	{ name: 'College', path: '/college' },
 	{ name: 'Hobbies', path: '/hobbies' },
