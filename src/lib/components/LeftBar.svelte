@@ -28,7 +28,6 @@
 			{ label: 'TCS', anchor: '#company-tcs' }
 		],
 		'/projects': [
-			{ label: 'SBOM Analysis Framework', anchor: '#story-sbom-analysis-framework' },
 			{ label: 'SpleenToTextBot', anchor: '#story-spleen-to-text-bot' },
 			{ label: 'AI-Powered Due Diligence Framework', anchor: '#story-black-pearl-ai' },
 			{ label: 'Itch - Playlist Exchange', anchor: '#story-playlist-exchange' },

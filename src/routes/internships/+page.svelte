@@ -67,13 +67,7 @@
 			achievements: [
 				'Conducted comparative analysis of 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems',
 				'Quantified dependency identification accuracy and completeness through systematic testing methodologies',
-				'Engineered automated frameworks to evaluate SBOM tool performance and identify coverage gaps',
-				'Documented metadata capture capabilities across enterprise repositories for comprehensive tool assessment'
-			],
-			projects: [
-				'Multi-ecosystem SBOM tool comparison study',
-				'Automated SBOM evaluation framework development',
-				'Enterprise repository metadata analysis system'
+				'Documented metadata capture capabilities across repositories for comprehensive tool assessment'
 			]
 		},
 		{

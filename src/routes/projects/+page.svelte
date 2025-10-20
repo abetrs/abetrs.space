@@ -41,16 +41,6 @@
 	// Project data using Svelte 5 runes
 	let projects = $state([
 		{
-			id: 'sbom-analysis-framework',
-			title: 'SBOM Analysis Framework',
-			description:
-				'Comprehensive research framework evaluating Software Bill of Materials (SBOM) generation tools across multiple programming ecosystems. Developed automated evaluation systems and comparative analysis methodologies to assess dependency identification accuracy and completeness.',
-			tech: ['Python', 'Go', 'JavaScript', 'Java', 'Research Methods', 'Automation', 'SBOM Tools'],
-			demoUrl: undefined,
-			githubUrl: undefined,
-			logo: sbomLogo
-		},
-		{
 			id: 'spleen-to-text-bot',
 			title: 'SpleenToTextBot',
 			description:
@@ -149,27 +139,6 @@
 
 	// Product management stories data
 	let productStories = $state([
-		{
-			projectId: 'sbom-analysis-framework',
-			title: 'SBOM Analysis Framework',
-			challenge:
-				'Software supply chain security faced <strong>critical visibility gaps</strong> as organizations struggled to identify and track dependencies across diverse programming ecosystems. Existing SBOM generation tools provided <strong>inconsistent coverage</strong> and accuracy, creating blind spots in vulnerability management and compliance efforts.',
-			solution:
-				'Designed and implemented a <strong>comprehensive evaluation methodology</strong> for comparing 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems. Created <strong>automated testing frameworks</strong> to systematically assess dependency identification accuracy, completeness, and tool performance under various scenarios.',
-			impact:
-				'Delivered actionable insights for organizations to select optimal SBOM tools for their specific technology stacks. Research findings provided <strong>evidence-based recommendations</strong> that improved dependency visibility and reduced supply chain security risks across multiple programming environments.',
-			metrics: [
-				'<strong>15+</strong> SBOM generation tools analyzed',
-				'<strong>4</strong> programming ecosystems evaluated',
-				'<strong>Multi-framework</strong> automated evaluation system',
-				'<strong>Comprehensive</strong> coverage gap analysis'
-			],
-			lessons: [
-				'<strong>Standardized evaluation criteria</strong> are essential for meaningful tool comparisons',
-				'<strong>Automation frameworks</strong> enable scalable and reproducible research methodologies',
-				'<strong>Multi-ecosystem analysis</strong> reveals critical patterns in dependency management'
-			]
-		},
 		{
 			projectId: 'black-pearl-ai',
 			title: 'AI-Powered Due Diligence Framework',
