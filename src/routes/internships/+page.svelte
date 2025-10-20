@@ -3,6 +3,7 @@
 	import SkillsCloud from '$lib/components/SkillsCloud.svelte';
 	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
 	// Internship logos
+	import wmLogo from '$lib/assets/photos/College/WilliamandMary.png';
 	import bpLogo from '$lib/assets/photos/Internships/black_pearl_global_investments_logo-3394222977.jpeg';
 	import deloitteLogo from '$lib/assets/photos/Internships/us-deloitte-logo-707218455.jpg';
 	import tcsLogo from '$lib/assets/photos/Internships/TCS-Logo-Tata-consultancy-service-3916172614.png';
@@ -46,7 +47,7 @@
 	let experiences = $state([
 		{
 			company: 'William & Mary Computer Science Department',
-			logo: undefined,
+			logo: wmLogo,
 			position: 'Research Assistant, SBOM Tool Analysis',
 			startDate: '2025-01-15',
 			endDate: undefined,
