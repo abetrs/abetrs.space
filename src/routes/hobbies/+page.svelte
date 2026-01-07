@@ -1,18 +1,10 @@
 <script>
 	import GalleryComponent from '$lib/components/GalleryComponent.svelte';
 	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
-	import SongMenu from '$lib/components/SongMenu.svelte';
-	import AudioPlayer from '$lib/components/AudioPlayer.svelte';
 	import { onMount } from 'svelte';
 	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
 	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
 	import { page } from '$app/stores';
-	// Dynamically discover audio assets from the project's audio folder using Vite's glob
-	// We use eager + as: 'url' so the build provides file URLs we can pass to the audio element.
-	const audioFiles = import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', {
-		eager: true,
-		as: 'url'
-	});
 
 	// Dynamically discover photography images (web-compatible formats only)
 	const photographyFiles = import.meta.glob(
@@ -91,38 +83,6 @@
 		}
 	]);
 
-	// Build musicTracks dynamically from discovered files. Set artist to 'ReallyAbe'.
-	// Limit to 2 tracks (or fewer if fewer files exist).
-	let musicTracks = $state([]);
-
-	$effect(() => {
-		// audioFiles is an object mapping paths -> urls
-		const fileEntries = Object.entries(audioFiles || {});
-
-		// Map to simple objects and sort by filename for determinism
-		const tracks = fileEntries
-			.map(([path, url]) => {
-				// Derive a title from the filename
-				const parts = path.split('/');
-				const filename = parts[parts.length - 1];
-				const title = filename.replace(/\.(mp3|wav|ogg)$/i, '');
-				return { title, artist: 'ReallyAbe', src: url, duration: '' };
-			})
-			.sort((a, b) => a.title.localeCompare(b.title));
-
-		// Use up to 2 tracks
-		musicTracks = tracks.slice(0, 2);
-	});
-
-	// Selected song state shared between SongMenu and AudioPlayer
-	let selectedSong = $state(null);
-	let selectedIndex = $state(null);
-	// audio element reference exposed by AudioPlayer (bindable)
-	let audioEl = $state(null);
-	// optional analyser provided by AudioPlayer
-	let visualizerAnalyser = $state(null);
-	let visualizerAudioCtx = $state(null);
-
 	// Photography gallery state
 	let photographyImages = $state([]);
 	let currentImageIndex = $state(0);
@@ -160,45 +120,54 @@
 
 <!-- Content Area -->
 <div bind:this={pageContainer} class="mx-auto w-full max-w-[600px]">
-	<!-- Music Card: Now Playing + Player + Playlist -->
+	<!-- Music Section with Spotify Embeds -->
 	<div id="music">
 		<h2 class="font-condensed mb-4 text-[28px] font-semibold tracking-[-1px] text-black">Music</h2>
-		<div class="mb-6 rounded-md border border-gray-200 bg-white p-4 shadow-sm">
-			<div class="font-condensed mb-2 text-[14px] text-gray-600">Now Playing</div>
-			<div class="flex items-center justify-between">
-				<div class="font-condensed text-[18px] font-semibold">
-					{#if selectedSong}{selectedSong.title} — {selectedSong.artist}{:else}No track selected{/if}
-				</div>
-				{#if selectedSong}
-					<AudioPlayer
-						on:ready={(e) => {
-							console.debug('Hobbies: AudioPlayer ready event', e.detail);
-							queueMicrotask(() => {
-								audioEl = e.detail.audio;
-								if (e.detail.analyser) {
-									visualizerAnalyser = e.detail.analyser;
-									visualizerAudioCtx = e.detail.audioCtx || null;
-								}
-								console.debug('Hobbies: assigned audioEl', { audioEl, visualizerAnalyser });
-							});
-						}}
-						songUrl={selectedSong.src}
-						title={selectedSong.title}
-					/>
-				{/if}
+		<div class="space-y-4">
+			<!-- Track 1: Swirl -->
+			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+				<iframe
+					style="border-radius:12px"
+					src="https://open.spotify.com/embed/track/5on2Z9P0gdlcwQT5C9nWXb?utm_source=generator"
+					width="100%"
+					height="152"
+					frameBorder="0"
+					allowfullscreen=""
+					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+					loading="lazy"
+					title="Spotify Track: Swirl"
+				></iframe>
 			</div>
-		</div>
-		<!-- Playlist beneath the player -->
-		<div>
-			<SongMenu
-				songs={musicTracks}
-				title="Tracks"
-				{selectedIndex}
-				on:select={(e) => {
-					selectedSong = e.detail.song;
-					selectedIndex = e.detail.index;
-				}}
-			/>
+
+			<!-- Track 2: Guten Tag -->
+			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+				<iframe
+					style="border-radius:12px"
+					src="https://open.spotify.com/embed/track/6lXIeb9Rz0yoYWoUcFlZjt?utm_source=generator"
+					width="100%"
+					height="152"
+					frameBorder="0"
+					allowfullscreen=""
+					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+					loading="lazy"
+					title="Spotify Track: Guten Tag"
+				></iframe>
+			</div>
+
+			<!-- Album: The Spleen -->
+			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
+				<iframe
+					style="border-radius:12px"
+					src="https://open.spotify.com/embed/album/6sqAqWYjtU1PSkmZYtvrFp?utm_source=generator"
+					width="100%"
+					height="352"
+					frameBorder="0"
+					allowfullscreen=""
+					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+					loading="lazy"
+					title="Spotify Album: The Spleen"
+				></iframe>
+			</div>
 		</div>
 	</div>
 
@@ -267,7 +236,7 @@
 							<img
 								src={image.url}
 								alt="Photography by Abhayprad Jha - {image.filename}"
-								class="h-auto w-full rounded-md shadow-sm transition-shadow duration-300 hover:shadow-md"
+								class="h-auto max-h-[500px] w-full rounded-md object-cover shadow-sm transition-shadow duration-300 hover:shadow-md"
 								loading="lazy"
 								onerror={(e) => (e.target.style.display = 'none')}
 							/>
@@ -278,7 +247,7 @@
 
 			<!-- Mobile: Carousel -->
 			<div class="block md:hidden">
-				<div class="relative overflow-hidden rounded-md bg-gray-100" style="height: 60vh;">
+				<div class="relative overflow-hidden rounded-md bg-gray-100" style="height: 50vh;">
 					<div
 						class="flex h-full transition-transform duration-300 ease-in-out"
 						style="transform: translateX(-{currentImageIndex * 100}%)"
