@@ -23,7 +23,9 @@
 	<RightBar />
 
 	<!-- Main Content with responsive left margin -->
-	<main class="ml-0 mr-0 flex flex-col items-center justify-center px-4 py-8 lg:ml-[200px] lg:mr-[200px]">
+	<main
+		class="mr-0 ml-0 flex flex-col items-center justify-center px-4 py-8 lg:mr-[250px] lg:ml-[200px]"
+	>
 		{@render children?.()}
 	</main>
 </div>
