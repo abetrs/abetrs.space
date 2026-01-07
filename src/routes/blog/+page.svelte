@@ -29,79 +29,81 @@
 
 	// Try JSON endpoint first, then fallback to RSS feed parsing
 	async function fetchRecentPosts() {
-		const proxy = '/api/substack';
-		const max = 3;
-		let posts = [];
+		const blogs = [
+			{ blog: 'underground', name: 'The Underground' },
+			{ blog: 'cricwar', name: 'CricWAR' }
+		];
+		const maxTotal = 3;
+		let allPosts = [];
 
-		try {
-			const res = await fetch(proxy);
-			if (!res.ok) throw new Error('Proxy fetch failed');
-			const payload = await res.json();
+		// Fetch from both blogs via proxy
+		for (const blogConfig of blogs) {
+			try {
+				const res = await fetch(`/api/substack?blog=${blogConfig.blog}`);
+				if (!res.ok) continue;
 
-			if (payload.type === 'json' && payload.data) {
-				const data = payload.data;
-				const candidates = data?.posts || data?.stories || data?.articles || data?.recent || [];
-				for (const p of candidates) {
-					if (!p) continue;
-					posts.push({
-						title: p.title || p.name || p.headline || '',
-						excerpt: stripHtml(
-							p.preview || p.description || p.excerpt || p.snippet || p.summary || p.content || ''
-						),
-						coverImage: p.image || p.cover_image || p.image_url || p.thumbnail || null,
-						publishedDate: p.date || p.published_at || p.publishedDate || null,
-						readTime: p.read_time_minutes || null,
-						url: p.url || (p.slug ? 'https://abetheunicorn.substack.com/p/' + p.slug : null)
-					});
-					if (posts.length >= max) break;
-				}
-			} else if (payload.type === 'rss' && payload.data) {
-				const xml = payload.data;
-				const parser = new DOMParser();
-				const doc = parser.parseFromString(xml, 'text/xml');
-				const items = Array.from(doc.querySelectorAll('item'));
-				for (const item of items) {
-					const title = item.querySelector('title')?.textContent || '';
-					const description =
-						item.querySelector('description')?.textContent ||
-						item.querySelector('content\\:encoded')?.textContent ||
-						'';
-					let cover = null;
-					const imgMatch = (description || '').match(/<img[^>]+src=["']?([^"'>\s]+)["']?/i);
-					if (imgMatch) cover = imgMatch[1];
-					if (!cover) {
-						const enclosure = item.querySelector('enclosure');
-						if (enclosure && enclosure.getAttribute('url')) cover = enclosure.getAttribute('url');
+				const payload = await res.json();
+
+				if (payload.type === 'rss' && payload.data) {
+					const xml = payload.data;
+					const parser = new DOMParser();
+					const doc = parser.parseFromString(xml, 'text/xml');
+
+					// Check for XML parsing errors
+					if (doc.getElementsByTagName('parsererror').length > 0) {
+						console.warn(`Failed to parse RSS for ${blogConfig.name}`);
+						continue;
 					}
 
-					const link = item.querySelector('link')?.textContent || null;
-					const pubDate = item.querySelector('pubDate')?.textContent || null;
+					const items = Array.from(doc.querySelectorAll('item'));
+					for (const item of items) {
+						const title = item.querySelector('title')?.textContent || '';
+						const description =
+							item.querySelector('description')?.textContent ||
+							item.querySelector('content\\:encoded')?.textContent ||
+							'';
+						let cover = null;
+						const imgMatch = (description || '').match(/<img[^>]+src=["']?([^"'>\s]+)["']?/i);
+						if (imgMatch) cover = imgMatch[1];
+						if (!cover) {
+							const enclosure = item.querySelector('enclosure');
+							if (enclosure && enclosure.getAttribute('url')) cover = enclosure.getAttribute('url');
+						}
 
-					posts.push({
-						title,
-						excerpt: stripHtml(description).slice(0, 300),
-						coverImage: cover,
-						publishedDate: pubDate,
-						readTime: null,
-						url: link
-					});
+						const link = item.querySelector('link')?.textContent || null;
+						const pubDate = item.querySelector('pubDate')?.textContent || null;
 
-					if (posts.length >= max) break;
+						// Parse date for sorting
+						const publishedDate = pubDate ? new Date(pubDate) : new Date(0);
+
+						allPosts.push({
+							title,
+							excerpt: stripHtml(description).slice(0, 300),
+							coverImage: cover,
+							publishedDate: pubDate,
+							publishedDateObj: publishedDate,
+							readTime: null,
+							url: link,
+							source: blogConfig.name
+						});
+					}
 				}
+			} catch (e) {
+				console.warn(`Failed to fetch posts from ${blogConfig.name}:`, e);
 			}
-		} catch (e) {
-			console.warn('Proxy fetch failed', e);
 		}
 
-		// Finalize posts (keep up to `max`). If still empty, keep some static fallback if desired.
-		if (posts.length > 0) {
-			blogPosts = posts.slice(0, max).map((p, i) => ({
+		// Sort by date (most recent first) and take top 3
+		if (allPosts.length > 0) {
+			allPosts.sort((a, b) => b.publishedDateObj - a.publishedDateObj);
+			blogPosts = allPosts.slice(0, maxTotal).map((p, i) => ({
 				title: p.title || 'Untitled',
 				excerpt: p.excerpt || 'No preview available.',
 				coverImage: p.coverImage || null,
 				publishedDate: p.publishedDate || null,
 				readTime: p.readTime || 5,
-				url: p.url || 'https://abetheunicorn.substack.com'
+				url: p.url || 'https://abetheunicorn.substack.com',
+				source: p.source
 			}));
 		}
 	}
@@ -191,23 +193,34 @@
 
 <div bind:this={pageContainer} class="w-full max-w-[1200px]">
 	<div class="text-center">
-		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">Blog</h1>
+		<h1 class="font-condensed mb-8 text-[48px] font-bold tracking-[-2px] text-black">Blog(s)</h1>
 		<div class="font-condensed text-[24px] leading-relaxed text-black">
 			<p class="mb-8">
-				Thoughts and insights on technology, design, and the intersection of innovation with
-				real-world problem solving. Follow my journey through tech, culture, and creative
-				exploration.
+				I have two blogs where I explore two of my biggest passions. The first is a journal-like
+				music and culture blog where I review my favorite pieces and share my music journey with the
+				world. The second is an analytic exploration of cricket, uncovering evidence-based insights
+				about the sport in a layman-friendly way.
 			</p>
 
 			<div class="space-y-8 text-left">
 				<div class="rounded-lg border-l-4 border-black bg-white p-6 shadow-sm">
-					<h3 class="mb-2 text-[28px] font-semibold">Memo</h3>
+					<h3 class="mb-2 text-[28px] font-semibold">The Underground</h3>
+					<p class="mb-4 text-[18px] text-gray-700">Reflections on music, culture and more</p>
+					<a
+						href="https://theunderground.substack.com/"
+						class="text-[18px] text-black underline hover:no-underline"
+					>
+						Read on Substack →
+					</a>
+				</div>
+
+				<div class="rounded-lg border-l-4 border-black bg-white p-6 shadow-sm">
+					<h3 class="mb-2 text-[28px] font-semibold">CricWAR</h3>
 					<p class="mb-4 text-[18px] text-gray-700">
-						Regular posts about creativity, design, development insights, and personal reflections
-						on the creative process.
+						Bringing 21st Century cricket tactics to the people
 					</p>
 					<a
-						href="https://abetheunicorn.substack.com/"
+						href="https://cricwar.substack.com/"
 						class="text-[18px] text-black underline hover:no-underline"
 					>
 						Read on Substack →

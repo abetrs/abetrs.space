@@ -542,36 +542,6 @@ When components don't render content:
 - [ ] Contact form implementation
 - [ ] Performance optimization and deployment
 
-## How to Prompt Copilot (Updated)
-
-### For New Components
-
-```
-"Create a [component name] following the working TimelineComponent pattern with:
-- State starting as visible ($state(true))
-- Simple $derived expressions
-- Functions for complex data grouping
-- No conditional rendering blocking initial display"
-```
-
-### For Page Implementation
-
-```
-"Build [page name] following the work experience page pattern:
-- Import only content-specific components
-- No layout components (TopBar/LeftBar already in +layout)
-- Content wrapper with max-w-[900px]
-- Roboto Condensed typography"
-```
-
-### For Data Structures
-
-```
-"Design data structure for [component] following the established patterns in TimelineComponent and SkillsCloud with proper typing and required/optional fields"
-```
-
-This updated documentation reflects all learnings from debugging the timeline and skills components, providing a reliable foundation for future development.
-
 ## SSR-Safe Development Patterns (CRITICAL)
 
 Since this project uses SvelteKit with SSR, follow these patterns to avoid 500 errors:
@@ -900,17 +870,6 @@ Notes:
 
 Remember: The goal is a clean, professional portfolio with proper SSR support, responsive design, and maintainable code architecture. Every component should follow established patterns and serve a clear purpose in the overall site structure.
 
-## Figma Design Implementation Notes
-
-The Figma design shows a specific layout that should be implemented:
-
-1. **Header Bar**: White background, contains "Abhayprad Jha" in italic narrow font (left) and barcode-style text element (right)
-2. **Left Navigation**: Vertical list of sections with right-pointing arrows
-3. **Main Content**: Centered with circular profile photo and about text
-4. **Right Sidebar**: Icon + label combinations for social links
-5. **Typography Hierarchy**: Name is largest, navigation is medium, body text is smaller
-6. **Spacing**: Clean, generous whitespace throughout
-
 ## Site Structure
 
 - **Root Layout (`src/routes/+layout.svelte`)**: Currently minimal, needs header with name/barcode, navigation sidebar, and social sidebar
@@ -959,126 +918,6 @@ The Figma design shows a specific layout that should be implemented:
 - Right sidebar social links: Blog (Substack), LinkedIn, GitHub, Resume
 - Smooth scrolling between sections
 - Mobile: Convert sidebars to collapsible menu or footer layout
-
-## Current Implementation Status
-
-### Completed Components
-
-#### TopBar Component (`src/lib/components/TopBar.svelte`)
-
-- **Reusable header component** for consistent navigation across pages
-- **Positioning**: Sticky top positioning (`sticky top-0 z-50`) for persistent header
-- **Layout**:
-  - Left side: "Abhayprad Jha" in Arial Narrow italics with -6% letter spacing
-  - Right side: Barcode-style text using Libre Barcode 128 font
-  - Height: 100px (optimized from initial 202px for better proportion)
-  - Background: Matches page background (`bg-gray-50`) for seamless integration
-- **Typography Implementation**:
-  - Primary font: Roboto Condensed as Arial Narrow fallback
-  - Barcode font: Libre Barcode 128 from Google Fonts
-  - Font size: 68px for name, 52px for barcode element
-
-#### Home Page Layout (`src/routes/+page.svelte`)
-
-- **Complete Bio section implementation** matching Figma design
-- **Profile Image**: Flattened oval placeholder (501px × 300px) for better visual proportion
-- **Content Structure**:
-  - TopBar component integration
-  - Centered layout with proper spacing
-  - "About Me" section with condensed typography
-  - Responsive design with Tailwind utilities
-- **Typography**: Consistent font implementation with proper letter spacing and tracking
-
-### Technical Implementation Details
-
-#### Font Management
-
-- **Google Fonts Integration**: Roboto Condensed and Libre Barcode 128
-- **Fallback Strategy**: Arial Narrow → Roboto Condensed → Arial → sans-serif
-- **Custom CSS Classes**: `.font-condensed` and `.font-barcode` for consistent application
-- **Letter Spacing**: -6% for name text to match design specifications
-
-#### Layout Architecture
-
-- **Sticky Header**: Properly implemented without wrapper containers that break positioning
-- **Component Reusability**: TopBar designed for use across multiple pages
-- **Background Consistency**: Unified gray-50 background throughout application
-- **Responsive Design**: Mobile-first approach with Tailwind responsive utilities
-
-#### Development Patterns Established
-
-- **Component Structure**: Reusable components in `src/lib/components/`
-- **Import Pattern**: Consistent component imports using `$lib/` alias
-- **Styling Approach**: Tailwind-first with custom CSS only for fonts and specific effects
-- **No External Dependencies**: Font loading handled via Google Fonts CDN
-- **Responsive Navigation**: Mobile-first collapsible sidebar with smooth transitions
-- **State Management**: Svelte stores for page routing, reactive state for screen size detection
-- **Accessibility**: ARIA labels, keyboard navigation, semantic HTML structure
-
-### Advanced Implementation Patterns
-
-#### Responsive Component Logic
-
-```javascript
-// Screen size detection with reactive updates
-let isMobile = false;
-
-function checkScreenSize() {
-	if (typeof window !== 'undefined') {
-		isMobile = window.innerWidth < 1024; // lg breakpoint
-		if (isMobile && !isCollapsed) {
-			isCollapsed = true; // Auto-collapse on mobile
-		}
-	}
-}
-
-onMount(() => {
-	checkScreenSize();
-	window.addEventListener('resize', checkScreenSize);
-	return () => window.removeEventListener('resize', checkScreenSize);
-});
-```
-
-#### Mobile-First Navigation Pattern
-
-```svelte
-<!-- Conditional rendering based on screen size -->
-{#if isCollapsed || isMobile}
-	<button class="toggle-button">...</button>
-{/if}
-
-<!-- Responsive sidebar with smooth transitions -->
-<nav class="sidebar {isCollapsed ? '-translate-x-full' : 'translate-x-0'}">
-	<!-- Navigation content -->
-</nav>
-
-<!-- Mobile-only glass backdrop effect -->
-{#if !isCollapsed && isMobile}
-	<div class="backdrop-blur-sm" transition:fade>...</div>
-{/if}
-```
-
-#### Font System Implementation
-
-- **Primary Navigation**: Roboto Mono for technical, modern appearance
-- **Headers & Body**: Roboto Condensed for clean, condensed layout
-- **Barcode Element**: Libre Barcode 128 for unique design accent
-- **Fallback Strategy**: Comprehensive fallbacks for cross-platform compatibility
-
-### Known Design Decisions
-
-1. **Height Optimization**: TopBar reduced from 202px to 100px for better screen real estate usage
-2. **Shadow Approach**: Subtle shadows can be added (`shadow-sm`) but currently clean design preferred
-3. **Image Placeholder**: Oval shape (501px × 300px) provides flatter, more elegant proportion than circular
-4. **Sticky Behavior**: TopBar sticks properly when not wrapped in padding containers
-5. **Font Loading**: External font loading via CSS imports in component styles
-6. **Mobile Breakpoint**: 1024px (lg) chosen as mobile/desktop breakpoint for optimal sidebar behavior
-7. **Navigation Typography**: Roboto Mono selected for technical, monospace aesthetic in sidebar
-8. **Glass Effect Scope**: Backdrop blur limited to mobile only for performance and UX optimization
-9. **Z-Index Layering**: Systematic layering (toggle: z-60, sidebar: z-50, backdrop: z-20, content: default)
-10. **Transition Timing**: 300ms duration across all animations for consistent, smooth experience
-11. **Auto-Collapse Logic**: Sidebar automatically collapses on mobile after navigation for better UX
-12. **Responsive Margins**: Different left margins for Bio page (150px) vs other pages (200px) for design balance
 
 ## Implementation Priority
 
@@ -1147,104 +986,18 @@ onMount(() => {
 - [ ] Optimize for GitHub Pages deployment
 - [ ] Add SEO meta tags and structured data
 
-## Development Guidelines Based on Implementation
+## Development Guidelines
 
-### Component Creation Patterns
+Build pages following these core patterns:
 
-```svelte
-<!-- Component Template Pattern -->
-<script>
-	// Minimal script when no props needed
-</script>
-
-<!-- Clean HTML structure with Tailwind -->
-<div class="sticky top-0 z-50 h-[100px] w-full bg-gray-50">
-	<!-- Content -->
-</div>
-
-<style>
-	/* External font imports */
-	@import url('https://fonts.googleapis.com/css2?family=Font+Name&display=swap');
-
-	/* Custom CSS classes for reusability */
-	.custom-class {
-		font-family: 'Font Name', fallback, sans-serif;
-	}
-</style>
-```
-
-### Sticky Positioning Best Practices
-
-- **Avoid wrapper containers** with padding around sticky elements
-- **Use proper z-index** (z-50 for headers) to ensure layering
-- **Match background colors** to parent containers for seamless integration
-- **Test scrolling behavior** with sufficient content height
-
-### Typography System Implementation
-
-- **Load fonts in component styles** rather than global CSS when component-specific
-- **Use CSS custom properties** for consistent letter spacing across elements
-- **Implement fallback fonts** for better loading performance and accessibility
-- **Size elements with px values** for precise control matching design specs
-
-### Component Layout Patterns
-
-- **Component-first approach**: Break UI into reusable components from the start
-- **Consistent import patterns**: Use `$lib/` aliases for clean imports
-- **Background consistency**: Ensure all components use unified color scheme
-- **Mobile-first responsive**: Start with mobile layout and enhance for desktop
-
-## How to Prompt Copilot (Updated)
-
-### For Components
-
-```text
-"Create a reusable [component name] component following the established pattern with sticky positioning and consistent typography"
-```
-
-### For Typography
-
-```text
-"Implement typography using the established font system with Roboto Condensed fallback and proper letter spacing"
-```
-
-### For Layout
-
-```text
-"Build [section name] following the TopBar component pattern with proper Tailwind classes and responsive design"
-```
-
-### For Styling
-
-```text
-"Add styling that matches the current gray-50 background with consistent spacing and the established design system"
-```
-
-## Additional Features
-
-- **Animations**: Fade-in on scroll, hover effects on navigation and social links
-- **Contact Integration**: Add contact form or direct email links
-- **Performance**: Lazy-load images, optimize for GitHub Pages
-- **SEO**: Add proper meta tags, Open Graph data, structured data
-- **Accessibility**: ARIA labels, keyboard navigation, screen reader support
-
-## How to Prompt Copilot
-
-- For layout: "Create the main layout structure based on the Figma design with left navigation sidebar, center content, and right social sidebar"
-- For components: "Generate a Svelte component for the circular profile section with image and about text"
-- For navigation: "Implement smooth scrolling navigation between portfolio sections"
-- For styling: "Style the navigation sidebar to match the Figma design with arrows and clean typography"
-- For sections: "Create the [specific section] content area with responsive design"
-
-## Development Notes
-
-- Use Svelte 5 runes ($state, $derived, $effect) for reactive functionality
-- Leverage Tailwind 4.0 features and new plugin system
-- Ensure GitHub Pages compatibility with adapter-auto
-- Follow semantic HTML structure for better SEO and accessibility
-- Test responsive design across devices during development
-
-Start by implementing the basic layout structure that matches the Figma design!
+- **Svelte 5 Runes**: Use $state, $derived, $effect consistently
+- **Component Visibility**: Always start with `$state(true)` to prevent blank renders
+- **Derived Values**: Use simple expressions or functions, not callback wrappers
+- **Browser APIs**: Always check `typeof window !== 'undefined'`
+- **Responsive Design**: Mobile-first approach with Tailwind utilities
+- **Typography**: Component-level font imports, Roboto Condensed/Mono preferred
+- **Accessibility**: ARIA labels, keyboard navigation, semantic HTML
+- **Z-index Hierarchy**: TopBar (50) > LeftBar/RightBar (40) > Content (default)
 
 ---
 
@@ -1744,6 +1497,8 @@ Next steps:
 
 This short appendix captures the most relevant, non-redundant patterns produced during a development session that added an audio menu and player to the Hobbies page. Keep this file concise; move long examples to `docs/`.
 
+This short appendix captures the most relevant, non-redundant patterns produced during a development session that added an audio menu and player to the Hobbies page. Keep this file concise; move long examples to `docs/`.
+
 - Svelte 5 runes: prefer simple `$derived` and functions for complex grouping; initialize visibility states (`$state(true)`) to avoid SSR blank pages; guard browser APIs with `typeof window !== 'undefined'` and use `onMount` for DOM-related logic.
 - Event handling: use `onclick`/`onkeydown`; add `role`/`tabindex` for non-button interactive elements; use `createEventDispatcher()` to emit child events (e.g., menu selections).
 - Audio assets: use `import.meta.glob('$lib/assets/audio/*.{mp3,wav,ogg}', { eager: true, as: 'url' })` to collect build-time URLs from `src/lib/assets/audio/`, or alternatively serve files from `static/audio/` and reference `/audio/...` URLs.
@@ -1751,6 +1506,82 @@ This short appendix captures the most relevant, non-redundant patterns produced 
 - Repo hygiene: if iterative edits corrupt a file (duplicated tags/fragments), prefer creating a clean replacement component and update imports; avoid leaving duplicate components with similar names.
 - Component rendering issues: Always start with `isVisible = $state(true)` to prevent blank components when intersection observers fail; avoid duplicate array entries that can cause rendering conflicts.
 - Dropdown navigation: Use exclusive Set logic (`expandedDropdowns = new Set([item.path])`) to ensure only one dropdown is open at a time; never add auto-expand effects that conflict with manual control.
+
+---
+
+## Development Session Summary (January 7, 2026)
+
+### Projects Page Updates
+
+#### ✅ Project Curation
+
+- **Removed 5 projects**: TransactionsApp, Gesture Project, The Space Race, Astronomer, International Mini Market
+- **Added 2 new projects** at the top (most recent first):
+  - **CricWAR**: Platform for 21st century cricket analytics with Substack blog link
+  - **SBOM Tool Evaluation**: Research assistantship project evaluating SBOM tools accuracy with Product Management Story
+- **ProjectCard component enhanced**: Added `substackUrl` prop to support Substack blog links with Substack icon button
+
+#### ✅ SBOM Product Management Story
+
+- Created comprehensive PM story for SBOM Tool Evaluation project
+- Covers: challenge (lack of systematic tool evaluation), solution (large-scale comparative analysis across 40+ Java repos), impact (exposed systematic failure patterns), metrics, and lessons learned
+- Demonstrates tool-specific optimizations (Microsoft for file provenance, Snyk for transitive dependencies, Trivy limitations)
+
+#### ✅ Blog System Redesign
+
+**RightBar Updates**:
+
+- Changed blog link from generic "Blog" to "CricWAR Blog" pointing to https://cricwar.substack.com/
+- Added new "The Underground" blog link pointing to https://theunderground.substack.com/
+- Increased RightBar width from `w-[200px]` to `w-[250px]` to accommodate longer text
+
+**Blog Page Updates**:
+
+- Updated intro text to explain both blog passions: music/culture (The Underground) and cricket analytics (CricWAR)
+- Replaced "Memo" section with "The Underground" (description: "Reflections on music, culture and more")
+- Added "CricWAR" section (description: "Bringing 21st Century cricket tactics to the people")
+- Changed page title and sidebar navigation from "Blog" to "Blog(s)"
+
+**Blog Post Fetching Logic**:
+
+- Updated `fetchRecentPosts()` to scrape from both blogs via server-side proxy
+- Fetches up to 3 posts from each blog (The Underground and CricWAR)
+- Sorts all posts chronologically and displays 3 most recent across both blogs
+- Fixed CORS issues by routing through `/api/substack?blog={underground|cricwar}` proxy
+
+#### ✅ Server-Side Proxy Enhancement
+
+- Updated `/api/substack/+server.js` to accept `blog` query parameter
+- Maps blog parameters: `underground` → https://abetheunicorn.substack.com, `cricwar` → https://cricwar.substack.com
+- Prevents CORS errors by fetching RSS feeds server-side instead of directly from browser
+- Returns RSS XML wrapped in JSON with caching headers (300s)
+
+### Navigation Updates
+
+- Navigation store (`navigation.svelte.js`) updated with "Blog(s)" label
+- Consistent branding across sidebar, page titles, and RightBar
+
+### Key Implementation Patterns
+
+**Substack Integration**:
+
+- Use server-side proxy for all Substack API calls (avoid CORS)
+- Blog parameter pattern: `/api/substack?blog={identifier}`
+- RSS feed parsing with error handling for multiple sources
+- Date-based sorting and filtering for multi-blog feeds
+
+**Blog Component Enhancements**:
+
+- ProjectCard now supports `substackUrl` prop for direct blog links
+- Blog boxes use consistent styling with border-left accent and Substack links
+- Recent Posts section aggregates posts from multiple sources
+
+### Testing Notes
+
+- Verify RSS feed parsing works for both The Underground and CricWAR Substack instances
+- Confirm proxy returns valid XML and handles feed errors gracefully
+- Test sorting of posts from different blogs by publication date
+- Check mobile responsiveness of RightBar at 250px width
 
 If you'd like, I can extract these notes into `docs/dev-guides.md` and keep this file focused on project-wide rules.
 

@@ -41,6 +41,25 @@
 	// Project data using Svelte 5 runes
 	let projects = $state([
 		{
+			id: 'cricwar',
+			title: 'CricWAR',
+			description:
+				"A platform that brings 21st century cricket analytics to the people. I've built advanced statistical models that place traditional cricket metrics in the context of the game, measure the value of a player's contribution, and predict the probability of a team winning. I use this platform to write a blog providing interesting insights into patterns in the game.",
+			tech: ['Python', 'Statistical Modeling', 'Data Analysis', 'Cricket Analytics', 'Substack'],
+			demoUrl: undefined,
+			githubUrl: undefined,
+			substackUrl: 'https://cricwar.substack.com/'
+		},
+		{
+			id: 'sbom-research',
+			title: 'SBOM Tool Evaluation',
+			description:
+				'Conducted systematic evaluation of SBOM tools (Microsoft SBOM Tool, Trivy, Snyk) across 40+ Java repositories. Built automated evaluation pipeline and computed precision/recall metrics to expose failure modes in dependency detection and version handling.',
+			tech: ['Python', 'Security Research', 'SBOM', 'Software Composition Analysis', 'Evaluation'],
+			demoUrl: undefined,
+			githubUrl: undefined
+		},
+		{
 			id: 'spleen-to-text-bot',
 			title: 'SpleenToTextBot',
 			description:
@@ -84,61 +103,33 @@
 			tech: ['User Research', 'Figma', 'Design Systems', 'UX Strategy', 'Prototyping'],
 			demoUrl: undefined,
 			githubUrl: undefined
-		},
-		{
-			id: 'international-mini-mart',
-			title: 'International Mini Market',
-			description:
-				'Managed end-to-end execution of a pop-up retail event featuring 50+ international products, achieving 100% sell-through rate within 2 hours through strategic stakeholder coordination.',
-			tech: [
-				'Product Management',
-				'Event Coordination',
-				'Stakeholder Management',
-				'Market Validation'
-			],
-			demoUrl: undefined,
-			githubUrl: undefined
-		},
-		{
-			id: 'transactions-app',
-			title: 'TransactionsApp',
-			description:
-				'A JavaScript-based application designed for accounting and tracking financial transactions with budgeting and logging features.',
-			tech: ['JavaScript'],
-			demoUrl: undefined,
-			githubUrl: 'https://github.com/abetrs/TransactionsApp'
-		},
-		{
-			id: 'gesture-project',
-			title: 'GestureProject',
-			description:
-				'An accessibility-focused hackathon project that enables control of video playback (like YouTube) using hand gestures, ideal for scenarios where touching the keyboard is inconvenient.',
-			tech: ['Python', 'OpenCV', 'CVZone'],
-			demoUrl: undefined,
-			githubUrl: undefined
-		},
-		{
-			id: 'space-race',
-			title: 'The Space Race',
-			description:
-				"A simple shoot 'em up video game developed as a personal project in 10th grade to simulate space exploration challenges.",
-			tech: ['C#', 'Unity'],
-			demoUrl: 'https://abetheunicorn.itch.io/personal-project',
-			githubUrl: 'https://github.com/abetrs/The-Space-Race_Finale'
-		},
-		{
-			id: 'astronomer',
-			title: 'Astronomer',
-			description:
-				'Robot control code for the 2018-2019 FIRST Tech Challenge competition, built as an Android app to manage competition robots.',
-			tech: ['Java', 'Android'],
-			demoUrl: undefined,
-			githubUrl: 'https://github.com/FTC11648/Astronomer'
 		}
 	]);
 
 	// Product management stories data
 	let productStories = $state([
+		{
+			projectId: 'sbom-research',
+			title: 'SBOM Tool Evaluation',
+			challenge:
+				'Widely used SBOM tools lacked <strong>systematic accuracy evaluation</strong> and understanding of their practical limitations. Organizations relied on these tools for <strong>vulnerability scanning and compliance</strong> without clear insight into <strong>failure modes in dependency detection</strong>, version handling, and multi-module repository analysis.',
+			solution:
+				'Designed and executed a <strong>large-scale comparative evaluation</strong> of three leading SBOM tools (Microsoft SBOM Tool, Trivy, Snyk) across 40+ Java repositories using a curated ground truth dataset. Built an <strong>automated evaluation pipeline in Python</strong> and developed custom analysis scripts to compute precision, recall, and component-level metrics, enabling <strong>reproducible cross-tool analysis</strong>.',
+			impact:
+				'Exposed <strong>systematic failure patterns</strong> including missed transitive dependencies, version mismatches in multi-module repositories, and fundamental differences between file-centric and package-centric SBOM modeling. Research revealed that Microsoft SBOM Tool achieved near-perfect accuracy for <strong>file provenance</strong>, Snyk excelled at <strong>transitive dependency analysis</strong>, while Trivy systematically missed deeper dependency trees—insights only visible through <strong>systematic evaluation</strong>.',
+			metrics: [
+				'<strong>40+</strong> Java repositories evaluated against ground truth',
+				'<strong>3</strong> major SBOM tools compared (Microsoft, Trivy, Snyk)',
+				'<strong>Automated</strong> Python pipeline for reproducible evaluation',
+				'<strong>Precision/Recall</strong> metrics computed at component level'
+			],
+			lessons: [
+				'<strong>SBOM tools optimize for different objectives</strong>—vulnerability scanning vs. file provenance vs. dependency graphs',
+				'<strong>Multi-module repositories</strong> are a dominant source of tool disagreement and semantic errors',
+				'<strong>Systematic evaluation at scale</strong> reveals failure modes invisible through isolated analysis',
+				'<strong>Tool correctness is semantic</strong>, not just formatting—directly affecting downstream security and license analysis'
+			]
+		},
 		{
 			projectId: 'black-pearl-ai',
 			title: 'AI-Powered Due Diligence Framework',
@@ -217,27 +208,6 @@
 				'<strong>Design systems</strong> significantly accelerate handoff and implementation',
 				'<strong>Compliance requirements</strong> must be embedded in UX from the start'
 			]
-		},
-		{
-			projectId: 'international-mini-mart',
-			title: 'International Mini Market',
-			challenge:
-				'Campus lacked <strong>accessible international products</strong> and cultural exchange opportunities. Students from diverse backgrounds had limited access to familiar foods and products, creating a gap in <strong>cultural representation and community building</strong>.',
-			solution:
-				'Designed and executed an <strong>end-to-end pop-up retail strategy</strong> featuring 50+ international products. Coordinated with <strong>10 multi-cultural organizations</strong> to ensure authentic product sourcing, strategic marketing, and efficient logistics for maximum campus reach.',
-			impact:
-				'Achieved exceptional <strong>product-market fit validation</strong> with 100% sell-through rate within 2 hours. Exceeded revenue targets while creating a <strong>sustainable model</strong> for cultural exchange and community engagement through retail innovation.',
-			metrics: [
-				'<strong>100%</strong> sell-through rate within 2 hours',
-				'<strong>50+</strong> international products featured',
-				'<strong>10</strong> multi-cultural organizations coordinated',
-				'<strong>200%</strong> revenue target exceeded'
-			],
-			lessons: [
-				'<strong>Stakeholder alignment</strong> is critical for multi-organization coordination',
-				'<strong>Product-market fit</strong> can be validated through rapid sell-through metrics',
-				'<strong>Cultural authenticity</strong> drives stronger community engagement'
-			]
 		}
 	]);
 
@@ -264,6 +234,7 @@
 						tech={project.tech}
 						demoUrl={project.demoUrl}
 						githubUrl={project.githubUrl}
+						substackUrl={project.substackUrl}
 						projectId={project.id}
 						hasStory={projectsWithStories.has(project.id)}
 						logo={project.logo}

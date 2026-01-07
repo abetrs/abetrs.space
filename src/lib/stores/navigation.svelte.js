@@ -8,7 +8,7 @@ export const navItems = [
 	{ name: 'Projects', path: '/projects' },
 	{ name: 'College', path: '/college' },
 	{ name: 'Hobbies', path: '/hobbies' },
-	{ name: 'Blog', path: '/blog' }
+	{ name: 'Blog(s)', path: '/blog' }
 ];
 
 // State for tracking scroll-to-next behavior

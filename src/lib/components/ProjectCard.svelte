@@ -8,6 +8,7 @@
 		tech = [],
 		demoUrl = null,
 		githubUrl = null,
+		substackUrl = null,
 		index = 0,
 		projectId = null,
 		hasStory = false,
@@ -21,8 +22,8 @@
 
 	// Derived values using Svelte 5 $derived
 	let animationDelay = $derived(index * 100);
-	let hasLinks = $derived(demoUrl || githubUrl);
-	let hasAnyActions = $derived(demoUrl || githubUrl || (projectId && hasStory));
+	let hasLinks = $derived(demoUrl || githubUrl || substackUrl);
+	let hasAnyActions = $derived(demoUrl || githubUrl || substackUrl || (projectId && hasStory));
 	let cardClasses = $derived(`
 		bg-white border border-gray-300 rounded-lg transition-all duration-300 hover:shadow-lg
 		${isHovered ? 'transform hover:-translate-y-1' : ''}
@@ -138,6 +139,21 @@
 						</button>
 					{/if}
 
+					{#if substackUrl}
+						<button
+							class="font-condensed flex flex-shrink-0 items-center gap-2 rounded-lg bg-black px-3 py-2 text-[14px] text-white transition-colors duration-200 hover:bg-gray-800"
+							onclick={() => openLink(substackUrl)}
+						>
+							<!-- Substack icon SVG -->
+							<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+								<path
+									d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"
+								/>
+							</svg>
+							Blog
+						</button>
+					{/if}
+
 					{#if projectId && hasStory}
 						<button
 							class="font-condensed flex-shrink-0 rounded-lg bg-black px-3 py-2 text-[14px] text-white transition-colors duration-200 hover:bg-gray-800"
@@ -150,8 +166,6 @@
 			{/if}
 		</div>
 	</div>
-{:else}
-	<div bind:this={cardRef} class="h-[250px]"></div>
 {/if}
 
 <style>

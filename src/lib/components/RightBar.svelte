@@ -5,23 +5,28 @@
 
 	// Social and resume links with SVG icons
 	const socialLinks = [
-		{ 
-			name: 'Blog', 
-			url: 'https://abetheunicorn.substack.com',
+		{
+			name: 'CricWAR Blog',
+			url: 'https://cricwar.substack.com/',
 			iconType: 'substack'
 		},
-		{ 
-			name: 'LinkedIn', 
+		{
+			name: 'The Underground',
+			url: 'https://theunderground.substack.com/',
+			iconType: 'substack'
+		},
+		{
+			name: 'LinkedIn',
 			url: 'https://www.linkedin.com/in/abhayprad-jha-b12390223/',
 			iconType: 'linkedin'
 		},
-		{ 
-			name: 'GitHub', 
+		{
+			name: 'GitHub',
 			url: 'https://github.com/abetrs',
 			iconType: 'github'
 		},
-		{ 
-			name: 'Resume', 
+		{
+			name: 'Resume',
 			url: resumePdf,
 			iconType: 'resume'
 		}
@@ -71,7 +76,7 @@
 			// For external links, open in new tab
 			window.open(url, '_blank', 'noopener,noreferrer');
 		}
-		
+
 		// Auto-collapse on mobile after click
 		if (isMobile) {
 			isCollapsed = true;
@@ -132,7 +137,7 @@
 
 <!-- Right Sidebar Social Links -->
 <nav
-	class="fixed top-[100px] right-0 z-40 h-[calc(100vh-100px)] w-[200px] bg-gray-50 px-6 py-8 transition-transform duration-300 ease-in-out
+	class="fixed top-[100px] right-0 z-40 h-[calc(100vh-100px)] w-[250px] bg-gray-50 px-6 py-8 transition-transform duration-300 ease-in-out
 	{isCollapsed ? 'translate-x-full' : 'translate-x-0'}"
 >
 	<!-- Close button (visible when expanded on mobile) -->
@@ -161,12 +166,15 @@
 					onclick={() => handleLinkClick(link.url)}
 				>
 					<span class="flex items-center gap-3">
-						<span class="text-gray-700 group-hover:text-black transition-colors duration-200">
+						<span class="text-gray-700 transition-colors duration-200 group-hover:text-black">
 							{@html getIcon(link.iconType)}
 						</span>
 						<span>{link.name}</span>
 					</span>
-					<span class="text-[16px] text-gray-600 group-hover:text-black transition-colors duration-200">↗</span>
+					<span
+						class="text-[16px] text-gray-600 transition-colors duration-200 group-hover:text-black"
+						>↗</span
+					>
 				</button>
 			</li>
 		{/each}

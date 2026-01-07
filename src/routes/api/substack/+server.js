@@ -1,7 +1,16 @@
 // Server-side proxy for Substack feeds to avoid CORS in the browser.
 // Returns JSON: { type: 'json', data } or { type: 'rss', data: '<xml>...</xml>' }
-export async function GET() {
-	const target = 'https://abetheunicorn.substack.com';
+export async function GET({ url }) {
+	// Get blog parameter from query string
+	const blogParam = url.searchParams.get('blog') || 'underground';
+
+	// Map blog names to URLs
+	const blogUrls = {
+		underground: 'https://abetheunicorn.substack.com',
+		cricwar: 'https://cricwar.substack.com'
+	};
+
+	const target = blogUrls[blogParam] || blogUrls['underground'];
 	const headers = { 'content-type': 'application/json' };
 
 	try {
