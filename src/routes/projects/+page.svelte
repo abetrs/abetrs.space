@@ -75,7 +75,8 @@
 				'Designed and proposed a Claude-based automation framework for venture capital due diligence at Black Pearl Global Investments, targeting 40-60% efficiency improvements through intelligent workflow orchestration.',
 			tech: ['AI Strategy', 'LangChain', 'Claude AI', 'n8n', 'Zapier', 'Product Strategy'],
 			demoUrl: undefined,
-			githubUrl: undefined
+			githubUrl: undefined,
+			figmaUrl: 'https://www.figma.com/slides/8mwqkeYUqmmdhKKFxmuFxD'
 		},
 		{
 			id: 'playlist-exchange',
@@ -234,8 +235,7 @@
 						tech={project.tech}
 						demoUrl={project.demoUrl}
 						githubUrl={project.githubUrl}
-						substackUrl={project.substackUrl}
-						projectId={project.id}
+						substackUrl={project.substackUrl}					figmaUrl={project.figmaUrl}						projectId={project.id}
 						hasStory={projectsWithStories.has(project.id)}
 						logo={project.logo}
 						{index}

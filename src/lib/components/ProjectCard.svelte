@@ -9,6 +9,7 @@
 		demoUrl = null,
 		githubUrl = null,
 		substackUrl = null,
+		figmaUrl = null,
 		index = 0,
 		projectId = null,
 		hasStory = false,
@@ -22,8 +23,8 @@
 
 	// Derived values using Svelte 5 $derived
 	let animationDelay = $derived(index * 100);
-	let hasLinks = $derived(demoUrl || githubUrl || substackUrl);
-	let hasAnyActions = $derived(demoUrl || githubUrl || substackUrl || (projectId && hasStory));
+	let hasLinks = $derived(demoUrl || githubUrl || substackUrl || figmaUrl);
+	let hasAnyActions = $derived(demoUrl || githubUrl || substackUrl || figmaUrl || (projectId && hasStory));
 	let cardClasses = $derived(`
 		bg-white border border-gray-300 rounded-lg transition-all duration-300 hover:shadow-lg
 		${isHovered ? 'transform hover:-translate-y-1' : ''}
@@ -151,6 +152,15 @@
 								/>
 							</svg>
 							Blog
+						</button>
+					{/if}
+
+					{#if figmaUrl}
+						<button
+							class="font-condensed flex-shrink-0 rounded-lg bg-black px-3 py-2 text-[14px] text-white transition-colors duration-200 hover:bg-gray-800"
+							onclick={() => openLink(figmaUrl)}
+						>
+							Learn More →
 						</button>
 					{/if}
 
