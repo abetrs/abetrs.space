@@ -202,4 +202,12 @@
 		white-space: nowrap;
 	}
 	.social-item:hover .social-label { opacity: 1; transform: translateY(0); }
+
+	@media (max-width: 600px) {
+		.social-row   { flex-direction: column; align-items: center; gap: 18px; padding-top: 36px; }
+		.social-item  { flex-direction: row; gap: 14px; }
+		.social-icon  { width: 22px; height: 22px; }
+		.social-label { font-size: 18px; opacity: 1; transform: none; }
+		.social-item:hover .social-icon { transform: none; }
+	}
 </style>

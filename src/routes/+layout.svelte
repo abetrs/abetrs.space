@@ -392,6 +392,16 @@
 
 	.site-root { min-height: 100vh; background: transparent; }
 
+	/* ── Mobile: shrink clock ── */
+	@media (max-width: 600px) {
+		.clock-display { top: 12px; left: 14px; }
+		.clock-time    { font-size: 28px; }
+		.clock-abbr    { font-size: 11px; margin-bottom: 4px; }
+		.clock-chevron { margin-bottom: 5px; }
+		.clock-date    { font-size: 10px; margin-top: 2px; }
+		.barcode-corner { font-size: 32px; top: 14px; right: 14px; }
+	}
+
 	/* ── Font helpers ── */
 	:global(.font-bodoni)  { font-family: 'Bodoni Moda', 'Bodoni 72', 'Didot', Georgia, serif; }
 	:global(.font-garamond){ font-family: 'EB Garamond', Garamond, Georgia, serif; }

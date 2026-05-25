@@ -268,6 +268,14 @@
 		color: rgba(0, 0, 0, 0.55);
 		animation: bounce 2.2s ease-in-out infinite;
 	}
+	@media (max-width: 600px) {
+		.social-row   { flex-direction: column; align-items: center; gap: 18px; margin-top: 36px; }
+		.social-item  { flex-direction: row; gap: 14px; }
+		.social-icon  { width: 22px; height: 22px; }
+		.social-label { font-size: 18px; opacity: 1; transform: none; }
+		.social-item:hover .social-icon { transform: none; }
+	}
+
 	@keyframes bounce {
 		0%, 100% { transform: translate(-50%, -50%) translateY(0); }
 		50%       { transform: translate(-50%, -50%) translateY(7px); }
