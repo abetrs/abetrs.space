@@ -1,335 +1,205 @@
 <script>
-	import GalleryComponent from '$lib/components/GalleryComponent.svelte';
-	import ScrollToNextIndicator from '$lib/components/ScrollToNextIndicator.svelte';
-	import { onMount } from 'svelte';
-	import { useScrollToNext } from '$lib/composables/useScrollToNext.js';
-	import { getNextPagePath } from '$lib/stores/navigation.svelte.js';
-	import { page } from '$app/stores';
+	import { slide } from 'svelte/transition';
+	import resumePdf from '$lib/assets/AbhaypradJhaResume.pdf';
 
-	// Dynamically discover photography images (web-compatible formats only)
-	const photographyFiles = import.meta.glob(
-		'$lib/assets/photos/Photography/*.{jpg,JPG,jpeg,JPEG,png,PNG}',
-		{
-			eager: true,
-			as: 'url'
-		}
-	);
+	const navLinks = [
+		{ label: 'Bio',             href: '/'            },
+		{ label: 'Work Experience', href: '/internships' },
+		{ label: 'Hobbies',         href: '/hobbies'     },
+	];
 
-	// Container reference for scroll detection
-	let pageContainer = $state(null);
-
-	// Scroll-to-next functionality
-	const scrollToNext = useScrollToNext();
-
-	// Get next page name for indicator
-	let nextPagePath = $derived($page.url ? getNextPagePath($page.url.pathname) : null);
-	let nextPageName = $derived(() => {
-		if (nextPagePath === '/blog') return 'Blog';
-		return 'Next Page';
-	});
-
-	// Initialize scroll functionality
-	onMount(() => {
-		scrollToNext.initScrollListener();
-		return () => {
-			scrollToNext.destroyScrollListener();
-		};
-	});
-
-	// Set the container reference for scroll detection
-	$effect(() => {
-		if (pageContainer) {
-			scrollToNext.containerRef.value = pageContainer;
-		}
-	});
-
-	// Hobbies gallery data using Svelte 5 runes
-	let hobbyItems = $state([
-		{
-			title: 'Placeholder: Music',
-			description: 'Short placeholder description for music-related hobby.',
-			category: 'music',
-			image: null,
-			tags: ['music'],
-			details: 'Placeholder details about music hobby.',
-			links: []
-		},
-		{
-			title: 'Placeholder: Photography',
-			description: 'Short placeholder description for photography.',
-			category: 'photography',
-			image: null,
-			tags: ['photography'],
-			details: 'Placeholder details about photography hobby.',
-			links: []
-		},
-		{
-			title: 'Placeholder: Film',
-			description: 'Short placeholder description for film/video work.',
-			category: 'film',
-			image: null,
-			tags: ['film'],
-			details: 'Placeholder details about film hobby.',
-			links: []
-		},
-		{
-			title: 'Placeholder: 3D Modeling',
-			description: 'Short placeholder description for 3D modeling.',
-			category: 'modeling',
-			image: null,
-			tags: ['3d'],
-			details: 'Placeholder details about 3D modeling hobby.',
-			links: []
-		}
-	]);
-
-	// Photography gallery state
-	let photographyImages = $state([]);
-	let currentImageIndex = $state(0);
-	let isMobile = $state(false);
-
-	// Build photography images array from discovered files
-	$effect(() => {
-		const fileEntries = Object.entries(photographyFiles || {});
-
-		// Filter out any files that might not be web-compatible and sort by filename
-		photographyImages = fileEntries
-			.map(([path, url]) => {
-				const parts = path.split('/');
-				const filename = parts[parts.length - 1];
-				// Only include common web image formats
-				const isWebCompatible = /\.(jpe?g|png)$/i.test(filename);
-				return isWebCompatible ? { url, filename } : null;
-			})
-			.filter(Boolean) // Remove null entries
-			.sort((a, b) => a.filename.localeCompare(b.filename));
-	});
-
-	// Check screen size for responsive behavior
-	$effect(() => {
-		if (typeof window !== 'undefined') {
-			const checkScreenSize = () => {
-				isMobile = window.innerWidth < 768; // md breakpoint
-			};
-			checkScreenSize();
-			window.addEventListener('resize', checkScreenSize);
-			return () => window.removeEventListener('resize', checkScreenSize);
-		}
-	});
+	let dropdownOpen = $state(false);
+	function toggleDropdown() { dropdownOpen = !dropdownOpen; }
 </script>
 
-<!-- Content Area -->
-<div bind:this={pageContainer} class="mx-auto w-full max-w-[600px]">
-	<!-- Music Section with Spotify Embeds -->
-	<div id="music">
-		<h2 class="font-condensed mb-4 text-[28px] font-semibold tracking-[-1px] text-black">Music</h2>
-		<div class="space-y-4">
-			<!-- Track 1: Swirl -->
-			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
-				<iframe
-					style="border-radius:12px"
-					src="https://open.spotify.com/embed/track/5on2Z9P0gdlcwQT5C9nWXb?utm_source=generator"
-					width="100%"
-					height="152"
-					frameBorder="0"
-					allowfullscreen=""
-					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-					loading="lazy"
-					title="Spotify Track: Swirl"
-				></iframe>
-			</div>
+<div class="page">
+	<button class="section-title-btn" onclick={toggleDropdown} aria-expanded={dropdownOpen}>
+		<h1 class="section-title font-bodoni">Hobbies</h1>
+		<svg class="section-chevron" class:open={dropdownOpen} width="24" height="14" viewBox="0 0 24 14" fill="none" aria-hidden="true">
+			<polyline points="2,2 12,12 22,2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+		</svg>
+	</button>
 
-			<!-- Track 2: Guten Tag -->
-			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
-				<iframe
-					style="border-radius:12px"
-					src="https://open.spotify.com/embed/track/6lXIeb9Rz0yoYWoUcFlZjt?utm_source=generator"
-					width="100%"
-					height="152"
-					frameBorder="0"
-					allowfullscreen=""
-					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-					loading="lazy"
-					title="Spotify Track: Guten Tag"
-				></iframe>
-			</div>
+	{#if dropdownOpen}
+		<nav class="nav-dropdown font-garamond" transition:slide={{ duration: 340 }}>
+			{#each navLinks as link (link.href)}
+				<a class="dropdown-item" href={link.href}>{link.label}</a>
+			{/each}
+		</nav>
+	{/if}
 
-			<!-- Album: The Spleen -->
-			<div class="rounded-md border border-gray-200 bg-white p-4 shadow-sm">
-				<iframe
-					style="border-radius:12px"
-					src="https://open.spotify.com/embed/album/6sqAqWYjtU1PSkmZYtvrFp?utm_source=generator"
-					width="100%"
-					height="352"
-					frameBorder="0"
-					allowfullscreen=""
-					allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-					loading="lazy"
-					title="Spotify Album: The Spleen"
-				></iframe>
-			</div>
-		</div>
+	<div class="under-construction font-garamond">
+		<p class="uc-label">Under Construction</p>
+		<p class="uc-sub">Something interesting is being built here. Check back soon.</p>
 	</div>
 
-	<!-- Film section -->
-	<div id="film" class="mt-12">
-		<h3 class="font-condensed mb-4 text-[28px] font-semibold tracking-[-1px] text-black">Film</h3>
-		<div class="rounded-md border border-gray-200 bg-white p-6 shadow-sm">
-			<h4 class="font-condensed mb-4 text-[18px] font-semibold text-black">Ellipses</h4>
-			<div class="mb-4 flex justify-center">
-				<iframe
-					width="480"
-					height="480"
-					src="https://www.youtube.com/embed/9JN5lsicZ6w?si=ATYZ6FzdovA0-Rwp"
-					title="YouTube video player"
-					frameborder="0"
-					allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-					referrerpolicy="strict-origin-when-cross-origin"
-					allowfullscreen
-					class="aspect-square h-auto max-w-full"
-				></iframe>
-			</div>
-			<p class="font-condensed text-[16px] leading-relaxed text-black">
-				A collaborative short film created in partnership with Taiga Lewis for the prestigious
-				24Speed filmmaking competition. This award-winning romance was conceived, written, filmed,
-				and edited within a demanding 24-hour timeframe while adhering to strict creative
-				constraints. Our compelling storytelling and technical execution earned recognition with the
-				Audience Choice Award for Best Film.
-			</p>
-
-			<!-- Signed in Blood -->
-			<div class="mt-8">
-				<h4 class="font-condensed mb-4 text-[18px] font-semibold text-black">Signed in Blood</h4>
-				<div class="mb-4 flex justify-center">
-					<iframe
-						src="https://drive.google.com/file/d/1spDtVlX2rmnolsr9EOvl5qmBk58b6U2r/preview"
-						width="480"
-						height="480"
-						allow="autoplay"
-						title="Signed in Blood - Noir Short Film"
-						class="aspect-square h-auto max-w-full"
-					></iframe>
-				</div>
-				<p class="font-condensed text-[16px] leading-relaxed text-black">
-					A noir thriller crafted for the 24Speed Film Festival at William & Mary, showcasing
-					atmospheric cinematography and classic genre elements. This moody short film demonstrates
-					our mastery of visual storytelling through careful lighting, composition, and shadow work.
-					The sophisticated visual aesthetic and technical precision earned recognition with the
-					Judges Award for Best Cinematography.
-				</p>
-			</div>
-		</div>
-	</div>
-
-	<!-- Photography Gallery -->
-	<div id="photography" class="mt-8 mb-16">
-		<h3 class="font-condensed mb-4 text-[28px] font-semibold tracking-[-1px] text-black">
-			Photography
-		</h3>
-
-		{#if photographyImages.length > 0}
-			<!-- Desktop: Masonry Collage -->
-			<div class="hidden md:block">
-				<div class="columns-1 gap-4 space-y-4 sm:columns-2 lg:columns-3">
-					{#each photographyImages as image, index}
-						<div class="mb-4 break-inside-avoid">
-							<img
-								src={image.url}
-								alt="Photography by Abhayprad Jha - {image.filename}"
-								class="h-auto max-h-[500px] w-full rounded-md object-cover shadow-sm transition-shadow duration-300 hover:shadow-md"
-								loading="lazy"
-								onerror={(e) => (e.target.style.display = 'none')}
-							/>
-						</div>
-					{/each}
-				</div>
-			</div>
-
-			<!-- Mobile: Carousel -->
-			<div class="block md:hidden">
-				<div class="relative overflow-hidden rounded-md bg-gray-100" style="height: 50vh;">
-					<div
-						class="flex h-full transition-transform duration-300 ease-in-out"
-						style="transform: translateX(-{currentImageIndex * 100}%)"
-					>
-						{#each photographyImages as image}
-							<div class="flex h-full w-full flex-shrink-0 items-center justify-center">
-								<img
-									src={image.url}
-									alt="Photography by Abhayprad Jha - {image.filename}"
-									class="max-h-full max-w-full object-contain"
-									loading="lazy"
-									onerror={(e) => (e.target.parentElement.style.display = 'none')}
-								/>
-							</div>
-						{/each}
-					</div>
-
-					<!-- Carousel Controls -->
-					<button
-						class="absolute top-1/2 left-2 -translate-y-1/2 transform rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-						onclick={() => {
-							currentImageIndex =
-								currentImageIndex === 0 ? photographyImages.length - 1 : currentImageIndex - 1;
-						}}
-						aria-label="Previous image"
-					>
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M15 19l-7-7 7-7"
-							></path>
-						</svg>
-					</button>
-
-					<button
-						class="absolute top-1/2 right-2 -translate-y-1/2 transform rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
-						onclick={() => {
-							currentImageIndex =
-								currentImageIndex === photographyImages.length - 1 ? 0 : currentImageIndex + 1;
-						}}
-						aria-label="Next image"
-					>
-						<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"
-							></path>
-						</svg>
-					</button>
-				</div>
-
-				<!-- Carousel Indicators -->
-				<div class="mt-4 flex justify-center space-x-2">
-					{#each photographyImages as _, index}
-						<button
-							class="h-2 w-2 rounded-full transition-colors {currentImageIndex === index
-								? 'bg-black'
-								: 'bg-gray-300 hover:bg-gray-400'}"
-							onclick={() => (currentImageIndex = index)}
-							aria-label="Go to image {index + 1}"
-						></button>
-					{/each}
-				</div>
-			</div>
-		{:else}
-			<div class="rounded-md border border-dashed border-gray-200 bg-white/50 p-6 text-gray-400">
-				<div class="italic">Loading photography gallery...</div>
-			</div>
-		{/if}
-	</div>
+	<nav class="social-row" aria-label="Links">
+		<a class="social-item" href="https://abetheunicorn.substack.com" target="_blank" rel="noopener noreferrer">
+			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/>
+			</svg>
+			<span class="social-label font-garamond">Cult Classic</span>
+		</a>
+		<a class="social-item" href="https://cricwar.substack.com" target="_blank" rel="noopener noreferrer">
+			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<rect x="8" y="2" width="8" height="13" rx="4"/>
+				<rect x="11" y="15" width="2" height="7" rx="1"/>
+			</svg>
+			<span class="social-label font-garamond">CricWAR</span>
+		</a>
+		<a class="social-item" href="https://github.com/abetrs" target="_blank" rel="noopener noreferrer">
+			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+			</svg>
+			<span class="social-label font-garamond">GitHub</span>
+		</a>
+		<a class="social-item" href="https://www.linkedin.com/in/abhayprad-jha-b12390223/" target="_blank" rel="noopener noreferrer">
+			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+			</svg>
+			<span class="social-label font-garamond">LinkedIn</span>
+		</a>
+		<a class="social-item" href={resumePdf} target="_blank" rel="noopener noreferrer">
+			<svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+				<polyline points="14 2 14 8 20 8"/>
+				<line x1="8" y1="13" x2="16" y2="13"/>
+				<line x1="8" y1="17" x2="16" y2="17"/>
+			</svg>
+			<span class="social-label font-garamond">Resume</span>
+		</a>
+	</nav>
 </div>
 
-<!-- Scroll-to-next indicator -->
-{#if nextPagePath}
-	<ScrollToNextIndicator nextPageName={nextPageName()} />
-{/if}
-
 <style>
-	/* Use Roboto Condensed as Arial Narrow substitute */
-	@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
-
-	.font-condensed {
-		font-family: 'Roboto Condensed', 'Arial Narrow', Arial, sans-serif;
+	.page {
+		position: relative;
+		z-index: 20;
+		padding-top: 72px;
+		padding-left: 2rem;
+		padding-right: 2rem;
+		padding-bottom: 6rem;
+		min-height: 100vh;
+		max-width: 860px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
 	}
+
+	.section-title-btn {
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		gap: 14px;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		width: 100%;
+		margin-bottom: 24px;
+		transition: transform 0.18s ease;
+	}
+	.section-title-btn:hover { transform: scale(1.04); transform-origin: right center; }
+
+	.section-title {
+		font-size: clamp(40px, 5vw, 80px);
+		font-weight: 400;
+		line-height: 1;
+		color: #000;
+		margin: 0;
+	}
+
+	.section-chevron {
+		color: #000;
+		flex-shrink: 0;
+		transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	.section-chevron.open { transform: rotate(180deg); }
+
+	.nav-dropdown {
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		margin-bottom: 32px;
+		border-right: 2px solid rgba(0, 0, 0, 0.12);
+		padding-right: 20px;
+		align-items: flex-end;
+	}
+
+	.dropdown-item {
+		font-size: clamp(16px, 1.5vw, 22px);
+		font-weight: 400;
+		color: #000;
+		text-decoration: none;
+		padding: 10px 0;
+		letter-spacing: 0.02em;
+		opacity: 0.75;
+		display: inline-block;
+		transform-origin: right center;
+		transition: opacity 0.15s ease, transform 0.15s ease;
+	}
+	.dropdown-item:hover { opacity: 1; transform: scale(1.12); }
+
+	.under-construction {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: flex-end;
+		padding-right: 4px;
+		gap: 16px;
+	}
+
+	.uc-label {
+		font-size: clamp(28px, 3.5vw, 52px);
+		font-weight: 400;
+		color: rgba(0, 0, 0, 0.22);
+		letter-spacing: 0.04em;
+		margin: 0;
+	}
+
+	.uc-sub {
+		font-size: clamp(14px, 1.2vw, 19px);
+		color: rgba(0, 0, 0, 0.35);
+		line-height: 1.7;
+		margin: 0;
+		text-align: right;
+	}
+
+	.social-row {
+		display: flex;
+		justify-content: center;
+		gap: 40px;
+		margin-top: auto;
+		padding-top: 52px;
+		padding-bottom: 2rem;
+	}
+
+	.social-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 18px;
+		text-decoration: none;
+		color: #000;
+	}
+
+	.social-icon {
+		width: 36px;
+		height: 36px;
+		transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.social-item:hover .social-icon { transform: scale(1.55); }
+
+	.social-label {
+		font-family: 'Bodoni Moda', 'Bodoni 72', 'Didot', Georgia, serif;
+		font-size: 27px;
+		font-weight: 400;
+		letter-spacing: 0.01em;
+		opacity: 0;
+		transform: translateY(4px);
+		transition: opacity 0.18s ease, transform 0.18s ease;
+		white-space: nowrap;
+	}
+	.social-item:hover .social-label { opacity: 1; transform: translateY(0); }
 </style>
