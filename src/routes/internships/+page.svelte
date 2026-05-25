@@ -2,7 +2,7 @@
 	import { slide, fly } from 'svelte/transition';
 	import { tick } from 'svelte';
 	import resumePdf    from '$lib/assets/AbhaypradJhaResume.pdf';
-	import wmLogo       from '$lib/assets/photos/College/WilliamandMary.png';
+	import wmLogo       from '$lib/assets/photos/College/WilliamandMary.svg';
 	import bpLogo       from '$lib/assets/photos/Internships/black_pearl_global_investments_logo-3394222977.jpeg';
 	import deloitteLogo from '$lib/assets/photos/Internships/us-deloitte-logo-707218455.jpg';
 	import tcsLogo      from '$lib/assets/photos/Internships/TCS-Logo-Tata-consultancy-service-3916172614.png';
