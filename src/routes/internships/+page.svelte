@@ -1,11 +1,12 @@
 <script>
 	import { slide, fly } from 'svelte/transition';
-	import { tick } from 'svelte';
+	import { tick, onMount } from 'svelte';
 	import resumePdf    from '$lib/assets/AbhaypradJhaResume.pdf';
-	import wmLogo       from '$lib/assets/photos/College/WilliamandMary.svg';
+	import wmLogo       from '$lib/assets/photos/College/WilliamandMary.jpg';
 	import bpLogo       from '$lib/assets/photos/Internships/black_pearl_global_investments_logo-3394222977.jpeg';
 	import deloitteLogo from '$lib/assets/photos/Internships/us-deloitte-logo-707218455.jpg';
 	import tcsLogo      from '$lib/assets/photos/Internships/TCS-Logo-Tata-consultancy-service-3916172614.png';
+	import flatHatLogo  from '$lib/assets/photos/Internships/flat_hat_logo.png';
 
 	const navLinks = [
 		{ label: 'Bio',             href: '/'            },
@@ -14,6 +15,20 @@
 	];
 
 	const experiences = [
+		{
+			id: 'flathat',
+			company: 'The Flat Hat',
+			logo: flatHatLogo,
+			position: 'Data Editor',
+			period: '2022 – 2026',
+			description: 'Founded and scaled the Data section of William & Mary\'s student newspaper from inception, establishing editorial processes and growing output to 20+ published articles annually.',
+			bullets: [
+				'Founded and scaled the Data section from inception, establishing editorial processes and growing output to 20+ published articles annually through strategic planning and team coordination',
+				'Managed cross-functional teams of 5+ writers and collaborated with editorial staff to produce the section\'s inaugural full-page feature, subsequently expanding to 2 full pages per semester',
+				'Developed and implemented data visualization frameworks for Sports and News sections, streamlining inter-sectional collaboration and enhancing analytical storytelling across publications',
+				'Award: Region 2 Mark of Excellence Finalist for data journalism, awarded by The Society of Professional Journalists',
+			],
+		},
 		{
 			id: 'tcs',
 			company: 'TCS',
@@ -33,7 +48,7 @@
 			id: 'deloitte',
 			company: 'Deloitte',
 			logo: deloitteLogo,
-			position: 'Product Strategy Intern',
+			position: 'Intern',
 			period: 'Jan 2025',
 			description: 'Converted market research into actionable product strategies, focusing on post-pandemic demand signals and stakeholder alignment for new product opportunities.',
 			bullets: [
@@ -41,17 +56,6 @@
 				'Secured stakeholder alignment in one workshop and green-lighted pilots',
 				'Translated research findings into actionable product strategies for SMEs and industry leaders',
 				'Standardized the decision pack (market sizing, comps, risks), reducing review cycles across SME groups',
-			],
-		},
-		{
-			id: 'wm',
-			company: 'William & Mary',
-			logo: wmLogo,
-			position: 'Research Assistant – SBOM Tool Analysis',
-			period: 'Jan 2025 – Present',
-			description: 'Authored a research paper conducting comparative analysis of 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems, quantifying dependency identification accuracy and completeness through systematic testing.',
-			bullets: [
-				'Engineered automated frameworks to evaluate SBOM tool performance, identifying coverage gaps and documenting metadata capture capabilities across enterprise repositories.',
 			],
 		},
 		{
@@ -68,12 +72,35 @@
 				'Co-authored a $10M fund thesis with explicit entry & kill signals, shortening IC prep by 25% and improving go/no-go clarity',
 			],
 		},
+		{
+			id: 'wm',
+			company: 'William & Mary',
+			logo: wmLogo,
+			position: 'Research Assistant – SBOM Tool Analysis',
+			period: 'Aug 2025 – May 2026',
+			description: 'Authored a research paper conducting comparative analysis of 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems, quantifying dependency identification accuracy and completeness through systematic testing.',
+			bullets: [
+				'Engineered automated frameworks to evaluate SBOM tool performance, identifying coverage gaps and documenting metadata capture capabilities across enterprise repositories.',
+			],
+		},
 	];
 
-	let dropdownOpen  = $state(false);
-	let hoveredId     = $state(null);
-	let activeId      = $state(null);
-	let detailCardEl  = $state(null);
+	let dropdownOpen    = $state(false);
+	let hoveredId       = $state(null);
+	let activeId        = $state(null);
+	let detailCardEl    = $state(null);
+	let highlightIndex  = $state(-1);
+
+	onMount(() => {
+		const timers = experiences.map((_, i) => {
+			const t = setTimeout(() => {
+				highlightIndex = i;
+				setTimeout(() => { if (highlightIndex === i) highlightIndex = -1; }, 750);
+			}, 300 + i * 2000);
+			return t;
+		});
+		return () => timers.forEach(clearTimeout);
+	});
 
 	$effect(() => {
 		if (activeId) {
@@ -112,13 +139,14 @@
 	<!-- ── Timeline (always visible, like the about body text) ── -->
 	<div class="timeline-outer">
 		<div class="nodes">
-			{#each experiences as exp (exp.id)}
+			{#each experiences as exp, i (exp.id)}
 				<div class="node-col">
 					<span class="period font-garamond">{exp.period}</span>
 
 					<button
 						class="logo-btn"
 						class:active={activeId === exp.id}
+						class:highlight={highlightIndex === i}
 						onmouseenter={() => (hoveredId = exp.id)}
 						onmouseleave={() => (hoveredId = null)}
 						onclick={() => toggleCard(exp.id)}
@@ -341,6 +369,15 @@
 		transform: scale(1.16);
 		box-shadow: 0 6px 26px rgba(0, 0, 0, 0.13);
 		border-color: rgba(0, 0, 0, 0.28);
+	}
+
+	.logo-btn.highlight {
+		animation: logo-pulse 0.75s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	}
+	@keyframes logo-pulse {
+		0%   { transform: scale(1);    box-shadow: 0 0 0 rgba(0,0,0,0); }
+		45%  { transform: scale(1.19); box-shadow: 0 6px 20px rgba(0,0,0,0.14); }
+		100% { transform: scale(1);    box-shadow: 0 0 0 rgba(0,0,0,0); }
 	}
 
 	.logo-img {

@@ -9,11 +9,24 @@
 	let hindiRef        = $state(null);
 	let arrowTopVh      = $state(56);
 	let dropdownOpen    = $state(false);
+	let nudgeChevron    = $state(false);
 
 	function expand() {
 		if (expanded) return;
 		expanded = true;
 		setTimeout(() => { startTypewriter = true; }, 1400);
+		setTimeout(() => {
+			nudgeChevron = true;
+			setTimeout(() => { nudgeChevron = false; }, 900);
+		}, 5000);
+	}
+
+	function collapse() {
+		if (!expanded) return;
+		expanded = false;
+		startTypewriter = false;
+		dropdownOpen = false;
+		nudgeChevron = false;
 	}
 
 	function toggleDropdown() { dropdownOpen = !dropdownOpen; }
@@ -40,7 +53,8 @@
 </script>
 
 <div class="page" class:expanded>
-	<div class="name-block">
+	<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+	<div class="name-block" class:clickable={expanded} onclick={collapse}>
 		<h1 class="name-en font-bodoni">Abhayprad Jha</h1>
 		<p bind:this={hindiRef} class="name-hi font-bodoni">अभयप्रद झा</p>
 	</div>
@@ -49,7 +63,7 @@
 		<section class="about" transition:fly={{ y: 30, duration: 700, delay: 400 }}>
 			<button class="about-title-btn" onclick={toggleDropdown} aria-expanded={dropdownOpen}>
 				<h2 class="about-title font-bodoni">About Me</h2>
-				<svg class="about-chevron" class:open={dropdownOpen} width="24" height="14" viewBox="0 0 24 14" fill="none" aria-hidden="true">
+				<svg class="about-chevron" class:open={dropdownOpen} class:nudge={nudgeChevron} width="24" height="14" viewBox="0 0 24 14" fill="none" aria-hidden="true">
 					<polyline points="2,2 12,12 22,2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 				</svg>
 			</button>
@@ -141,6 +155,7 @@
 	.page.expanded { padding-top: 72px; }
 
 	.name-block { text-align: center; }
+	.name-block.clickable { cursor: pointer; }
 
 	.name-en {
 		font-size: clamp(48px, 8vw, 118px);
@@ -226,6 +241,17 @@
 		transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 	.about-chevron.open { transform: rotate(180deg); }
+	.about-chevron.nudge { animation: chevron-nudge 0.9s ease forwards; }
+	@keyframes chevron-nudge {
+		0%   { transform: scale(1)    rotate(0deg); }
+		15%  { transform: scale(1.7)  rotate(-18deg); }
+		30%  { transform: scale(1.7)  rotate(18deg); }
+		45%  { transform: scale(1.7)  rotate(-12deg); }
+		60%  { transform: scale(1.7)  rotate(12deg); }
+		75%  { transform: scale(1.45) rotate(-6deg); }
+		90%  { transform: scale(1.2)  rotate(3deg); }
+		100% { transform: scale(1)    rotate(0deg); }
+	}
 
 	.about-dropdown {
 		display: flex;

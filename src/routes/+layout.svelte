@@ -400,6 +400,8 @@
 		.clock-chevron { margin-bottom: 5px; }
 		.clock-date    { font-size: 10px; margin-top: 2px; }
 		.barcode-corner { font-size: 32px; top: 14px; right: 14px; }
+		/* Larger tap target on mobile */
+		.clock-btn { padding: 10px 12px 10px 0; margin: -10px -12px -10px 0; }
 	}
 
 	/* ── Font helpers ── */
@@ -446,7 +448,10 @@
 	:global(html[data-theme="night"] .nav-dropdown),
 	:global(html[data-theme="night"] .about-dropdown) { border-color: rgba(255,255,255,.18) !important; }
 
-	:global(html[data-theme="night"] .card) {
+	:global(html[data-theme="night"] .arrow-btn) { color: rgba(255,255,255,.55) !important; }
+
+	:global(html[data-theme="night"] .card),
+	:global(html[data-theme="night"] .detail-card) {
 		background: rgba(255,255,255,.06) !important;
 		border-color: rgba(255,255,255,.10) !important;
 	}
@@ -454,6 +459,14 @@
 		background: rgba(255,255,255,.10) !important;
 		border-color: rgba(255,255,255,.16) !important;
 	}
+
+	:global(html[data-theme="night"] .timeline-outer::before) { background: rgba(255,255,255,.15) !important; }
+
+	:global(html[data-theme="night"] .bullets) { border-top-color: rgba(255,255,255,.10) !important; }
+	:global(html[data-theme="night"] .bullets li::before) { color: rgba(255,255,255,.30) !important; }
+
+	:global(html[data-theme="night"] .uc-label) { color: rgba(255,255,255,.22) !important; }
+	:global(html[data-theme="night"] .uc-sub)   { color: rgba(255,255,255,.35) !important; }
 
 	/* Golden hour: keep all text very dark (near-black) */
 	:global(html[data-theme="golden"] .name-en),
