@@ -449,8 +449,13 @@
 	:global(html[data-theme="night"] .section-body p),
 	:global(html[data-theme="night"] .about-body),
 	:global(html[data-theme="night"] .period),
+	:global(html[data-theme="night"] .mobile-position),
+	:global(html[data-theme="night"] .mobile-desc),
 	:global(html[data-theme="night"] .bullets li),
 	:global(html[data-theme="night"] .dropdown-item) { color: rgba(255,255,255,.68) !important; }
+
+	:global(html[data-theme="night"] .mobile-company) { color: rgba(255,255,255,.90) !important; }
+	:global(html[data-theme="night"] .mobile-period)  { color: rgba(255,255,255,.42) !important; }
 
 	:global(html[data-theme="night"] .story-meta),
 	:global(html[data-theme="night"] .metric-label) { color: rgba(255,255,255,.50) !important; }

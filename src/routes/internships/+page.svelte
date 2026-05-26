@@ -158,12 +158,27 @@
 					</button>
 
 					<span class="company-name font-bodoni">{exp.company}</span>
+
+					<!-- Mobile inline card (hidden on desktop) -->
+					<div class="mobile-card">
+						<span class="mobile-company font-bodoni">{exp.company}</span>
+						<span class="mobile-position font-garamond">{exp.position}</span>
+						<span class="mobile-period font-garamond">{exp.period}</span>
+						<p class="mobile-desc font-garamond">{exp.description}</p>
+						{#if activeId === exp.id}
+							<ul class="bullets font-garamond" transition:slide={{ duration: 260 }}>
+								{#each exp.bullets as bullet}
+									<li>{bullet}</li>
+								{/each}
+							</ul>
+						{/if}
+					</div>
 				</div>
 			{/each}
 		</div>
 	</div>
 
-	<!-- Centered detail card — shown for whichever node is hovered or active -->
+	<!-- Centered detail card — shown for whichever node is hovered or active (desktop only) -->
 	{#if displayExp}
 		{#key displayExp.id}
 			<div class="detail-card" bind:this={detailCardEl} transition:fly={{ y: 10, duration: 200 }}>
@@ -448,6 +463,9 @@
 		color: rgba(0, 0, 0, 0.32);
 	}
 
+	/* Mobile inline card — hidden on desktop */
+	.mobile-card { display: none; }
+
 	/* ── Social row (exact copy from home page) ── */
 	.social-row {
 		display: flex;
@@ -494,6 +512,88 @@
 	}
 
 	@media (max-width: 600px) {
+		/* ── Vertical timeline ── */
+		.timeline-outer {
+			margin-top: 32px;
+			margin-bottom: 24px;
+		}
+
+		/* Vertical track line through logo centers */
+		.timeline-outer::before {
+			top: 23px;
+			bottom: 28px;
+			left: 23px;
+			right: auto;
+			width: 1.5px;
+			height: auto;
+		}
+
+		.nodes {
+			flex-direction: column;
+			gap: 0;
+			align-items: stretch;
+		}
+
+		.node-col {
+			flex: none;
+			flex-direction: row;
+			align-items: flex-start;
+			gap: 14px;
+			padding-bottom: 28px;
+		}
+
+		/* Smaller logo on mobile */
+		.logo-btn {
+			width: 46px;
+			height: 46px;
+			flex-shrink: 0;
+		}
+
+		/* Hide desktop-only labels (shown in mobile-card instead) */
+		.period      { display: none; }
+		.company-name { display: none; }
+
+		/* Show inline mobile card */
+		.mobile-card {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+			flex: 1;
+			min-width: 0;
+			padding-top: 4px;
+		}
+
+		.mobile-company {
+			font-size: 16px;
+			font-weight: 400;
+			color: #000;
+			line-height: 1.2;
+		}
+
+		.mobile-position {
+			font-size: 13px;
+			color: rgba(0, 0, 0, 0.62);
+			letter-spacing: 0.01em;
+		}
+
+		.mobile-period {
+			font-size: 12px;
+			color: rgba(0, 0, 0, 0.42);
+			letter-spacing: 0.03em;
+			margin-bottom: 6px;
+		}
+
+		.mobile-desc {
+			font-size: 13px;
+			line-height: 1.7;
+			color: rgba(0, 0, 0, 0.68);
+			margin: 0;
+		}
+
+		/* Hide the desktop detail card on mobile */
+		.detail-card { display: none !important; }
+
+		/* Social */
 		.social-row   { flex-direction: column; align-items: center; gap: 18px; padding-top: 36px; }
 		.social-item  { flex-direction: row; gap: 14px; }
 		.social-icon  { width: 22px; height: 22px; }
