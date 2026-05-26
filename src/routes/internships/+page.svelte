@@ -11,6 +11,7 @@
 	const navLinks = [
 		{ label: 'Bio',             href: '/'            },
 		{ label: 'Work Experience', href: '/internships' },
+		{ label: 'Projects',        href: '/projects'    },
 		{ label: 'Hobbies',         href: '/hobbies'     },
 	];
 

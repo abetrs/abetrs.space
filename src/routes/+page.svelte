@@ -34,6 +34,7 @@
 	const navLinks = [
 		{ label: 'Bio',             href: '/'            },
 		{ label: 'Work Experience', href: '/internships' },
+		{ label: 'Projects',        href: '/projects'    },
 		{ label: 'Hobbies',         href: '/hobbies'     },
 	];
 
@@ -49,7 +50,7 @@
 		return () => window.removeEventListener('resize', measure);
 	});
 
-	const aboutText = `I'm Abhayprad Jha, a Computer Science and Economics student at William & Mary (Class of 2026), blending my passion for building products with a fascination for modelling the world around me. I come from a global background, having grown across 5 different countries. My experience learning from different perspectives has fostered a habit of interdisciplinary thinking and innovation. With internships at Deloitte, TCS and Black Pearl Global Investments, I've honed skills in full-stack development, data analysis, and digital transformation. My goal is to craft user-centered digital experiences that solve real-world challenges.`;
+	const aboutText = `I'm a globally minded creative operating across disciplines — builder, designer, writer, musician, filmmaker, DJ. Raised across five countries, I move between worlds as naturally as between mediums. My work is informed by three principles: simplicity, practicality, and applicability. I don't build for the sake of building. I'm interested in the gap between how things work and how they could work — the friction in systems that haven't been questioned, the noise in interfaces that never needed to be loud. I'm here to close that gap, one problem at a time.`;
 </script>
 
 <div class="page" class:expanded>

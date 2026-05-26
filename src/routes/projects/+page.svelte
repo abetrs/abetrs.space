@@ -9,13 +9,56 @@
 		{ label: 'Hobbies',         href: '/hobbies'     },
 	];
 
+	const projects = [
+		{
+			id: 'bp-agentic',
+			title: 'Black Pearl AI Due Diligence',
+			summary: 'A Claude-based agentic workflow to automate venture capital due diligence. Synthesises pitch decks, market data, and financials into structured investment memos — cutting initial screening time by an estimated 40%.',
+			storyHref: '/projects/black-pearl',
+			link: 'https://www.figma.com/slides/8mwqkeYUqmmdhKKFxmuFxD',
+			linkLabel: 'View Deck',
+		},
+		{
+			id: 'flathat',
+			title: 'The Flat Hat — Data',
+			summary: 'Founded and scaled the data journalism section of William & Mary\'s student newspaper from zero to 20+ articles annually. Region 2 SPJ Mark of Excellence finalist.',
+			storyHref: '/projects/flat-hat',
+			link: 'https://flathatnews.com/category/data/',
+			linkLabel: 'View Section',
+		},
+		{
+			id: 'tcs-ux',
+			title: 'TCS Lithium Battery UX',
+			summary: 'End-to-end UX design for an enterprise lithium-ion battery supply chain platform at TCS. Delivered a Figma prototype with compliance acceptance criteria, securing CTO sign-off and reducing engineering rework by 30%.',
+			storyHref: '/projects/tcs-ux',
+			link: null,
+			linkLabel: null,
+		},
+		{
+			id: 'spleen',
+			title: 'SpleenToTextBot',
+			summary: 'A Discord bot that transcribes voice messages to text in real time, making conversations accessible for every server member. Built in Go for performance and low latency.',
+			storyHref: '/projects/spleen',
+			link: 'https://github.com/abetrs/SpleenToTextBot',
+			linkLabel: 'GitHub',
+		},
+		{
+			id: 'cricwar',
+			title: 'CricWAR',
+			summary: 'A cricket analytics platform applying WAR (Wins Above Replacement) methodology to the sport. Builds statistical models that contextualise traditional metrics and quantify individual player contributions to team wins.',
+			storyHref: '/projects/cricwar',
+			link: null,
+			linkLabel: null,
+		},
+	];
+
 	let dropdownOpen = $state(false);
 	function toggleDropdown() { dropdownOpen = !dropdownOpen; }
 </script>
 
 <div class="page">
 	<button class="section-title-btn" onclick={toggleDropdown} aria-expanded={dropdownOpen}>
-		<h1 class="section-title font-bodoni">Hobbies</h1>
+		<h1 class="section-title font-bodoni">Projects</h1>
 		<svg class="section-chevron" class:open={dropdownOpen} width="24" height="14" viewBox="0 0 24 14" fill="none" aria-hidden="true">
 			<polyline points="2,2 12,12 22,2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 		</svg>
@@ -29,9 +72,32 @@
 		</nav>
 	{/if}
 
-	<div class="under-construction font-garamond">
-		<p class="uc-label">Under Construction</p>
-		<p class="uc-sub">Something interesting is being built here. Check back soon.</p>
+	<a class="ux-token font-garamond" href="/projects/ux-philosophy">
+		About the UX philosophy of this site →
+	</a>
+
+	<div class="projects-grid">
+		{#each projects as project (project.id)}
+			<div class="project-card">
+				<h2 class="card-title font-bodoni">{project.title}</h2>
+				<p class="card-summary font-garamond">{project.summary}</p>
+				<a class="card-learn-more font-garamond" href={project.storyHref}>
+					Learn more
+					<svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+						<path d="M1 12L11 2M11 2H4M11 2v7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</a>
+				{#if project.link}
+					<div class="card-divider"></div>
+					<a class="card-link font-garamond" href={project.link} target="_blank" rel="noopener noreferrer">
+						{project.linkLabel}
+						<svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+							<path d="M2 12L12 2M12 2H5M12 2v7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</a>
+				{/if}
+			</div>
+		{/each}
 	</div>
 
 	<nav class="social-row" aria-label="Links">
@@ -81,7 +147,7 @@
 		padding-right: 2rem;
 		padding-bottom: 6rem;
 		min-height: 100vh;
-		max-width: 860px;
+		max-width: 960px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
@@ -141,32 +207,92 @@
 	}
 	.dropdown-item:hover { opacity: 1; transform: scale(1.12); }
 
-	.under-construction {
-		flex: 1;
+	/* ── UX philosophy token ── */
+	.ux-token {
+		display: inline-block;
+		align-self: flex-end;
+		font-size: clamp(12px, 1vw, 14px);
+		color: rgba(0, 0, 0, 0.42);
+		text-decoration: none;
+		letter-spacing: 0.04em;
+		border: 1px solid rgba(0, 0, 0, 0.14);
+		border-radius: 20px;
+		padding: 5px 14px;
+		margin-bottom: 32px;
+		transition: color 0.15s ease, border-color 0.15s ease;
+	}
+	.ux-token:hover { color: #000; border-color: rgba(0,0,0,0.35); }
+
+	/* ── Projects grid ── */
+	.projects-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 22px;
+		margin-top: 48px;
+	}
+
+	.project-card {
+		background: rgba(255, 255, 255, 0.80);
+		border: 1px solid rgba(0, 0, 0, 0.08);
+		border-radius: 12px;
+		padding: 24px 26px 20px;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: flex-end;
-		padding-right: 4px;
-		gap: 16px;
+		gap: 10px;
+		transition: box-shadow 0.22s ease, transform 0.22s ease;
+	}
+	.project-card:hover {
+		box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+		transform: translateY(-3px);
 	}
 
-	.uc-label {
-		font-size: clamp(28px, 3.5vw, 52px);
+	.card-title {
+		font-size: clamp(17px, 1.5vw, 22px);
 		font-weight: 400;
-		color: rgba(0, 0, 0, 0.22);
-		letter-spacing: 0.04em;
+		color: #000;
+		line-height: 1.2;
 		margin: 0;
 	}
 
-	.uc-sub {
-		font-size: clamp(14px, 1.2vw, 19px);
-		color: rgba(0, 0, 0, 0.35);
-		line-height: 1.7;
+	.card-summary {
+		font-size: clamp(13px, 1.1vw, 16px);
+		line-height: 1.75;
+		color: rgba(0, 0, 0, 0.65);
+		flex: 1;
 		margin: 0;
-		text-align: right;
 	}
 
+	.card-learn-more {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		font-size: clamp(13px, 1.1vw, 16px);
+		color: rgba(0, 0, 0, 0.72);
+		text-decoration: none;
+		letter-spacing: 0.01em;
+		transition: color 0.15s ease, gap 0.15s ease;
+	}
+	.card-learn-more:hover { color: #000; gap: 10px; }
+
+	.card-divider {
+		height: 1px;
+		background: rgba(0, 0, 0, 0.07);
+		margin: 2px 0;
+	}
+
+	.card-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 5px;
+		font-size: clamp(11px, 0.9vw, 13px);
+		color: rgba(0, 0, 0, 0.38);
+		text-decoration: none;
+		transition: color 0.15s ease, gap 0.15s ease;
+		letter-spacing: 0.03em;
+	}
+	.card-link:hover { color: rgba(0,0,0,0.70); gap: 8px; }
+
+	/* ── Social row ── */
 	.social-row {
 		display: flex;
 		justify-content: center;
@@ -204,11 +330,16 @@
 	}
 	.social-item:hover .social-label { opacity: 1; transform: translateY(0); }
 
-	@media (max-width: 600px) {
+	@media (max-width: 700px) {
+		.projects-grid { grid-template-columns: 1fr; }
 		.social-row   { flex-direction: column; align-items: center; gap: 18px; padding-top: 36px; }
 		.social-item  { flex-direction: row; gap: 14px; }
 		.social-icon  { width: 22px; height: 22px; }
 		.social-label { font-size: 18px; opacity: 1; transform: none; }
 		.social-item:hover .social-icon { transform: none; }
+	}
+
+	@media (min-width: 701px) and (max-width: 960px) {
+		.projects-grid { grid-template-columns: repeat(2, 1fr); }
 	}
 </style>

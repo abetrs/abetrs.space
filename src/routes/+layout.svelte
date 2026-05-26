@@ -440,6 +440,8 @@
 	:global(html[data-theme="night"] .social-item) { color: rgba(255,255,255,.90) !important; }
 
 	:global(html[data-theme="night"] .card-desc),
+	:global(html[data-theme="night"] .card-summary),
+	:global(html[data-theme="night"] .card-link),
 	:global(html[data-theme="night"] .about-body),
 	:global(html[data-theme="night"] .period),
 	:global(html[data-theme="night"] .bullets li),
@@ -451,7 +453,8 @@
 	:global(html[data-theme="night"] .arrow-btn) { color: rgba(255,255,255,.55) !important; }
 
 	:global(html[data-theme="night"] .card),
-	:global(html[data-theme="night"] .detail-card) {
+	:global(html[data-theme="night"] .detail-card),
+	:global(html[data-theme="night"] .project-card) {
 		background: rgba(255,255,255,.06) !important;
 		border-color: rgba(255,255,255,.10) !important;
 	}
