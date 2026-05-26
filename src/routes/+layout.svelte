@@ -437,15 +437,28 @@
 	:global(html[data-theme="night"] .back-link),
 	:global(html[data-theme="night"] .card-title),
 	:global(html[data-theme="night"] .company-name),
+	:global(html[data-theme="night"] .story-title),
+	:global(html[data-theme="night"] .section-heading),
+	:global(html[data-theme="night"] .metric-num),
 	:global(html[data-theme="night"] .social-item) { color: rgba(255,255,255,.90) !important; }
 
 	:global(html[data-theme="night"] .card-desc),
 	:global(html[data-theme="night"] .card-summary),
 	:global(html[data-theme="night"] .card-link),
+	:global(html[data-theme="night"] .card-learn-more),
+	:global(html[data-theme="night"] .section-body p),
 	:global(html[data-theme="night"] .about-body),
 	:global(html[data-theme="night"] .period),
 	:global(html[data-theme="night"] .bullets li),
 	:global(html[data-theme="night"] .dropdown-item) { color: rgba(255,255,255,.68) !important; }
+
+	:global(html[data-theme="night"] .story-meta),
+	:global(html[data-theme="night"] .metric-label) { color: rgba(255,255,255,.50) !important; }
+
+	:global(html[data-theme="night"] .ux-token) {
+		color: rgba(255,255,255,.55) !important;
+		border-color: rgba(255,255,255,.18) !important;
+	}
 
 	:global(html[data-theme="night"] .nav-dropdown),
 	:global(html[data-theme="night"] .about-dropdown) { border-color: rgba(255,255,255,.18) !important; }
@@ -461,6 +474,11 @@
 	:global(html[data-theme="night"] .logo-btn) {
 		background: rgba(255,255,255,.10) !important;
 		border-color: rgba(255,255,255,.16) !important;
+	}
+
+	:global(html[data-theme="night"] .metrics-row) {
+		border-top-color: rgba(255,255,255,.10) !important;
+		border-bottom-color: rgba(255,255,255,.10) !important;
 	}
 
 	:global(html[data-theme="night"] .timeline-outer::before) { background: rgba(255,255,255,.15) !important; }
