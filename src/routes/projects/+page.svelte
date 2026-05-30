@@ -47,8 +47,8 @@
 			title: 'CricWAR',
 			summary: 'A cricket analytics platform applying WAR (Wins Above Replacement) methodology to the sport. Builds statistical models that contextualise traditional metrics and quantify individual player contributions to team wins.',
 			storyHref: '/projects/cricwar',
-			link: null,
-			linkLabel: null,
+			link: 'https://github.com/abetrs/cricket-sim',
+			linkLabel: 'GitHub',
 		},
 	];
 
