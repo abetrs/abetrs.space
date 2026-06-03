@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const fs=require\\('fs'\\); const css=fs.readFileSync\\('src/app.css','utf8'\\); console.log\\(css\\)\")",
+      "Bash(grep 'from '\\\\''$lib/components')",
+      "Bash(grep -rn 'import.*from '\\\\''$lib/components' src/routes/)",
+      "Bash(Remove-Item -Recurse -Force src/routes/college, src/routes/projects, src/routes/blog)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git checkout *)",
+      "Bash(git merge *)",
+      "Bash(git push *)",
+      "WebFetch(domain:www.wm.edu)",
+      "Bash(curl -L \"https://www.wm.edu/images/wm_logo_horizontal_green_gold.svg\" -o \"c:\\\\Users\\\\abhay\\\\OneDrive\\\\Documents\\\\Stuff2.0\\\\Programming\\\\abetrs.space\\\\src\\\\lib\\\\assets\\\\photos\\\\College\\\\WilliamandMary.svg\" --user-agent \"Mozilla/5.0\" -w \"%{http_code}\")",
+      "WebFetch(domain:athletics.wm.edu)",
+      "Bash(curl -L \"https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/William_%26_Mary_Tribe_logo.svg/1200px-William_%26_Mary_Tribe_logo.svg.png\" -o \"c:\\\\Users\\\\abhay\\\\OneDrive\\\\Documents\\\\Stuff2.0\\\\Programming\\\\abetrs.space\\\\src\\\\lib\\\\assets\\\\photos\\\\College\\\\WilliamandMary.png\" --user-agent \"Mozilla/5.0\" -w \"%{http_code}\")",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(curl -L \"https://upload.wikimedia.org/wikipedia/commons/a/a3/William_%26_Mary_Tribe_logo.svg\" -o \"c:\\\\Users\\\\abhay\\\\OneDrive\\\\Documents\\\\Stuff2.0\\\\Programming\\\\abetrs.space\\\\src\\\\lib\\\\assets\\\\photos\\\\College\\\\WilliamandMary.svg\" --user-agent \"Mozilla/5.0\" -w \"%{http_code}\")",
+      "Bash(curl -L \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fclipground.com%2Fimages%2Fwilliam-and-mary-logo-png-1.jpg&f=1&nofb=1&ipt=846b66ed8d701c8df33c09b806b426b02bb0a6e7d245ab2dde68823641a3ffde\" -o \"c:\\\\Users\\\\abhay\\\\OneDrive\\\\Documents\\\\Stuff2.0\\\\Programming\\\\abetrs.space\\\\src\\\\lib\\\\assets\\\\photos\\\\College\\\\WilliamandMary.jpg\" --user-agent \"Mozilla/5.0\" -w \"%{http_code}\")",
+      "Bash(curl -L \"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fflathatnews.com%2Fwp-content%2Fuploads%2F2021%2F05%2Fversion5.png&f=1&nofb=1&ipt=1f920ce2baf3cd5449edf7cbdc1b2bee7f1958a8d73af0d6aaec9df7180ec098\" -o \"c:\\\\Users\\\\abhay\\\\OneDrive\\\\Documents\\\\Stuff2.0\\\\Programming\\\\abetrs.space\\\\src\\\\lib\\\\assets\\\\photos\\\\Internships\\\\flat_hat_logo.png\" --user-agent \"Mozilla/5.0\" -w \"%{http_code}\")",
+      "Bash(git restore *)",
+      "Bash(git reset *)"
+    ]
+  }
+}
