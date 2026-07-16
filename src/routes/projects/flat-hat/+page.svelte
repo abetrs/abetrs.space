@@ -1,5 +1,6 @@
 <script>
 	import resumePdf from '$lib/assets/AbhaypradJhaResume.pdf';
+	import dataSection from '$lib/assets/photos/Projects/flathat-data.png';
 </script>
 
 <div class="page">
@@ -7,6 +8,11 @@
 
 	<h1 class="story-title font-bodoni">The Flat Hat<br>Data Section</h1>
 	<p class="story-meta font-garamond">Editorial Product · Data Journalism · 0 → 1</p>
+
+	<figure class="story-figure">
+		<img src={dataSection} alt="The Flat Hat's Data section — a dedicated vertical of data-driven campus journalism." loading="lazy" />
+		<figcaption class="fig-caption font-garamond">The Data section today, still running — a dedicated vertical that outlasted its founding team.</figcaption>
+	</figure>
 
 	<div class="story-body">
 		<section class="story-section">

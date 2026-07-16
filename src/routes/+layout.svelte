@@ -494,6 +494,12 @@
 	:global(html[data-theme="night"] .uc-label) { color: rgba(255,255,255,.22) !important; }
 	:global(html[data-theme="night"] .uc-sub)   { color: rgba(255,255,255,.35) !important; }
 
+	:global(html[data-theme="night"] .fig-caption) { color: rgba(255,255,255,.42) !important; }
+	:global(html[data-theme="night"] .story-figure img) {
+		border-color: rgba(255,255,255,.12) !important;
+		box-shadow: 0 6px 26px rgba(0,0,0,.35) !important;
+	}
+
 	/* Golden hour: keep all text very dark (near-black) */
 	:global(html[data-theme="golden"] .name-en),
 	:global(html[data-theme="golden"] .name-hi),

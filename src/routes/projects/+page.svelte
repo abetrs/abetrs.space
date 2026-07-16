@@ -11,6 +11,14 @@
 
 	const projects = [
 		{
+			id: 'library',
+			title: 'Library',
+			summary: 'A minimalist, static reading dashboard. Turns a Markdown list or a Goodreads CSV export into a browsable shelf — covers, canonicalised genre tags, and summaries all fetched from Open Library and Wikipedia at runtime. No accounts, no backend, everything in the browser.',
+			storyHref: '/projects/library',
+			link: 'https://github.com/abetrs/book-library',
+			linkLabel: 'GitHub',
+		},
+		{
 			id: 'bp-agentic',
 			title: 'Black Pearl AI Due Diligence',
 			summary: 'A Claude-based agentic workflow to automate venture capital due diligence. Synthesises pitch decks, market data, and financials into structured investment memos — cutting initial screening time by an estimated 40%.',
