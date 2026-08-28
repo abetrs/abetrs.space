@@ -1,44 +1,103 @@
 <script>
-	import resumePdf from '$lib/assets/AbhaypradJhaResume.pdf';
+	import SocialRow from '$lib/components/SocialRow.svelte';
 	import dataSection from '$lib/assets/photos/Projects/flathat-data.png';
 </script>
 
 <div class="page">
-	<a class="back-link font-garamond" href="/projects">← Projects</a>
+	<a class="back-link font-garamond" href="/#projects">← Projects</a>
 
-	<h1 class="story-title font-bodoni">The Flat Hat<br>Data Section</h1>
+	<h1 class="story-title font-bodoni">The Flat Hat<br />Data Section</h1>
 	<p class="story-meta font-garamond">Editorial Product · Data Journalism · 0 → 1</p>
 
 	<figure class="story-figure">
-		<img src={dataSection} alt="The Flat Hat's Data section — a dedicated vertical of data-driven campus journalism." loading="lazy" />
-		<figcaption class="fig-caption font-garamond">The Data section today, still running — a dedicated vertical that outlasted its founding team.</figcaption>
+		<img
+			src={dataSection}
+			alt="The Flat Hat's Data section — a dedicated vertical of data-driven campus journalism."
+			loading="lazy"
+		/>
+		<figcaption class="fig-caption font-garamond">
+			The Data section as it runs today — a vertical that outlasted the people who started it.
+		</figcaption>
 	</figure>
 
 	<div class="story-body">
 		<section class="story-section">
-			<h2 class="section-heading font-bodoni">The Problem</h2>
+			<h2 class="section-heading font-bodoni">The Anecdote Problem</h2>
 			<div class="section-body font-garamond">
-				<p>Student journalism at William & Mary had a credibility problem — not one of dishonesty, but of evidence. Stories about campus policy, athletics performance, and student life were routinely published with anecdote as their primary evidence base. The numbers existed — in institutional reports, in public datasets, in the university's own records — but there was no infrastructure to turn them into stories, and no culture of computational reporting in the newsroom.</p>
-				<p>The Flat Hat had no data journalism section. More fundamentally, it had no shared understanding of what data journalism even meant in a college context: not just charts, but a different epistemological commitment to evidence — showing the pattern, not just the instance; quantifying what is usually only described; making claims that can be checked rather than only felt.</p>
-				<p>The challenge wasn't writing the first data story. It was building something that would outlast any individual contributor — a section with its own identity, its own pipeline, and its own audience.</p>
+				<p>
+					Every college newspaper runs on anecdote. You stand outside Swem, you talk to four
+					students, one of them says the thing, and the quote carries the piece. It works. It is
+					also, in a specific and boring way, a lie: four people are not a campus, and a quote is
+					not a pattern.
+				</p>
+				<p>
+					The numbers were there the entire time. They sat in institutional reports, in public
+					datasets, in the university's own filings, and nobody in the newsroom had any particular
+					reason to go and get them. That isn't a failure of will. It's a failure of infrastructure.
+					There was no section, no pipeline, and no person whose job it was, so the work did not
+					happen.
+				</p>
+				<p>
+					What The Flat Hat was missing wasn't charts. Charts are easy — anyone can make a bar chart
+					in an afternoon. What it was missing was a shared idea of what data journalism is <em
+						>for</em
+					> in a student paper: the commitment to show the pattern rather than the instance, to make
+					a claim a reader can check instead of one they can only feel.
+				</p>
 			</div>
 		</section>
 
 		<section class="story-section">
-			<h2 class="section-heading font-bodoni">The Approach</h2>
+			<h2 class="section-heading font-bodoni">Founding a Section Is a Product Problem</h2>
 			<div class="section-body font-garamond">
-				<p>Launching a new editorial section from scratch is fundamentally a product problem. You're not just producing content; you're defining a value proposition, recruiting a team, building a production pipeline, and establishing quality standards — all simultaneously, with zero budget and a rotating workforce of students who graduate every four years.</p>
-				<p>The first decision was the editorial philosophy: show the pattern, not just the data point. A chart that shows one number is an infographic. A chart that reveals a trend, a disparity, or an anomaly is journalism. Everything I built was designed to serve that distinction.</p>
-				<p>I recruited a founding team of five writers, selecting for curiosity over technical skill — data journalism can be taught, but the instinct to ask "what does this number actually mean?" is harder to develop. I built reusable visualization frameworks in Datawrapper and Flourish that any reporter could deploy without design expertise, which eliminated the bottleneck of having to route every visual through a single person. I established an editorial review process that treated data verification with the same rigour as factual checking — a number that's technically correct but contextually misleading is still bad journalism.</p>
-				<p>Cross-functional relationships were critical. The sports section had data it didn't know how to use. The news section had stories that could be strengthened by quantification. I positioned the data section not as a standalone vertical but as an analytical resource for the entire paper — which both expanded our output and embedded the section into the newsroom's culture in a way that made it harder to cut.</p>
+				<p>
+					You are not producing content. You are defining what the thing is, recruiting the people
+					who will make it, building the pipeline they will make it in, and setting the standard it
+					has to clear — all at once, with no budget, and with a staff that graduates out from under
+					you every four years.
+				</p>
+				<p>
+					The first decision was editorial, and everything else followed from it. A chart that shows
+					one number is an infographic. A chart that shows a trend, a disparity, or an anomaly is
+					journalism. I recruited five writers and selected for curiosity over technical skill,
+					because you can teach someone Datawrapper before lunch and you cannot teach someone to
+					look at a number and ask what it actually means.
+				</p>
+				<p>
+					Then I made the tooling boring on purpose. Reusable visualization templates in Datawrapper
+					and Flourish meant no story had to route through one person's hands to get a chart, which
+					is the bottleneck that quietly kills every section like this. Review treated a number with
+					the same suspicion as a quote: a figure that is technically correct and contextually
+					misleading is still a bad figure, and it will still embarrass you in print.
+				</p>
+				<p>
+					The last part was political rather than editorial. Sports had data it didn't know what to
+					do with. News had stories that would survive contact with a spreadsheet. So I stopped
+					treating Data as a vertical competing for page space and started treating it as a service
+					the rest of the paper could call on. It doubled what we published, and — more usefully —
+					it made the section very hard to cut, because cutting it would have taken three other
+					sections down with it.
+				</p>
 			</div>
 		</section>
 
 		<section class="story-section">
-			<h2 class="section-heading font-bodoni">The Outcome</h2>
+			<h2 class="section-heading font-bodoni">What Survived</h2>
 			<div class="section-body font-garamond">
-				<p>Within two years the section was producing more than 20 articles annually and had grown from a half-page feature to two full pages per semester. The Society of Professional Journalists awarded Region 2 Mark of Excellence finalist recognition for our data journalism — a rare distinction for a student publication, and one that validated the quality standard we'd been holding ourselves to.</p>
-				<p>The outcome I care about most, though, is the one that's hardest to measure: the section still exists. A section that survives its founder is a system, not a project. The processes I built, the frameworks I documented, the culture I tried to model — they were all designed with the understanding that I would eventually graduate and someone else would have to run this thing. That it continued is the real proof of concept.</p>
+				<p>
+					Within two years: more than twenty articles a year, a half-page that became two full pages
+					a semester, and a Region 2 Mark of Excellence finalist nod from the Society of
+					Professional Journalists — which is not nothing for a student paper, and which mostly told
+					me the standard we were holding ourselves to was real rather than imagined.
+				</p>
+				<p>
+					The number I actually care about is one. The section still exists. I graduated and it kept
+					running, staffed by people I never met, publishing stories I had nothing to do with. A
+					thing that outlives its founder is a system; a thing that dies with them was a hobby with
+					good branding. I would like to claim I engineered that. In truth I wrote everything down
+					and worked from the assumption that I was temporary, which turns out to be most of the
+					job.
+				</p>
 			</div>
 		</section>
 
@@ -56,28 +115,31 @@
 				<span class="metric-label font-garamond">Region 2 Mark of Excellence finalist</span>
 			</div>
 		</div>
+
+		<p class="story-outro font-garamond">
+			The charts themselves — and the stories they ran in — are collected on the
+			<a href="/#data">portfolio's data visualization section</a>.
+		</p>
 	</div>
 
-	<nav class="social-row" aria-label="Links">
-		<a class="social-item" href="https://abetheunicorn.substack.com" target="_blank" rel="noopener noreferrer">
-			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
-			<span class="social-label font-garamond">Cult Classic</span>
-		</a>
-		<a class="social-item" href="https://github.com/abetrs" target="_blank" rel="noopener noreferrer">
-			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-			<span class="social-label font-garamond">GitHub</span>
-		</a>
-		<a class="social-item" href="https://www.linkedin.com/in/abhayprad-jha-b12390223/" target="_blank" rel="noopener noreferrer">
-			<svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-			<span class="social-label font-garamond">LinkedIn</span>
-		</a>
-		<a class="social-item" href={resumePdf} target="_blank" rel="noopener noreferrer">
-			<svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
-			<span class="social-label font-garamond">Resume</span>
-		</a>
-	</nav>
+	<SocialRow />
 </div>
 
 <style>
 	@import '../story.css';
+
+	.story-outro {
+		font-size: clamp(14px, 1.2vw, 18px);
+		line-height: 1.8;
+		color: rgba(0, 0, 0, 0.55);
+		margin: 0;
+	}
+	.story-outro a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+	.story-outro a:hover {
+		color: #000;
+	}
 </style>
