@@ -615,7 +615,7 @@
 		border-top-color: rgba(255, 255, 255, 0.1) !important;
 	}
 	:global(html[data-theme='night'] .bullets li::before) {
-		color: rgba(255, 255, 255, 0.3) !important;
+		background: rgba(255, 255, 255, 0.3) !important;
 	}
 
 	:global(html[data-theme='night'] .uc-label) {
@@ -631,6 +631,18 @@
 	:global(html[data-theme='night'] .story-figure img) {
 		border-color: rgba(255, 255, 255, 0.12) !important;
 		box-shadow: 0 6px 26px rgba(0, 0, 0, 0.35) !important;
+	}
+
+	/* ── Night mode: story ledes and work lists ── */
+	:global(html[data-theme='night'] .story-lede),
+	:global(html[data-theme='night'] .story-list li) {
+		color: rgba(255, 255, 255, 0.72) !important;
+	}
+	:global(html[data-theme='night'] .story-list strong) {
+		color: rgba(255, 255, 255, 0.92) !important;
+	}
+	:global(html[data-theme='night'] .story-list li::before) {
+		background: rgba(255, 255, 255, 0.35) !important;
 	}
 
 	/* ── Night mode: one-page portfolio (home) ── */

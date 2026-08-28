@@ -183,10 +183,13 @@
 		color: rgba(0, 0, 0, 0.65);
 	}
 	.bullets li::before {
-		content: '—';
+		content: '';
 		position: absolute;
 		left: 0;
-		color: rgba(0, 0, 0, 0.28);
+		top: 0.66em;
+		width: 9px;
+		height: 1px;
+		background: rgba(0, 0, 0, 0.28);
 	}
 
 	.cue {

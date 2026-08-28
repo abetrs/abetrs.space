@@ -70,6 +70,50 @@
 	margin: 0;
 }
 
+/* Lede: one short paragraph setting up the problem */
+.story-lede {
+	font-size: clamp(16px, 1.5vw, 22px);
+	line-height: 1.7;
+	color: rgba(0, 0, 0, 0.78);
+	margin: 0 0 44px;
+}
+.story-lede p {
+	margin: 0 0 14px;
+}
+.story-lede p:last-child {
+	margin-bottom: 0;
+}
+
+/* Work list: what was built, one line each */
+.story-list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	margin: 0;
+	padding: 0;
+}
+.story-list li {
+	position: relative;
+	padding-left: 22px;
+	font-size: clamp(14px, 1.2vw, 18px);
+	line-height: 1.65;
+	color: rgba(0, 0, 0, 0.72);
+}
+.story-list li::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0.66em;
+	width: 9px;
+	height: 1px;
+	background: rgba(0, 0, 0, 0.32);
+}
+.story-list strong {
+	font-weight: 400;
+	color: #000;
+}
+
 /* Metrics row */
 .metrics-row {
 	display: flex;

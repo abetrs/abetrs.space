@@ -60,7 +60,7 @@
 		return () => window.removeEventListener('resize', measure);
 	});
 
-	const aboutText = `I'm a globally minded creative operating across disciplines — builder, designer, writer, musician, filmmaker, DJ. Raised across five countries, I move between worlds as naturally as between mediums. My work is informed by three principles: simplicity, practicality, and applicability. I don't build for the sake of building. I'm interested in the gap between how things work and how they could work — the friction in systems that haven't been questioned, the noise in interfaces that never needed to be loud. I'm here to close that gap, one problem at a time.`;
+	const aboutText = `I build, design, write, play music, make films and DJ. I was raised across five countries, which is roughly how I move between mediums. Three principles: simplicity, practicality, applicability. I am interested in the gap between how things work and how they could work. The friction in systems nobody has questioned. The noise in interfaces that never needed to be loud.`;
 </script>
 
 <div class="page" class:expanded>
@@ -112,14 +112,8 @@
 					<h2 class="block-title font-bodoni">Data Visualization</h2>
 					<div class="block-intro font-garamond">
 						<p>
-							I founded the data section at <em>The Flat Hat</em> and spent four years making charts
-							that had to survive a reader who did not care. A chart that shows one number is an infographic.
-							A chart that shows a pattern is journalism, and the difference between the two is the entire
-							job.
-						</p>
-						<p>
-							Everything below is published work. The stories are linked; the charts are live,
-							pulled straight from Datawrapper rather than screenshotted.
+							Data editor at <em>The Flat Hat</em>, 2022 to 2026. I reported these and built the
+							charts.
 						</p>
 					</div>
 
@@ -621,10 +615,13 @@
 		color: rgba(0, 0, 0, 0.65);
 	}
 	.bullets li::before {
-		content: '—';
+		content: '';
 		position: absolute;
 		left: 0;
-		color: rgba(0, 0, 0, 0.28);
+		top: 0.66em;
+		width: 9px;
+		height: 1px;
+		background: rgba(0, 0, 0, 0.28);
 	}
 
 	/* ══ Projects ══ */
