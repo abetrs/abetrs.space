@@ -10,31 +10,49 @@
 
 	// ── Timezone options ────────────────────────────────────────────────────
 	const ZONES = [
-		{ label: 'London',      abbr: 'GMT', tz: 'Europe/London',       lat:  51.51, lon:  -0.13 },
-		{ label: 'New York',    abbr: 'EST', tz: 'America/New_York',    lat:  40.71, lon: -74.01 },
-		{ label: 'Los Angeles', abbr: 'PST', tz: 'America/Los_Angeles', lat:  34.05, lon:-118.24 },
-		{ label: 'Mumbai',      abbr: 'IST', tz: 'Asia/Kolkata',        lat:  19.08, lon:  72.88 },
-		{ label: 'Tokyo',       abbr: 'JST', tz: 'Asia/Tokyo',          lat:  35.68, lon: 139.69 },
-		{ label: 'Dubai',       abbr: 'GST', tz: 'Asia/Dubai',          lat:  25.20, lon:  55.27 },
-		{ label: 'Melbourne',   abbr: 'AET', tz: 'Australia/Melbourne', lat: -37.81, lon: 144.96 },
-		{ label: 'Beijing',     abbr: 'CST', tz: 'Asia/Shanghai',       lat:  39.91, lon: 116.39 },
+		{ label: 'London', abbr: 'GMT', tz: 'Europe/London', lat: 51.51, lon: -0.13 },
+		{ label: 'New York', abbr: 'EST', tz: 'America/New_York', lat: 40.71, lon: -74.01 },
+		{ label: 'Los Angeles', abbr: 'PST', tz: 'America/Los_Angeles', lat: 34.05, lon: -118.24 },
+		{ label: 'Mumbai', abbr: 'IST', tz: 'Asia/Kolkata', lat: 19.08, lon: 72.88 },
+		{ label: 'Tokyo', abbr: 'JST', tz: 'Asia/Tokyo', lat: 35.68, lon: 139.69 },
+		{ label: 'Dubai', abbr: 'GST', tz: 'Asia/Dubai', lat: 25.2, lon: 55.27 },
+		{ label: 'Melbourne', abbr: 'AET', tz: 'Australia/Melbourne', lat: -37.81, lon: 144.96 },
+		{ label: 'Beijing', abbr: 'CST', tz: 'Asia/Shanghai', lat: 39.91, lon: 116.39 }
 	];
 
-	let selectedZone  = $state(null); // null = device local
-	let dropdownOpen  = $state(false);
+	let selectedZone = $state(null); // null = device local
+	let dropdownOpen = $state(false);
 
 	// ── Clock ────────────────────────────────────────────────────────────────
 	let now = $state(new Date());
 
-	const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-	const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+	const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+	const MONTHS = [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sep',
+		'Oct',
+		'Nov',
+		'Dec'
+	];
 
 	function getClockStr(date, zone) {
 		if (!zone) {
-			return String(date.getHours()).padStart(2,'0') + ':' + String(date.getMinutes()).padStart(2,'0');
+			return (
+				String(date.getHours()).padStart(2, '0') + ':' + String(date.getMinutes()).padStart(2, '0')
+			);
 		}
 		return new Intl.DateTimeFormat('en-GB', {
-			timeZone: zone.tz, hour: '2-digit', minute: '2-digit', hour12: false
+			timeZone: zone.tz,
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false
 		}).format(date);
 	}
 
@@ -43,18 +61,21 @@
 			return DAYS[date.getDay()] + ' ' + date.getDate() + ' ' + MONTHS[date.getMonth()];
 		}
 		const parts = new Intl.DateTimeFormat('en-GB', {
-			timeZone: zone.tz, weekday: 'long', day: 'numeric', month: 'short'
+			timeZone: zone.tz,
+			weekday: 'long',
+			day: 'numeric',
+			month: 'short'
 		}).formatToParts(date);
-		const get = (t) => parts.find(p => p.type === t)?.value ?? '';
+		const get = (t) => parts.find((p) => p.type === t)?.value ?? '';
 		return get('weekday') + ' ' + get('day') + ' ' + get('month');
 	}
 
 	let clockStr = $derived(getClockStr(now, selectedZone));
-	let dateStr  = $derived(getDateStr(now, selectedZone));
+	let dateStr = $derived(getDateStr(now, selectedZone));
 
 	// ── Sun times & theme ────────────────────────────────────────────────────
 	let sunrise = $state(null);
-	let sunset  = $state(null);
+	let sunset = $state(null);
 
 	// 'day' | 'golden' | 'night'
 	let theme = $state('day');
@@ -63,23 +84,28 @@
 		const h = (() => {
 			if (!selectedZone) return t.getHours();
 			const parts = new Intl.DateTimeFormat('en-GB', {
-				timeZone: selectedZone.tz, hour: 'numeric', hour12: false
+				timeZone: selectedZone.tz,
+				hour: 'numeric',
+				hour12: false
 			}).formatToParts(t);
-			return parseInt(parts.find(p => p.type === 'hour')?.value ?? '12', 10);
+			return parseInt(parts.find((p) => p.type === 'hour')?.value ?? '12', 10);
 		})();
 
 		if (!sunrise || !sunset) {
-			if (h >= 8 && h < 17)              return 'day';
+			if (h >= 8 && h < 17) return 'day';
 			if ((h >= 6 && h < 8) || (h >= 17 && h < 19)) return 'golden';
 			return 'night';
 		}
 		const TWO_H = 2 * 60 * 60 * 1000;
-		const tMs   = t.getTime();
-		const srMs  = sunrise.getTime();
-		const ssMs  = sunset.getTime();
+		const tMs = t.getTime();
+		const srMs = sunrise.getTime();
+		const ssMs = sunset.getTime();
 		if (tMs < srMs - TWO_H || tMs >= ssMs + TWO_H) return 'night';
-		if ((tMs >= srMs - TWO_H && tMs <= srMs + TWO_H) ||
-		    (tMs >= ssMs - TWO_H && tMs <= ssMs + TWO_H)) return 'golden';
+		if (
+			(tMs >= srMs - TWO_H && tMs <= srMs + TWO_H) ||
+			(tMs >= ssMs - TWO_H && tMs <= ssMs + TWO_H)
+		)
+			return 'golden';
 		return 'day';
 	}
 
@@ -91,16 +117,17 @@
 	}
 
 	async function fetchSunTimes(lat, lon, tz) {
-		const date    = tz ? getCityDate(tz) : new Date().toISOString().slice(0, 10);
+		const date = tz ? getCityDate(tz) : new Date().toISOString().slice(0, 10);
 		const cacheKey = (tz ?? 'local') + '-' + date;
 		if (sunCache.has(cacheKey)) {
 			const c = sunCache.get(cacheKey);
-			sunrise = c.sunrise; sunset = c.sunset;
+			sunrise = c.sunrise;
+			sunset = c.sunset;
 			theme = computeTheme(now);
 			return;
 		}
 		try {
-			const res  = await fetch(
+			const res = await fetch(
 				`https://api.sunrise-sunset.org/json?lat=${lat}&lng=${lon}&formatted=0&date=${date}`
 			);
 			const data = await res.json();
@@ -108,28 +135,34 @@
 				const sr = new Date(data.results.sunrise);
 				const ss = new Date(data.results.sunset);
 				sunCache.set(cacheKey, { sunrise: sr, sunset: ss });
-				sunrise = sr; sunset = ss;
+				sunrise = sr;
+				sunset = ss;
 				theme = computeTheme(now);
 			}
-		} catch { /* keep heuristic */ }
+		} catch {
+			/* keep heuristic */
+		}
 	}
 
 	function selectZone(zone) {
 		selectedZone = zone;
 		dropdownOpen = false;
 		// Reset sun times so theme re-derives from new zone immediately
-		sunrise = null; sunset = null;
+		sunrise = null;
+		sunset = null;
 		theme = computeTheme(now);
 		fetchSunTimes(zone.lat, zone.lon, zone.tz);
 	}
 
-	function toggleDropdown() { dropdownOpen = !dropdownOpen; }
+	function toggleDropdown() {
+		dropdownOpen = !dropdownOpen;
+	}
 
 	onMount(() => {
 		theme = computeTheme(now);
 
 		const tick = setInterval(() => {
-			now   = new Date();
+			now = new Date();
 			theme = computeTheme(now);
 		}, 30_000);
 
@@ -171,19 +204,37 @@
 </svelte:head>
 
 <div class="site-root">
-
 	<!-- Dynamic background layer -->
 	<div class="bg-layer bg-{theme}" aria-hidden="true"></div>
 
 	<!-- Clock — top left, z-index 15 (above blur veil) -->
 	<div class="clock-display">
-		<button class="clock-btn" onclick={toggleDropdown} aria-expanded={dropdownOpen} aria-haspopup="listbox">
+		<button
+			class="clock-btn"
+			onclick={toggleDropdown}
+			aria-expanded={dropdownOpen}
+			aria-haspopup="listbox"
+		>
 			<span class="clock-time">{clockStr}</span>
 			{#if selectedZone}
 				<span class="clock-abbr">{selectedZone.abbr}</span>
 			{/if}
-			<svg class="clock-chevron" class:open={dropdownOpen} width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-				<polyline points="1,1 6,7 11,1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+			<svg
+				class="clock-chevron"
+				class:open={dropdownOpen}
+				width="12"
+				height="8"
+				viewBox="0 0 12 8"
+				fill="none"
+				aria-hidden="true"
+			>
+				<polyline
+					points="1,1 6,7 11,1"
+					stroke="currentColor"
+					stroke-width="1.8"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				/>
 			</svg>
 		</button>
 		<div class="clock-date">{dateStr}</div>
@@ -220,11 +271,14 @@
 	<main>
 		{@render children?.()}
 	</main>
-
 </div>
 
 <style>
-	:global(*) { box-sizing: border-box; margin: 0; padding: 0; }
+	:global(*) {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+	}
 
 	:global(body) {
 		background: #ffffff;
@@ -240,17 +294,23 @@
 		pointer-events: none;
 		transition: background 2s ease;
 	}
-	.bg-day    { background: linear-gradient(to bottom, #f0f8ff 0%, #c8e8f4 50%, #9ECCD6 100%); }
+	.bg-day {
+		background: linear-gradient(to bottom, #f0f8ff 0%, #c8e8f4 50%, #9eccd6 100%);
+	}
 	.bg-golden {
 		background:
-			radial-gradient(ellipse at 50% 115%,
-				rgba(255,210, 60,.90)  0%,
-				rgba(255,120, 30,.70) 22%,
-				rgba(220, 50, 10,.40) 42%,
-				transparent           62%),
+			radial-gradient(
+				ellipse at 50% 115%,
+				rgba(255, 210, 60, 0.9) 0%,
+				rgba(255, 120, 30, 0.7) 22%,
+				rgba(220, 50, 10, 0.4) 42%,
+				transparent 62%
+			),
 			linear-gradient(to bottom, #c0dcf0 0%, #f0d898 42%, #f09050 68%, #d85020 84%, #a82800 100%);
 	}
-	.bg-night  { background: linear-gradient(to bottom, #020509 0%, #05101f 45%, #091828 100%); }
+	.bg-night {
+		background: linear-gradient(to bottom, #020509 0%, #05101f 45%, #091828 100%);
+	}
 
 	/* ── Clock display (fixed, top-left, above blur-veil) ── */
 	.clock-display {
@@ -286,7 +346,7 @@
 
 	.clock-abbr {
 		font-size: 17px;
-		opacity: 0.50;
+		opacity: 0.5;
 		letter-spacing: 0.05em;
 		margin-bottom: 7px;
 	}
@@ -297,13 +357,15 @@
 		transition: transform 0.22s ease;
 		flex-shrink: 0;
 	}
-	.clock-chevron.open { transform: rotate(180deg); }
+	.clock-chevron.open {
+		transform: rotate(180deg);
+	}
 
 	/* Row 2: date */
 	.clock-date {
 		font-size: 14px;
 		letter-spacing: 0.04em;
-		opacity: 0.60;
+		opacity: 0.6;
 		margin-top: 3px;
 		text-transform: uppercase;
 		margin-left: 2px;
@@ -332,7 +394,7 @@
 		padding: 5px 0;
 		min-width: 180px;
 		overflow: hidden;
-		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.10);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 	}
 
 	.tz-item {
@@ -347,8 +409,12 @@
 		text-align: left;
 		transition: background 0.12s ease;
 	}
-	.tz-item:hover { background: rgba(0, 0, 0, 0.05); }
-	.tz-item.active .tz-city { color: #006A82; }
+	.tz-item:hover {
+		background: rgba(0, 0, 0, 0.05);
+	}
+	.tz-item.active .tz-city {
+		color: #006a82;
+	}
 
 	.tz-city {
 		font-family: 'EB Garamond', Garamond, Georgia, serif;
@@ -388,131 +454,260 @@
 		-webkit-backdrop-filter: blur(40px);
 	}
 
-	main { position: relative; }
+	main {
+		position: relative;
+	}
 
-	.site-root { min-height: 100vh; background: transparent; }
+	.site-root {
+		min-height: 100vh;
+		background: transparent;
+	}
 
 	/* ── Mobile: shrink clock ── */
 	@media (max-width: 600px) {
-		.clock-display { top: 12px; left: 14px; }
-		.clock-time    { font-size: 28px; }
-		.clock-abbr    { font-size: 11px; margin-bottom: 4px; }
-		.clock-chevron { margin-bottom: 5px; }
-		.clock-date    { font-size: 10px; margin-top: 2px; }
-		.barcode-corner { font-size: 32px; top: 14px; right: 14px; }
+		.clock-display {
+			top: 12px;
+			left: 14px;
+		}
+		.clock-time {
+			font-size: 28px;
+		}
+		.clock-abbr {
+			font-size: 11px;
+			margin-bottom: 4px;
+		}
+		.clock-chevron {
+			margin-bottom: 5px;
+		}
+		.clock-date {
+			font-size: 10px;
+			margin-top: 2px;
+		}
+		.barcode-corner {
+			font-size: 32px;
+			top: 14px;
+			right: 14px;
+		}
 		/* Larger tap target on mobile */
-		.clock-btn { padding: 10px 12px 10px 0; margin: -10px -12px -10px 0; }
+		.clock-btn {
+			padding: 10px 12px 10px 0;
+			margin: -10px -12px -10px 0;
+		}
 	}
 
 	/* ── Font helpers ── */
-	:global(.font-bodoni)  { font-family: 'Bodoni Moda', 'Bodoni 72', 'Didot', Georgia, serif; }
-	:global(.font-garamond){ font-family: 'EB Garamond', Garamond, Georgia, serif; }
-	:global(.font-barcode) { font-family: 'Libre Barcode 128', monospace; }
+	:global(.font-bodoni) {
+		font-family: 'Bodoni Moda', 'Bodoni 72', 'Didot', Georgia, serif;
+	}
+	:global(.font-garamond) {
+		font-family: 'EB Garamond', Garamond, Georgia, serif;
+	}
+	:global(.font-barcode) {
+		font-family: 'Libre Barcode 128', monospace;
+	}
 
 	/* ════════════════════════════════════════════════════════════════
 	   NIGHT MODE — flip all dark foreground elements to white
 	   ════════════════════════════════════════════════════════════════ */
-	:global(html[data-theme="night"]) .clock-display,
-	:global(html[data-theme="night"]) .barcode-corner { color: rgba(255,255,255,.78); }
+	:global(html[data-theme='night']) .clock-display,
+	:global(html[data-theme='night']) .barcode-corner {
+		color: rgba(255, 255, 255, 0.78);
+	}
 
-	:global(html[data-theme="night"]) .tz-dropdown {
+	:global(html[data-theme='night']) .tz-dropdown {
 		background: rgba(8, 18, 36, 0.96);
-		border-color: rgba(255,255,255,.12);
-		box-shadow: 0 8px 32px rgba(0,0,0,.45);
+		border-color: rgba(255, 255, 255, 0.12);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
 	}
-	:global(html[data-theme="night"]) .tz-city  { color: rgba(255,255,255,.82); }
-	:global(html[data-theme="night"]) .tz-abbr  { color: rgba(255,255,255,.30); }
-	:global(html[data-theme="night"]) .tz-item:hover { background: rgba(255,255,255,.07); }
-	:global(html[data-theme="night"]) .tz-item.active .tz-city { color: #5cd4e8; }
-
-	:global(html[data-theme="night"] .name-en),
-	:global(html[data-theme="night"] .name-hi),
-	:global(html[data-theme="night"] .about-title),
-	:global(html[data-theme="night"] .about-title-btn),
-	:global(html[data-theme="night"] .about-chevron),
-	:global(html[data-theme="night"] .section-title),
-	:global(html[data-theme="night"] .section-title-btn),
-	:global(html[data-theme="night"] .section-chevron),
-	:global(html[data-theme="night"] .page-title),
-	:global(html[data-theme="night"] .back-link),
-	:global(html[data-theme="night"] .card-title),
-	:global(html[data-theme="night"] .company-name),
-	:global(html[data-theme="night"] .story-title),
-	:global(html[data-theme="night"] .section-heading),
-	:global(html[data-theme="night"] .metric-num),
-	:global(html[data-theme="night"] .social-item) { color: rgba(255,255,255,.90) !important; }
-
-	:global(html[data-theme="night"] .card-desc),
-	:global(html[data-theme="night"] .card-summary),
-	:global(html[data-theme="night"] .card-link),
-	:global(html[data-theme="night"] .card-learn-more),
-	:global(html[data-theme="night"] .section-body p),
-	:global(html[data-theme="night"] .about-body),
-	:global(html[data-theme="night"] .period),
-	:global(html[data-theme="night"] .mobile-position),
-	:global(html[data-theme="night"] .mobile-desc),
-	:global(html[data-theme="night"] .bullets li),
-	:global(html[data-theme="night"] .dropdown-item) { color: rgba(255,255,255,.68) !important; }
-
-	:global(html[data-theme="night"] .mobile-company) { color: rgba(255,255,255,.90) !important; }
-	:global(html[data-theme="night"] .mobile-period)  { color: rgba(255,255,255,.42) !important; }
-
-	:global(html[data-theme="night"] .story-meta),
-	:global(html[data-theme="night"] .metric-label) { color: rgba(255,255,255,.50) !important; }
-
-	:global(html[data-theme="night"] .ux-token) {
-		color: rgba(255,255,255,.55) !important;
-		border-color: rgba(255,255,255,.18) !important;
+	:global(html[data-theme='night']) .tz-city {
+		color: rgba(255, 255, 255, 0.82);
+	}
+	:global(html[data-theme='night']) .tz-abbr {
+		color: rgba(255, 255, 255, 0.3);
+	}
+	:global(html[data-theme='night']) .tz-item:hover {
+		background: rgba(255, 255, 255, 0.07);
+	}
+	:global(html[data-theme='night']) .tz-item.active .tz-city {
+		color: #5cd4e8;
 	}
 
-	:global(html[data-theme="night"] .nav-dropdown),
-	:global(html[data-theme="night"] .about-dropdown) { border-color: rgba(255,255,255,.18) !important; }
-
-	:global(html[data-theme="night"] .arrow-btn) { color: rgba(255,255,255,.55) !important; }
-
-	:global(html[data-theme="night"] .card),
-	:global(html[data-theme="night"] .detail-card),
-	:global(html[data-theme="night"] .project-card) {
-		background: rgba(255,255,255,.06) !important;
-		border-color: rgba(255,255,255,.10) !important;
-	}
-	:global(html[data-theme="night"] .logo-btn) {
-		background: rgba(255,255,255,.10) !important;
-		border-color: rgba(255,255,255,.16) !important;
-	}
-
-	:global(html[data-theme="night"] .metrics-row) {
-		border-top-color: rgba(255,255,255,.10) !important;
-		border-bottom-color: rgba(255,255,255,.10) !important;
+	:global(html[data-theme='night'] .name-en),
+	:global(html[data-theme='night'] .name-hi),
+	:global(html[data-theme='night'] .about-title),
+	:global(html[data-theme='night'] .about-title-btn),
+	:global(html[data-theme='night'] .about-chevron),
+	:global(html[data-theme='night'] .section-title),
+	:global(html[data-theme='night'] .section-title-btn),
+	:global(html[data-theme='night'] .section-chevron),
+	:global(html[data-theme='night'] .page-title),
+	:global(html[data-theme='night'] .back-link),
+	:global(html[data-theme='night'] .card-title),
+	:global(html[data-theme='night'] .company-name),
+	:global(html[data-theme='night'] .story-title),
+	:global(html[data-theme='night'] .section-heading),
+	:global(html[data-theme='night'] .metric-num),
+	:global(html[data-theme='night'] .social-item) {
+		color: rgba(255, 255, 255, 0.9) !important;
 	}
 
-	:global(html[data-theme="night"] .timeline-outer::before) { background: rgba(255,255,255,.15) !important; }
+	:global(html[data-theme='night'] .card-desc),
+	:global(html[data-theme='night'] .card-summary),
+	:global(html[data-theme='night'] .card-link),
+	:global(html[data-theme='night'] .card-learn-more),
+	:global(html[data-theme='night'] .section-body p),
+	:global(html[data-theme='night'] .about-body),
+	:global(html[data-theme='night'] .period),
+	:global(html[data-theme='night'] .mobile-position),
+	:global(html[data-theme='night'] .mobile-desc),
+	:global(html[data-theme='night'] .bullets li),
+	:global(html[data-theme='night'] .dropdown-item) {
+		color: rgba(255, 255, 255, 0.68) !important;
+	}
 
-	:global(html[data-theme="night"] .bullets) { border-top-color: rgba(255,255,255,.10) !important; }
-	:global(html[data-theme="night"] .bullets li::before) { color: rgba(255,255,255,.30) !important; }
+	:global(html[data-theme='night'] .mobile-company) {
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+	:global(html[data-theme='night'] .mobile-period) {
+		color: rgba(255, 255, 255, 0.42) !important;
+	}
 
-	:global(html[data-theme="night"] .uc-label) { color: rgba(255,255,255,.22) !important; }
-	:global(html[data-theme="night"] .uc-sub)   { color: rgba(255,255,255,.35) !important; }
+	:global(html[data-theme='night'] .story-meta),
+	:global(html[data-theme='night'] .metric-label) {
+		color: rgba(255, 255, 255, 0.5) !important;
+	}
 
-	:global(html[data-theme="night"] .fig-caption) { color: rgba(255,255,255,.42) !important; }
-	:global(html[data-theme="night"] .story-figure img) {
-		border-color: rgba(255,255,255,.12) !important;
-		box-shadow: 0 6px 26px rgba(0,0,0,.35) !important;
+	:global(html[data-theme='night'] .ux-token) {
+		color: rgba(255, 255, 255, 0.55) !important;
+		border-color: rgba(255, 255, 255, 0.18) !important;
+	}
+
+	:global(html[data-theme='night'] .nav-dropdown),
+	:global(html[data-theme='night'] .about-dropdown) {
+		border-color: rgba(255, 255, 255, 0.18) !important;
+	}
+
+	:global(html[data-theme='night'] .arrow-btn) {
+		color: rgba(255, 255, 255, 0.55) !important;
+	}
+
+	:global(html[data-theme='night'] .card),
+	:global(html[data-theme='night'] .detail-card),
+	:global(html[data-theme='night'] .project-card) {
+		background: rgba(255, 255, 255, 0.06) !important;
+		border-color: rgba(255, 255, 255, 0.1) !important;
+	}
+	:global(html[data-theme='night'] .logo-btn) {
+		background: rgba(255, 255, 255, 0.1) !important;
+		border-color: rgba(255, 255, 255, 0.16) !important;
+	}
+
+	:global(html[data-theme='night'] .metrics-row) {
+		border-top-color: rgba(255, 255, 255, 0.1) !important;
+		border-bottom-color: rgba(255, 255, 255, 0.1) !important;
+	}
+
+	:global(html[data-theme='night'] .timeline-outer::before) {
+		background: rgba(255, 255, 255, 0.15) !important;
+	}
+
+	:global(html[data-theme='night'] .bullets) {
+		border-top-color: rgba(255, 255, 255, 0.1) !important;
+	}
+	:global(html[data-theme='night'] .bullets li::before) {
+		color: rgba(255, 255, 255, 0.3) !important;
+	}
+
+	:global(html[data-theme='night'] .uc-label) {
+		color: rgba(255, 255, 255, 0.22) !important;
+	}
+	:global(html[data-theme='night'] .uc-sub) {
+		color: rgba(255, 255, 255, 0.35) !important;
+	}
+
+	:global(html[data-theme='night'] .fig-caption) {
+		color: rgba(255, 255, 255, 0.42) !important;
+	}
+	:global(html[data-theme='night'] .story-figure img) {
+		border-color: rgba(255, 255, 255, 0.12) !important;
+		box-shadow: 0 6px 26px rgba(0, 0, 0, 0.35) !important;
+	}
+
+	/* ── Night mode: one-page portfolio (home) ── */
+	:global(html[data-theme='night'] .block-title),
+	:global(html[data-theme='night'] .sub-heading),
+	:global(html[data-theme='night'] .exp-company),
+	:global(html[data-theme='night'] .article-title),
+	:global(html[data-theme='night'] .card-meta),
+	:global(html[data-theme='night'] .cue) {
+		color: rgba(255, 255, 255, 0.9) !important;
+	}
+
+	:global(html[data-theme='night'] .block-intro p),
+	:global(html[data-theme='night'] .exp-desc),
+	:global(html[data-theme='night'] .exp-position),
+	:global(html[data-theme='night'] .article-kicker) {
+		color: rgba(255, 255, 255, 0.68) !important;
+	}
+
+	:global(html[data-theme='night'] .exp-period),
+	:global(html[data-theme='night'] .article-cue) {
+		color: rgba(255, 255, 255, 0.45) !important;
+	}
+
+	:global(html[data-theme='night'] .block > .block-title) {
+		border-bottom-color: rgba(255, 255, 255, 0.14) !important;
+	}
+	:global(html[data-theme='night'] .article-list) {
+		border-top-color: rgba(255, 255, 255, 0.12) !important;
+	}
+	:global(html[data-theme='night'] .article) {
+		border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+	}
+	:global(html[data-theme='night'] .article:hover) {
+		background: rgba(255, 255, 255, 0.06) !important;
+	}
+
+	:global(html[data-theme='night'] .exp) {
+		background: rgba(255, 255, 255, 0.06) !important;
+		border-color: rgba(255, 255, 255, 0.1) !important;
+	}
+	:global(html[data-theme='night'] .exp-logo) {
+		background: rgba(255, 255, 255, 0.1) !important;
+		border-color: rgba(255, 255, 255, 0.16) !important;
+	}
+
+	/* Datawrapper charts render on white, so their cards stay light at night. */
+	:global(html[data-theme='night'] .chart-figure) {
+		background: rgba(255, 255, 255, 0.9) !important;
+		border-color: rgba(255, 255, 255, 0.14) !important;
+	}
+	:global(html[data-theme='night'] .chart-figure figcaption) {
+		color: rgba(0, 0, 0, 0.45) !important;
 	}
 
 	/* Golden hour: keep all text very dark (near-black) */
-	:global(html[data-theme="golden"] .name-en),
-	:global(html[data-theme="golden"] .name-hi),
-	:global(html[data-theme="golden"] .about-title),
-	:global(html[data-theme="golden"] .about-title-btn),
-	:global(html[data-theme="golden"] .section-title),
-	:global(html[data-theme="golden"] .section-title-btn),
-	:global(html[data-theme="golden"] .page-title),
-	:global(html[data-theme="golden"] .card-title),
-	:global(html[data-theme="golden"] .card-desc),
-	:global(html[data-theme="golden"] .dropdown-item),
-	:global(html[data-theme="golden"] .social-item),
-	:global(html[data-theme="golden"] .company-name),
-	:global(html[data-theme="golden"] .period),
-	:global(html[data-theme="golden"] .bullets li) { color: #0a0a0a !important; }
+	:global(html[data-theme='golden'] .name-en),
+	:global(html[data-theme='golden'] .name-hi),
+	:global(html[data-theme='golden'] .about-title),
+	:global(html[data-theme='golden'] .about-title-btn),
+	:global(html[data-theme='golden'] .section-title),
+	:global(html[data-theme='golden'] .section-title-btn),
+	:global(html[data-theme='golden'] .page-title),
+	:global(html[data-theme='golden'] .card-title),
+	:global(html[data-theme='golden'] .card-desc),
+	:global(html[data-theme='golden'] .dropdown-item),
+	:global(html[data-theme='golden'] .social-item),
+	:global(html[data-theme='golden'] .company-name),
+	:global(html[data-theme='golden'] .period),
+	:global(html[data-theme='golden'] .bullets li),
+	:global(html[data-theme='golden'] .block-title),
+	:global(html[data-theme='golden'] .sub-heading),
+	:global(html[data-theme='golden'] .block-intro p),
+	:global(html[data-theme='golden'] .exp-company),
+	:global(html[data-theme='golden'] .exp-desc),
+	:global(html[data-theme='golden'] .article-title),
+	:global(html[data-theme='golden'] .cue) {
+		color: #0a0a0a !important;
+	}
 </style>

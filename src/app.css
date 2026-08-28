@@ -1,10 +1,36 @@
 @import 'tailwindcss';
 
-html { color-scheme: light; }
+html {
+	color-scheme: light;
+}
+
+/* Anchor jumps from the contents rail should glide, and land clear of the
+   fixed clock in the top-left corner. */
+html {
+	scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
 
 /* ── Page fade via View Transitions API ── */
-@keyframes vt-fade-out { to   { opacity: 0; } }
-@keyframes vt-fade-in  { from { opacity: 0; } }
+@keyframes vt-fade-out {
+	to {
+		opacity: 0;
+	}
+}
+@keyframes vt-fade-in {
+	from {
+		opacity: 0;
+	}
+}
 
-::view-transition-old(root) { animation: 180ms ease both vt-fade-out; }
-::view-transition-new(root) { animation: 280ms ease both vt-fade-in;  }
+::view-transition-old(root) {
+	animation: 180ms ease both vt-fade-out;
+}
+::view-transition-new(root) {
+	animation: 280ms ease both vt-fade-in;
+}
