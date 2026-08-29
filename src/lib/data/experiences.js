@@ -74,13 +74,13 @@ export const experiences = [
 		id: 'wm',
 		company: 'William & Mary',
 		logo: wmLogo,
-		position: 'Research Assistant – SBOM Tool Analysis',
+		position: 'Research Assistant, Software Bill of Materials Tooling',
 		period: 'Aug 2025 – May 2026',
 		description:
-			'Authored a research paper conducting comparative analysis of 15+ SBOM generation tools across Python, JavaScript, Java, and Go ecosystems, quantifying dependency identification accuracy and completeness through systematic testing.',
+			'A research paper comparing 15+ tools that generate a Software Bill of Materials, the dependency inventory that says what third-party code ships inside a piece of software. Tested across Python, JavaScript, Java and Go for how accurately and completely each tool identifies what is actually in there.',
 		storyHref: null,
 		bullets: [
-			'Engineered automated frameworks to evaluate SBOM tool performance, identifying coverage gaps and documenting metadata capture capabilities across enterprise repositories.'
+			'Built automated frameworks to test each tool across enterprise repositories, identifying coverage gaps and documenting what metadata each one captures.'
 		]
 	}
 ];

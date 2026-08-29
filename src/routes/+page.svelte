@@ -1,11 +1,11 @@
 <script>
 	import TypewriterText from '$lib/components/TypewriterText.svelte';
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
-	import DatawrapperChart from '$lib/components/DatawrapperChart.svelte';
+	import ChartGrid from '$lib/components/ChartGrid.svelte';
 	import SocialRow from '$lib/components/SocialRow.svelte';
 	import { experiences } from '$lib/data/experiences.js';
 	import { projects } from '$lib/data/projects.js';
-	import { articles, charts } from '$lib/data/dataviz.js';
+	import { articles, unplacedCharts } from '$lib/data/dataviz.js';
 	import { fly } from 'svelte/transition';
 	import { onMount, tick } from 'svelte';
 
@@ -117,10 +117,9 @@
 						</p>
 					</div>
 
-					<h3 class="sub-heading font-bodoni">Selected stories</h3>
 					<ul class="article-list">
 						{#each articles as article (article.id)}
-							<li>
+							<li class="article-item">
 								<a class="article" href={article.href} target="_blank" rel="noopener noreferrer">
 									<span class="article-title font-garamond">{article.title}</span>
 									<span class="article-kicker font-garamond">{article.kicker}</span>
@@ -137,25 +136,20 @@
 										</svg>
 									</span>
 								</a>
+
+								{#if article.charts.length}
+									<div class="article-charts">
+										<ChartGrid charts={article.charts} />
+									</div>
+								{/if}
 							</li>
 						{/each}
 					</ul>
 
-					<h3 class="sub-heading font-bodoni">The charts</h3>
-					<div class="chart-grid">
-						{#each charts as chart (chart.id)}
-							{#if chart.kind === 'chart'}
-								<DatawrapperChart id={chart.id} height={chart.height} />
-							{:else}
-								<figure class="chart-figure">
-									<a href={chart.href} target="_blank" rel="noopener noreferrer">
-										<img src={chart.src} alt={chart.alt} loading="lazy" />
-									</a>
-									<figcaption class="font-garamond">{chart.caption}</figcaption>
-								</figure>
-							{/if}
-						{/each}
-					</div>
+					{#if unplacedCharts.length}
+						<h3 class="sub-heading font-bodoni">More charts</h3>
+						<ChartGrid charts={unplacedCharts} />
+					{/if}
 				</section>
 
 				<!-- ══ Work Experience ══ -->
@@ -436,6 +430,14 @@
 		border-top: 1px solid rgba(0, 0, 0, 0.09);
 	}
 
+	.article-item {
+		border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+	}
+
+	.article-charts {
+		padding: 4px 0 28px;
+	}
+
 	.article {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) auto;
@@ -444,7 +446,6 @@
 		row-gap: 4px;
 		align-items: center;
 		padding: 20px 4px;
-		border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 		text-decoration: none;
 		transition:
 			padding-left 0.18s ease,
@@ -480,38 +481,6 @@
 	}
 	.article:hover .article-cue {
 		color: rgba(0, 0, 0, 0.72);
-	}
-
-	.chart-grid {
-		display: grid;
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-		gap: 22px;
-	}
-
-	.chart-figure {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-		background: rgba(255, 255, 255, 0.82);
-		border: 1px solid rgba(0, 0, 0, 0.08);
-		border-radius: 12px;
-		padding: 18px 18px 12px;
-		margin: 0;
-		transition: box-shadow 0.22s ease;
-	}
-	.chart-figure:hover {
-		box-shadow: 0 8px 28px rgba(0, 0, 0, 0.09);
-	}
-	.chart-figure img {
-		width: 100%;
-		height: auto;
-		display: block;
-	}
-	.chart-figure figcaption {
-		font-size: 12px;
-		letter-spacing: 0.03em;
-		color: rgba(0, 0, 0, 0.38);
-		text-align: right;
 	}
 
 	/* ══ Work experience ══ */
@@ -755,7 +724,6 @@
 	}
 
 	@media (max-width: 760px) {
-		.chart-grid,
 		.projects-grid {
 			grid-template-columns: minmax(0, 1fr);
 		}
