@@ -673,7 +673,7 @@
 	:global(html[data-theme='night'] .article-list) {
 		border-top-color: rgba(255, 255, 255, 0.12) !important;
 	}
-	:global(html[data-theme='night'] .article) {
+	:global(html[data-theme='night'] .article-item) {
 		border-bottom-color: rgba(255, 255, 255, 0.12) !important;
 	}
 	:global(html[data-theme='night'] .article:hover) {

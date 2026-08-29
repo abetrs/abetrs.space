@@ -1,37 +1,47 @@
 // Published data journalism for The Flat Hat, William & Mary's student newspaper.
 // Each Datawrapper iframe renders its own headline, description and source line.
 
+// Charts live on the story they ran in. To place one, move its entry out of
+// `unplacedCharts` below and into that article's `charts` array.
+//
+//   { kind: 'chart', id: '<datawrapper id>' }   embeds datawrapper.dwcdn.net/<id>/
+//   { kind: 'image', src, alt, caption }        for a graphic that is not a chart
+//
+// `height` is the starting height only. Each chart posts its real height back to
+// the parent window on load and DatawrapperChart resizes to match.
+
 export const articles = [
 	{
 		id: 'construction',
 		title: 'Construction disruptions are now part of daily life for many students',
 		kicker: 'Campus construction, mapped against who has to walk around it.',
-		href: 'https://flathatnews.com/construction-disruptions-are-now-part-of-daily-life-for-many-students/'
+		href: 'https://flathatnews.com/construction-disruptions-are-now-part-of-daily-life-for-many-students/',
+		charts: []
 	},
 	{
 		id: 'coffee',
 		title: 'Students reflect on best Williamsburg coffeehouses, Aromas to win most visited',
 		kicker: 'Where campus actually drinks its coffee.',
-		href: 'https://flathatnews.com/students-reflect-on-best-williamsburg-coffeehouses-aromas-to-win-most-visited/'
+		href: 'https://flathatnews.com/students-reflect-on-best-williamsburg-coffeehouses-aromas-to-win-most-visited/',
+		charts: []
 	},
 	{
 		id: 'wrapped',
 		title: "The Tribe's 2024 Listening Wrapped",
 		kicker: 'A year of campus listening, surveyed and counted.',
-		href: 'https://flathatnews.com/the-tribes-2024-listening-wrapped/'
+		href: 'https://flathatnews.com/the-tribes-2024-listening-wrapped/',
+		charts: []
 	},
 	{
 		id: 'yikyak',
 		title: 'Yik Yak: open discussion forum or anonymous hub of gossip?',
 		kicker: 'What an anonymous feed is for, according to the people posting on it.',
-		href: 'https://flathatnews.com/yik-yak-open-discussion-forum-or-anonymous-hub-of-gossip/'
+		href: 'https://flathatnews.com/yik-yak-open-discussion-forum-or-anonymous-hub-of-gossip/',
+		charts: []
 	}
 ];
 
-// `id` is the Datawrapper chart ID; the embed lives at datawrapper.dwcdn.net/<id>/.
-// `height` is the starting height only. Each chart posts its real height back to
-// the parent window on load and DatawrapperChart resizes to match.
-export const charts = [
+export const unplacedCharts = [
 	{ kind: 'chart', id: 'qGMVv', height: 420 },
 	{ kind: 'chart', id: 'hKfKl', height: 420 },
 	{
